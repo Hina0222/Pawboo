@@ -1,0 +1,9 @@
+{
+  "name": "BRAGram",
+  "version": "1.0.0",
+  "scripts": {
+  },
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.28.2"
+}
