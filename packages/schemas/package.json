@@ -1,0 +1,19 @@
+{
+  "name": "@bragram/schemas",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./index.ts",
+      "default": "./index.ts"
+    },
+    "./*": {
+      "types": "./*/index.ts",
+      "default": "./*/index.ts"
+    }
+  },
+  "dependencies": {
+    "zod": "^4.3.6"
+  }
+}

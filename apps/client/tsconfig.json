@@ -25,6 +25,12 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@bragram/schemas": [
+        "../../packages/schemas/index.ts"
+      ],
+      "@bragram/schemas/*": [
+        "../../packages/schemas/*/index.ts"
       ]
     }
   },
