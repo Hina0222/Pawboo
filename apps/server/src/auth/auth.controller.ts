@@ -9,6 +9,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import type { Response, Request as ExpressRequest } from 'express';
+import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { KakaoAuthGuard } from './guards/kakao-auth.guard';
 
@@ -21,7 +22,10 @@ const REFRESH_TOKEN_COOKIE_OPTIONS = {
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
 
   @Get('kakao')
   @UseGuards(KakaoAuthGuard)
@@ -33,13 +37,14 @@ export class AuthController {
   @UseGuards(KakaoAuthGuard)
   async kakaoCallback(
     @Request() req: { user: { id: number; kakaoId: string; nickname: string } },
-    @Res({ passthrough: true }) res: Response,
+    @Res() res: Response,
   ) {
     const { accessToken, refreshToken } = await this.authService.login(
       req.user,
     );
     res.cookie('refreshToken', refreshToken, REFRESH_TOKEN_COOKIE_OPTIONS);
-    return { accessToken };
+    const clientUrl = this.configService.get<string>('CLIENT_URL');
+    res.redirect(`${clientUrl}/auth/callback?accessToken=${accessToken}`);
   }
 
   @Post('refresh')

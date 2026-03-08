@@ -16,6 +16,9 @@ const envSchema = z.object({
   POSTGRES_DB: z.string(),
   DATABASE_URL: z.url(),
 
+  // Client URL
+  CLIENT_URL: z.url(),
+
   // Kakao OAuth
   KAKAO_CLIENT_ID: z.string(),
   KAKAO_CLIENT_SECRET: z.string(),
