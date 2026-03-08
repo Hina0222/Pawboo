@@ -10,7 +10,7 @@ export default function AuthCallbackPage() {
     const params = new URLSearchParams(window.location.search);
     const accessToken = params.get('accessToken');
     if (accessToken) {
-      console.log('accessToken:', accessToken);
+      localStorage.setItem('accessToken', accessToken);
       router.replace('/');
     }
   }, [router]);
