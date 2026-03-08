@@ -12,7 +12,7 @@ export function AuthInitializer({ children }: { children: React.ReactNode }) {
     const init = async () => {
       try {
         const { accessToken } = await apiClient.post<{ accessToken: string }>('/auth/refresh');
-        const user = await apiClient.get<MeResponse>('auth/me', {
+        const user = await apiClient.get<MeResponse>('/users/me', {
           headers: { Authorization: `Bearer ${accessToken}` },
         });
         setAuth(accessToken, user);

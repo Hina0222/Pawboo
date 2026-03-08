@@ -16,7 +16,7 @@ export default function AuthCallbackPage() {
     if (!accessToken) return;
 
     apiClient
-      .get<MeResponse>('/auth/me', {
+      .get<MeResponse>('/users/me', {
         headers: { Authorization: `Bearer ${accessToken}` },
       })
       .then(user => {
