@@ -9,7 +9,11 @@ import { DRIZZLE_ORM } from '../database/database.provider';
 import type { DrizzleDB } from '../database/database.provider';
 import { pets } from '../database/schema';
 import { AwsService } from '../aws/aws.service';
-import { CreatePetInput, UpdatePetInput } from '@bragram/schemas/pet';
+import {
+  CreatePetRequest,
+  UpdatePetRequest,
+  PetResponse,
+} from '@bragram/schemas/pet';
 
 @Injectable()
 export class PetService {
@@ -18,7 +22,11 @@ export class PetService {
     private readonly awsService: AwsService,
   ) {}
 
-  async create(userId: number, input: CreatePetInput, imageBuffer: Buffer) {
+  async create(
+    userId: number,
+    input: CreatePetRequest,
+    imageBuffer: Buffer,
+  ): Promise<PetResponse> {
     const existing = await this.db
       .select({ id: pets.id })
       .from(pets)
@@ -49,7 +57,7 @@ export class PetService {
     return pet;
   }
 
-  async findAllByUser(userId: number) {
+  async findAllByUser(userId: number): Promise<PetResponse[]> {
     return this.db
       .select()
       .from(pets)
@@ -57,7 +65,7 @@ export class PetService {
       .orderBy(desc(pets.isActive), asc(pets.createdAt));
   }
 
-  async findOne(userId: number, petId: number) {
+  async findOne(userId: number, petId: number): Promise<PetResponse> {
     const [pet] = await this.db
       .select()
       .from(pets)
@@ -73,9 +81,9 @@ export class PetService {
   async update(
     userId: number,
     petId: number,
-    input: UpdatePetInput,
+    input: UpdatePetRequest,
     imageBuffer?: Buffer,
-  ) {
+  ): Promise<PetResponse> {
     const pet = await this.findOne(userId, petId);
 
     let imageUrl = pet.imageUrl;
@@ -102,7 +110,7 @@ export class PetService {
     return updated;
   }
 
-  async remove(userId: number, petId: number) {
+  async remove(userId: number, petId: number): Promise<void> {
     const pet = await this.findOne(userId, petId);
 
     await this.awsService.deleteImage(pet.imageUrl);
@@ -125,7 +133,7 @@ export class PetService {
     }
   }
 
-  async activate(userId: number, petId: number) {
+  async activate(userId: number, petId: number): Promise<PetResponse> {
     const target = await this.findOne(userId, petId);
 
     if (target.isActive) {

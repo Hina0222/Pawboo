@@ -36,6 +36,6 @@ export const PetResponseSchema = z.object({
 
 export type PetType = z.infer<typeof PetTypeSchema>;
 export type PetGender = z.infer<typeof PetGenderSchema>;
-export type CreatePetInput = z.infer<typeof CreatePetSchema>;
-export type UpdatePetInput = z.infer<typeof UpdatePetSchema>;
+export type CreatePetRequest = z.infer<typeof CreatePetSchema>;
+export type UpdatePetRequest = z.infer<typeof UpdatePetSchema>;
 export type PetResponse = z.infer<typeof PetResponseSchema>;

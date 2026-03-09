@@ -19,7 +19,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PetService } from './pet.service';
-import { CreatePetSchema, UpdatePetSchema } from '@bragram/schemas/pet';
+import {
+  CreatePetSchema,
+  UpdatePetSchema,
+  PetResponse,
+} from '@bragram/schemas/pet';
 
 interface AuthenticatedRequest extends Request {
   user: { id: number; kakaoId: string };
@@ -56,7 +60,7 @@ export class PetController {
     @Req() req: AuthenticatedRequest,
     @Body() body: Record<string, string>,
     @UploadedFile() file: Express.Multer.File,
-  ) {
+  ): Promise<PetResponse> {
     if (!file) {
       throw new BadRequestException('이미지 파일이 필요합니다.');
     }
@@ -70,7 +74,7 @@ export class PetController {
   }
 
   @Get()
-  findAll(@Req() req: AuthenticatedRequest) {
+  findAll(@Req() req: AuthenticatedRequest): Promise<PetResponse[]> {
     return this.petService.findAllByUser(req.user.id);
   }
 
@@ -78,7 +82,7 @@ export class PetController {
   findOne(
     @Req() req: AuthenticatedRequest,
     @Param('id', ParseIntPipe) id: number,
-  ) {
+  ): Promise<PetResponse> {
     return this.petService.findOne(req.user.id, id);
   }
 
@@ -89,7 +93,7 @@ export class PetController {
     @Param('id', ParseIntPipe) id: number,
     @Body() body: Record<string, string>,
     @UploadedFile() file?: Express.Multer.File,
-  ) {
+  ): Promise<PetResponse> {
     const parsed = UpdatePetSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
@@ -103,7 +107,7 @@ export class PetController {
   remove(
     @Req() req: AuthenticatedRequest,
     @Param('id', ParseIntPipe) id: number,
-  ) {
+  ): Promise<void> {
     return this.petService.remove(req.user.id, id);
   }
 
@@ -111,7 +115,7 @@ export class PetController {
   activate(
     @Req() req: AuthenticatedRequest,
     @Param('id', ParseIntPipe) id: number,
-  ) {
+  ): Promise<PetResponse> {
     return this.petService.activate(req.user.id, id);
   }
 }
