@@ -23,9 +23,11 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`${pretendard.className} dark antialiased`}>
-        <QueryProvider>
-          <AuthInitializer>{children}</AuthInitializer>
-        </QueryProvider>
+        <div className="mx-auto flex h-full min-h-dvh max-w-[390px] flex-col">
+          <QueryProvider>
+            <AuthInitializer>{children}</AuthInitializer>
+          </QueryProvider>
+        </div>
       </body>
     </html>
   );
