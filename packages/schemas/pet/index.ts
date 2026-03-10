@@ -1,18 +1,24 @@
-import { z } from 'zod';
+import {z} from 'zod';
 
-export const PetTypeSchema = z.enum(['cat', 'dog']);
+export const PetTypeSchema = z.enum(['cat', 'dog'], {
+  error: '반려동물 종류를 선택해주세요',
+});
 export const PetGenderSchema = z.enum(['male', 'female']);
 
 export const CreatePetSchema = z.object({
-  name: z.string().min(2).max(15),
+  name: z
+    .string()
+    .min(2, '이름은 최소 2자 이상 입력해주세요')
+    .max(15, '이름은 최대 15자까지 입력할 수 있습니다'),
   type: PetTypeSchema,
-  breed: z.string().max(50).optional(),
+  breed: z.string().max(50, '품종은 50자 이하로 입력해주세요').optional(),
   birthDate: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/)
-    .optional(),
+    .optional()
+    .or(z.literal('')),
   gender: PetGenderSchema.optional(),
-  bio: z.string().max(60).optional(),
+  bio: z.string().max(60, '설명은 60자 이하로 입력해주세요').optional(),
 });
 
 export const UpdatePetSchema = CreatePetSchema.partial();
