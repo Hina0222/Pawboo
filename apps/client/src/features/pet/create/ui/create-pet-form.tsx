@@ -8,13 +8,16 @@ import { useForm } from 'react-hook-form';
 import { CreatePetRequest, CreatePetSchema } from '@bragram/schemas/pet';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/shared/ui';
+import { useCreatePetMutation } from '@/features/pet/create/api/useCreatePetMutation';
 
 const TOTAL_STEPS = 3;
 
 export function CreatePetForm() {
   const [step, setStep] = useState(1);
   const [photo, setPhoto] = useState<string | null>(null);
+  const [photoFile, setPhotoFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { mutate } = useCreatePetMutation();
 
   const {
     register,
@@ -49,25 +52,14 @@ export function CreatePetForm() {
   };
 
   const onSubmit = (data: CreatePetRequest) => {
-    // TODO: API 연동 — POST /pets
-    console.log(
-      '펫 등록 데이터:',
-      {
-        name: data.name,
-        type: data.type!,
-        breed: data.breed || undefined,
-        birthDate: data.birthDate || undefined,
-        gender: data.gender,
-        bio: data.bio || undefined,
-      },
-      '사진:',
-      photo
-    );
+    if (!photoFile) return;
+    mutate({ ...data, image: photoFile });
   };
 
   const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    setPhotoFile(file);
     setPhoto(URL.createObjectURL(file));
   };
 
@@ -108,6 +100,13 @@ export function CreatePetForm() {
             <StepPhoto photo={photo} onFileClick={() => fileInputRef.current?.click()} />
           )}
         </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handlePhotoChange}
+        />
 
         {/* 하단 버튼 */}
         <div className="px-5 pt-4 pb-10">
@@ -121,14 +120,6 @@ export function CreatePetForm() {
           </Button>
         </div>
       </form>
-
-      <input
-        ref={fileInputRef}
-        type="file"
-        accept="image/*"
-        className="hidden"
-        onChange={handlePhotoChange}
-      />
     </>
   );
 }
