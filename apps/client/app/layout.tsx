@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import '@/app/styles/globals.css';
 import { QueryProvider } from '@/app/providers';
 import { AuthInitializer } from '@/app/providers/auth-initializer';
+import { Toaster } from '@/shared/ui';
 
 const pretendard = localFont({
   src: '../src/app/fonts/PretendardVariable.woff2',
@@ -28,6 +29,7 @@ export default function RootLayout({
             <AuthInitializer>{children}</AuthInitializer>
           </QueryProvider>
         </div>
+        <Toaster position="top-center" />
       </body>
     </html>
   );
