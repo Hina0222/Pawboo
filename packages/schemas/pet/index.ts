@@ -32,7 +32,7 @@ export const PetResponseSchema = z.object({
   birthDate: z.string().nullable(),
   gender: PetGenderSchema.nullable(),
   bio: z.string().nullable(),
-  imageUrl: z.string(),
+  imageUrl: z.string().nullable(),
   isActive: z.boolean(),
   score: z.number(),
   weeklyScore: z.number(),

@@ -24,7 +24,7 @@ export const pets = pgTable('pets', {
   birthDate: date('birth_date'),
   gender: petGenderEnum('gender'),
   bio: varchar('bio', { length: 60 }),
-  imageUrl: varchar('image_url', { length: 500 }).notNull(),
+  imageUrl: varchar('image_url', { length: 500 }),
   isActive: boolean('is_active').notNull().default(false),
   score: integer('score').notNull().default(0),
   weeklyScore: integer('weekly_score').notNull().default(0),

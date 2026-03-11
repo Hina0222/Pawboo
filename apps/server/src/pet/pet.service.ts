@@ -25,7 +25,7 @@ export class PetService {
   async create(
     userId: number,
     input: CreatePetRequest,
-    imageBuffer: Buffer,
+    imageBuffer?: Buffer,
   ): Promise<PetResponse> {
     const existing = await this.db
       .select({ id: pets.id })
@@ -36,7 +36,9 @@ export class PetService {
       throw new BadRequestException('펫은 최대 5마리까지 등록할 수 있습니다.');
     }
 
-    const imageUrl = await this.awsService.uploadImage(imageBuffer, 'pets');
+    const imageUrl = imageBuffer
+      ? await this.awsService.uploadImage(imageBuffer, 'pets')
+      : null;
     const isFirst = existing.length === 0;
 
     const [pet] = await this.db
@@ -89,7 +91,7 @@ export class PetService {
     let imageUrl = pet.imageUrl;
     if (imageBuffer) {
       imageUrl = await this.awsService.uploadImage(imageBuffer, 'pets');
-      await this.awsService.deleteImage(pet.imageUrl);
+      if (pet.imageUrl) await this.awsService.deleteImage(pet.imageUrl);
     }
 
     const [updated] = await this.db
@@ -113,7 +115,7 @@ export class PetService {
   async remove(userId: number, petId: number): Promise<void> {
     const pet = await this.findOne(userId, petId);
 
-    await this.awsService.deleteImage(pet.imageUrl);
+    if (pet.imageUrl) await this.awsService.deleteImage(pet.imageUrl);
     await this.db.delete(pets).where(eq(pets.id, petId));
 
     if (pet.isActive) {

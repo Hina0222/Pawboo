@@ -59,18 +59,14 @@ export class PetController {
   async create(
     @Req() req: AuthenticatedRequest,
     @Body() body: Record<string, string>,
-    @UploadedFile() file: Express.Multer.File,
+    @UploadedFile() file?: Express.Multer.File,
   ): Promise<PetResponse> {
-    if (!file) {
-      throw new BadRequestException('이미지 파일이 필요합니다.');
-    }
-
     const parsed = CreatePetSchema.safeParse(body);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
     }
 
-    return this.petService.create(req.user.id, parsed.data, file.buffer);
+    return this.petService.create(req.user.id, parsed.data, file?.buffer);
   }
 
   @Get()
