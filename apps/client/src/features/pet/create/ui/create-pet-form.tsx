@@ -1,68 +1,14 @@
 'use client';
 
-import { useState } from 'react';
 import { StepPetType, StepBasicInfo, StepPhoto } from '@/features/pet/create/ui';
 import { ChevronLeft } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
-import { FormProvider, useForm, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { FormProvider } from 'react-hook-form';
 import { Button } from '@/shared/ui';
-import { useCreatePetMutation } from '@/features/pet/create/api/useCreatePetMutation';
-import { CreatePetFormSchema, CreatePetFormValues } from '@/features/pet/create/model/schema';
-
-const TOTAL_STEPS = 3;
-const stepFields: Record<number, (keyof CreatePetFormValues)[]> = {
-  1: ['type'],
-  2: ['name', 'breed', 'birthDate', 'bio'],
-};
+import { useCreatePetForm } from '@/features/pet/create/hooks/useCreatePetForm';
 
 export function CreatePetForm() {
-  const [step, setStep] = useState(1);
-  const { mutate } = useCreatePetMutation();
-
-  const methods = useForm<CreatePetFormValues>({
-    resolver: zodResolver(CreatePetFormSchema),
-    defaultValues: {
-      name: '',
-      breed: '',
-      birthDate: '',
-      bio: '',
-    },
-  });
-  const { handleSubmit, trigger, control } = methods;
-  const [type, name] = useWatch({ control, name: ['type', 'name'] });
-
-  const canNext = () => {
-    switch (step) {
-      case 1:
-        return !!type;
-      case 2:
-        return !!name?.trim();
-      default:
-        return true;
-    }
-  };
-
-  const onSubmit = (data: CreatePetFormValues) => {
-    mutate(data);
-  };
-
-  const handleNext = async () => {
-    const fields = stepFields[step];
-    if (fields) {
-      const valid = await trigger(fields);
-      if (!valid) return;
-    }
-    setStep(s => s + 1);
-  };
-
-  const handleButtonClick = () => {
-    if (step === TOTAL_STEPS) {
-      handleSubmit(onSubmit)();
-    } else {
-      handleNext();
-    }
-  };
+  const { step, methods, canNext, handleButtonClick, handleBack, TOTAL_STEPS } = useCreatePetForm();
 
   return (
     <>
@@ -70,7 +16,7 @@ export function CreatePetForm() {
       <header className="flex items-center px-5 pt-12 pb-4">
         {step > 1 && (
           <button
-            onClick={() => setStep(s => s - 1)}
+            onClick={handleBack}
             className="text-muted-foreground transition-colors hover:text-foreground"
           >
             <ChevronLeft size={24} />
@@ -92,7 +38,7 @@ export function CreatePetForm() {
       </div>
 
       <FormProvider {...methods}>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-1 flex-col">
+        <form onSubmit={e => e.preventDefault()} className="flex flex-1 flex-col">
           <div className="flex flex-1 flex-col px-5">
             {step === 1 && <StepPetType />}
             {step === 2 && <StepBasicInfo />}
