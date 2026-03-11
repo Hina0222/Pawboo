@@ -19,10 +19,12 @@ export class AwsService {
   private readonly s3: S3Client;
   private readonly bucket: string;
   private readonly region: string;
+  private readonly cloudfrontUrl: string;
 
   constructor(private readonly configService: ConfigService) {
     this.region = this.configService.get<string>('AWS_REGION')!;
     this.bucket = this.configService.get<string>('AWS_S3_BUCKET')!;
+    this.cloudfrontUrl = this.configService.get<string>('AWS_CLOUDFRONT_URL')!;
     this.s3 = new S3Client({
       region: this.region,
       credentials: {
@@ -60,8 +62,7 @@ export class AwsService {
       this.logger.error('S3 업로드 실패', error);
       throw new InternalServerErrorException('이미지 업로드에 실패했습니다.');
     }
-
-    return `https://${this.bucket}.s3.${this.region}.amazonaws.com/${key}`;
+    return `${this.cloudfrontUrl}/${key}`;
   }
 
   async deleteImage(imageUrl: string): Promise<void> {
