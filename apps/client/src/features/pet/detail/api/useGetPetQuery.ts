@@ -3,7 +3,7 @@
 import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
-import { petQueryKeys } from '@/features/pet/create/model/pet.query-key';
+import { petQueryKeys } from '@/entities/pet/model/pet.query-key';
 import type { PetResponse } from '@bragram/schemas/pet';
 
 export const getPet = async (id: number): Promise<PetResponse> => {
