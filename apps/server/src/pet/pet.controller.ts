@@ -8,17 +8,15 @@ import {
   Body,
   ParseIntPipe,
   UseGuards,
-  UseInterceptors,
   UploadedFile,
   BadRequestException,
   HttpCode,
   HttpStatus,
   Req,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { memoryStorage } from 'multer';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PetService } from './pet.service';
+import { ImageUpload } from '../common/decorators/image-upload.decorator';
 import {
   CreatePetSchema,
   UpdatePetSchema,
@@ -29,33 +27,13 @@ interface AuthenticatedRequest extends Request {
   user: { id: number; kakaoId: string };
 }
 
-const imageUploadOptions = {
-  storage: memoryStorage(),
-  fileFilter: (
-    _req: Express.Request,
-    file: Express.Multer.File,
-    cb: (error: Error | null, acceptFile: boolean) => void,
-  ) => {
-    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
-    if (allowed.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(
-        new BadRequestException('JPEG, PNG, WEBP 이미지만 업로드 가능합니다.'),
-        false,
-      );
-    }
-  },
-  limits: { fileSize: 10 * 1024 * 1024 },
-};
-
 @UseGuards(JwtAuthGuard)
 @Controller('pets')
 export class PetController {
   constructor(private readonly petService: PetService) {}
 
   @Post()
-  @UseInterceptors(FileInterceptor('image', imageUploadOptions))
+  @ImageUpload()
   async create(
     @Req() req: AuthenticatedRequest,
     @Body() body: Record<string, string>,
@@ -83,7 +61,7 @@ export class PetController {
   }
 
   @Patch(':id')
-  @UseInterceptors(FileInterceptor('image', imageUploadOptions))
+  @ImageUpload()
   async update(
     @Req() req: AuthenticatedRequest,
     @Param('id', ParseIntPipe) id: number,

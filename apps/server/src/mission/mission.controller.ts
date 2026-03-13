@@ -8,17 +8,15 @@ import {
   Query,
   ParseIntPipe,
   UseGuards,
-  UseInterceptors,
   UploadedFile,
   BadRequestException,
   HttpCode,
   HttpStatus,
   Req,
 } from '@nestjs/common';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { memoryStorage } from 'multer';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { MissionService } from './mission.service';
+import { ImageUpload } from '../common/decorators/image-upload.decorator';
 import {
   CreateSubmissionSchema,
   SubmissionHistoryQuerySchema,
@@ -29,26 +27,6 @@ import {
 interface AuthenticatedRequest extends Request {
   user: { id: number; kakaoId: string };
 }
-
-const imageUploadOptions = {
-  storage: memoryStorage(),
-  fileFilter: (
-    _req: Express.Request,
-    file: Express.Multer.File,
-    cb: (error: Error | null, acceptFile: boolean) => void,
-  ) => {
-    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
-    if (allowed.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(
-        new BadRequestException('JPEG, PNG, WEBP 이미지만 업로드 가능합니다.'),
-        false,
-      );
-    }
-  },
-  limits: { fileSize: 10 * 1024 * 1024 },
-};
 
 @UseGuards(JwtAuthGuard)
 @Controller('missions')
@@ -73,7 +51,7 @@ export class MissionController {
   }
 
   @Post(':missionId/submissions')
-  @UseInterceptors(FileInterceptor('image', imageUploadOptions))
+  @ImageUpload()
   async submit(
     @Req() req: AuthenticatedRequest,
     @Param('missionId', ParseIntPipe) missionId: number,
