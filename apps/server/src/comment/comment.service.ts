@@ -36,6 +36,7 @@ export class CommentService {
         id: comments.id,
         content: comments.content,
         createdAt: comments.createdAt,
+        authorId: users.id,
         authorNickname: users.nickname,
         authorProfileImage: users.profileImage,
       })
@@ -53,6 +54,7 @@ export class CommentService {
       content: r.content,
       createdAt: r.createdAt.toISOString(),
       author: {
+        id: r.authorId,
         nickname: r.authorNickname,
         profileImage: r.authorProfileImage ?? null,
       },
@@ -80,7 +82,11 @@ export class CommentService {
     }
 
     const [user] = await this.db
-      .select({ nickname: users.nickname, profileImage: users.profileImage })
+      .select({
+        nickname: users.nickname,
+        profileImage: users.profileImage,
+        id: users.id,
+      })
       .from(users)
       .where(eq(users.id, userId));
 
@@ -103,6 +109,7 @@ export class CommentService {
       content: result.content,
       createdAt: result.createdAt.toISOString(),
       author: {
+        id: user.id,
         nickname: user.nickname,
         profileImage: user.profileImage ?? null,
       },
