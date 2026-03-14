@@ -44,4 +44,14 @@ export const API_ROUTES = {
       METHOD: 'DELETE',
     },
   },
+  FEEDS: {
+    ADD_LIKE: {
+      URL: (submissionId: number) => `/feeds/${submissionId}/likes`,
+      METHOD: 'POST',
+    },
+    REMOVE_LIKE: {
+      URL: (submissionId: number) => `/feeds/${submissionId}/likes`,
+      METHOD: 'DELETE',
+    },
+  },
 } as const;
