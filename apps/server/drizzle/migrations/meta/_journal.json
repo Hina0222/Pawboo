@@ -15,6 +15,13 @@
       "when": 1773393519224,
       "tag": "0001_milky_living_lightning",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1773487645333,
+      "tag": "0002_gifted_rachel_grey",
+      "breakpoints": true
     }
   ]
 }

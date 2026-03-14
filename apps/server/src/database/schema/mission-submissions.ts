@@ -23,6 +23,8 @@ export const missionSubmissions = pgTable(
     imageUrl: varchar('image_url', { length: 500 }).notNull(),
     comment: varchar('comment', { length: 150 }),
     hashtags: jsonb('hashtags').$type<string[]>(),
+    likeCount: integer('like_count').default(0).notNull(),
+    commentCount: integer('comment_count').default(0).notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
