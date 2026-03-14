@@ -16,6 +16,7 @@ import type {
   SubmissionHistoryQuery,
   MissionResponse,
   SubmissionResponse,
+  SubmissionHistoryResponse,
   TodayMissionResponse,
 } from '@bragram/schemas/mission';
 
@@ -192,10 +193,10 @@ export class MissionService {
   async findHistory(
     userId: number,
     query: SubmissionHistoryQuery,
-  ): Promise<SubmissionResponse[]> {
+  ): Promise<SubmissionHistoryResponse> {
     const activePet = await this.getActivePet(userId);
     if (!activePet) {
-      return [];
+      return { data: [], hasNext: false, cursor: null };
     }
 
     const conditions = [eq(missionSubmissions.petId, activePet.id)];
@@ -208,8 +209,15 @@ export class MissionService {
       .from(missionSubmissions)
       .where(and(...conditions))
       .orderBy(desc(missionSubmissions.createdAt))
-      .limit(query.limit);
+      .limit(query.limit + 1);
 
-    return rows as SubmissionResponse[];
+    const hasNext = rows.length > query.limit;
+    const data = hasNext ? rows.slice(0, query.limit) : rows;
+
+    return {
+      data: data as SubmissionResponse[],
+      hasNext,
+      cursor: hasNext ? data[data.length - 1].id : null,
+    };
   }
 }

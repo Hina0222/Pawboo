@@ -51,8 +51,15 @@ export const TodayMissionResponseSchema = z.object({
   submission: SubmissionResponseSchema.nullable(),
 });
 
+export const SubmissionHistoryResponseSchema = z.object({
+  data: z.array(SubmissionResponseSchema),
+  hasNext: z.boolean(),
+  cursor: z.number().nullable(),
+});
+
 export type CreateSubmissionRequest = z.infer<typeof CreateSubmissionSchema>;
 export type SubmissionHistoryQuery = z.infer<typeof SubmissionHistoryQuerySchema>;
 export type MissionResponse = z.infer<typeof MissionResponseSchema>;
 export type SubmissionResponse = z.infer<typeof SubmissionResponseSchema>;
 export type TodayMissionResponse = z.infer<typeof TodayMissionResponseSchema>;
+export type SubmissionHistoryResponse = z.infer<typeof SubmissionHistoryResponseSchema>;

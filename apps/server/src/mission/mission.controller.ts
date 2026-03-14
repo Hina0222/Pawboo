@@ -21,6 +21,7 @@ import type { AuthenticatedRequest } from '../common/types/authenticated-request
 import {
   CreateSubmissionSchema,
   SubmissionHistoryQuerySchema,
+  type SubmissionHistoryResponse,
   type SubmissionResponse,
   type TodayMissionResponse,
 } from '@bragram/schemas/mission';
@@ -39,7 +40,7 @@ export class MissionController {
   async findHistory(
     @Req() req: AuthenticatedRequest,
     @Query() query: Record<string, string>,
-  ): Promise<SubmissionResponse[]> {
+  ): Promise<SubmissionHistoryResponse> {
     const parsed = SubmissionHistoryQuerySchema.safeParse(query);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
