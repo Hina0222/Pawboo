@@ -97,4 +97,53 @@ export class FeedService {
       cursor: hasNext && lastItem ? lastItem.id : null,
     };
   }
+
+  async findOneFeed(userId: number, submissionId: number): Promise<FeedItem> {
+    const rows = await this.db
+      .select({
+        id: missionSubmissions.id,
+        imageUrl: missionSubmissions.imageUrl,
+        hashtags: missionSubmissions.hashtags,
+        createdAt: missionSubmissions.createdAt,
+        likeCount: missionSubmissions.likeCount,
+        commentCount: missionSubmissions.commentCount,
+        petId: pets.id,
+        petName: pets.name,
+        petImageUrl: pets.imageUrl,
+        ownerNickname: users.nickname,
+        missionTitle: missions.title,
+      })
+      .from(missionSubmissions)
+      .innerJoin(pets, eq(missionSubmissions.petId, pets.id))
+      .innerJoin(users, eq(pets.userId, users.id))
+      .innerJoin(missions, eq(missionSubmissions.missionId, missions.id))
+      .where(eq(missionSubmissions.id, submissionId))
+      .limit(1);
+
+    if (rows.length === 0) {
+      throw new Error(`Feed item ${submissionId} not found`);
+    }
+
+    const r = rows[0];
+
+    const likedRows = await this.db
+      .select({ submissionId: likes.submissionId })
+      .from(likes)
+      .where(
+        and(eq(likes.userId, userId), eq(likes.submissionId, submissionId)),
+      );
+
+    return {
+      id: r.id,
+      imageUrl: r.imageUrl,
+      hashtags: r.hashtags ?? null,
+      createdAt: r.createdAt.toISOString(),
+      pet: { id: r.petId, name: r.petName, imageUrl: r.petImageUrl ?? null },
+      owner: { nickname: r.ownerNickname },
+      missionTitle: r.missionTitle,
+      likeCount: r.likeCount,
+      commentCount: r.commentCount,
+      isLiked: likedRows.length > 0,
+    };
+  }
 }

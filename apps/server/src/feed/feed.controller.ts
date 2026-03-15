@@ -1,6 +1,7 @@
 import {
   Controller,
   Get,
+  Param,
   Query,
   UseGuards,
   Req,
@@ -8,7 +9,11 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { FeedService } from './feed.service';
-import { FeedQuerySchema, type FeedListResponse } from '@bragram/schemas/feed';
+import {
+  FeedQuerySchema,
+  type FeedItem,
+  type FeedListResponse,
+} from '@bragram/schemas/feed';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.type';
 
 @UseGuards(JwtAuthGuard)
@@ -26,5 +31,13 @@ export class FeedController {
       throw new BadRequestException(parsed.error.issues);
     }
     return this.feedService.findFeed(req.user.id, parsed.data);
+  }
+
+  @Get(':id')
+  findOneFeed(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: string,
+  ): Promise<FeedItem> {
+    return this.feedService.findOneFeed(req.user.id, +id);
   }
 }
