@@ -10,6 +10,7 @@ import { MissionModule } from './mission/mission.module';
 import { FeedModule } from './feed/feed.module';
 import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
+import { RankingModule } from './ranking/ranking.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { CommentModule } from './comment/comment.module';
     FeedModule,
     LikeModule,
     CommentModule,
+    RankingModule,
   ],
   controllers: [AppController],
   providers: [AppService],
