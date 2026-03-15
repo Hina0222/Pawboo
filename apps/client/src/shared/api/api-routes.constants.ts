@@ -75,4 +75,10 @@ export const API_ROUTES = {
       METHOD: 'DELETE',
     },
   },
+  RANKINGS: {
+    GET_RANKINGS: {
+      URL: '/rankings',
+      METHOD: 'GET',
+    },
+  },
 } as const;
