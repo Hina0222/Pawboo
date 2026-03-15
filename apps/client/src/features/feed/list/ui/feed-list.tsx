@@ -11,10 +11,9 @@ import type { FeedQuery } from '@bragram/schemas/feed';
 
 interface FeedListProps {
   sort?: FeedQuery['sort'];
-  onCommentClick?: (submissionId: number) => void;
 }
 
-function FeedList({ sort = 'latest', onCommentClick }: FeedListProps) {
+function FeedList({ sort = 'latest' }: FeedListProps) {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetFeedsSuspenseInfiniteQuery(sort);
 
@@ -39,7 +38,7 @@ function FeedList({ sort = 'latest', onCommentClick }: FeedListProps) {
   return (
     <div className="flex flex-col gap-4 pt-4">
       {feeds.map(item => (
-        <FeedItem key={item.id} item={item} onCommentClick={onCommentClick} />
+        <FeedItem key={item.id} item={item} />
       ))}
       <div ref={ref} className="flex justify-center py-4">
         {isFetchingNextPage && <p className="text-xs text-muted-foreground">불러오는 중...</p>}

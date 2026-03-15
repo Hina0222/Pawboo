@@ -26,6 +26,7 @@ export function CommentItem({ comment, submissionId }: CommentItemProps) {
             src={comment.author.profileImage}
             alt={comment.author.nickname}
             fill
+            sizes="(max-width: 768px) 100vw, 50vw"
             className="object-cover"
           />
         ) : (

@@ -1,16 +1,19 @@
 'use client';
 
 import Image from 'next/image';
-import Link from 'next/link';
-import { MessageCircle, ImageOff } from 'lucide-react';
+import { ImageOff } from 'lucide-react';
+import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { LikeButton } from '@/features/like/ui';
-import type { FeedItem as FeedItemType } from '@bragram/schemas/feed';
+import { FeedDetailSkeleton, FeedDetailError } from '@/features/feed/detail/ui';
+import { useGetFeedSuspenseQuery } from '@/features/feed/detail/api/useGetFeedQuery';
 
-interface FeedItemProps {
-  item: FeedItemType;
+interface FeedDetailProps {
+  id: number;
 }
 
-export function FeedItem({ item }: FeedItemProps) {
+function FeedDetail({ id }: FeedDetailProps) {
+  const { data: item } = useGetFeedSuspenseQuery(id);
+
   return (
     <article className="flex flex-col gap-3 border-b border-border pb-4">
       {/* 작성자 정보 */}
@@ -44,10 +47,10 @@ export function FeedItem({ item }: FeedItemProps) {
         <Image
           src={item.imageUrl}
           alt={`${item.pet.name}의 미션 사진`}
+          className="object-cover"
           fill
           sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover"
-          priority={false}
+          priority
         />
       </div>
 
@@ -63,21 +66,16 @@ export function FeedItem({ item }: FeedItemProps) {
         ))}
       </div>
 
-      {/* 좋아요 / 댓글 */}
+      {/* 좋아요 */}
       <div className="flex items-center gap-1 px-4">
         <LikeButton
           submissionId={item.id}
           initialLikeCount={item.likeCount}
           initialIsLiked={item.isLiked}
         />
-        <Link
-          href={`/feed/${item.id}`}
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent"
-        >
-          <MessageCircle size={16} />
-          <span>{item.commentCount}</span>
-        </Link>
       </div>
     </article>
   );
 }
+
+export default withErrorBoundary(withSuspense(FeedDetail, <FeedDetailSkeleton />), FeedDetailError);

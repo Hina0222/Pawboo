@@ -18,15 +18,20 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="ko">
       <body className={`${pretendard.className} dark antialiased`}>
         <div className="mx-auto flex h-full min-h-dvh max-w-[390px] flex-col">
           <QueryProvider>
-            <AuthInitializer>{children}</AuthInitializer>
+            <AuthInitializer>
+              {children}
+              {modal}
+            </AuthInitializer>
           </QueryProvider>
         </div>
         <Toaster position="top-center" />

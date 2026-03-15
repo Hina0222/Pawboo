@@ -45,6 +45,10 @@ export const API_ROUTES = {
     },
   },
   FEEDS: {
+    GET_FEED: {
+      URL: (id: number) => `/feeds/${id}`,
+      METHOD: 'GET',
+    },
     GET_FEEDS: {
       URL: '/feeds',
       METHOD: 'GET',
