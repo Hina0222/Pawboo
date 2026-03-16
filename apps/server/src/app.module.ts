@@ -11,6 +11,7 @@ import { FeedModule } from './feed/feed.module';
 import { LikeModule } from './like/like.module';
 import { CommentModule } from './comment/comment.module';
 import { RankingModule } from './ranking/ranking.module';
+import { FollowModule } from './follow/follow.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { RankingModule } from './ranking/ranking.module';
     LikeModule,
     CommentModule,
     RankingModule,
+    FollowModule,
   ],
   controllers: [AppController],
   providers: [AppService],
