@@ -81,4 +81,26 @@ export const API_ROUTES = {
       METHOD: 'GET',
     },
   },
+  USERS: {
+    SEARCH: {
+      URL: '/users/search',
+      METHOD: 'GET',
+    },
+    GET_PROFILE: {
+      URL: (id: number) => `/users/${id}`,
+      METHOD: 'GET',
+    },
+    GET_USER_FEEDS: {
+      URL: (id: number) => `/users/${id}/feeds`,
+      METHOD: 'GET',
+    },
+    FOLLOW: {
+      URL: (id: number) => `/users/${id}/follow`,
+      METHOD: 'POST',
+    },
+    UNFOLLOW: {
+      URL: (id: number) => `/users/${id}/follow`,
+      METHOD: 'DELETE',
+    },
+  },
 } as const;
