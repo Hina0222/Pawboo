@@ -20,7 +20,7 @@ import {
   UserSearchQuerySchema,
   type UserSearchResponse,
   type UserProfileResponse,
-} from '@bragram/schemas/follow';
+} from '@bragram/schemas/user';
 import type { FeedListResponse } from '@bragram/schemas/feed';
 
 @UseGuards(JwtAuthGuard)

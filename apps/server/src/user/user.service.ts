@@ -21,7 +21,7 @@ import type {
   UserSearchQuery,
   UserSearchResponse,
   UserProfileResponse,
-} from '@bragram/schemas/follow';
+} from '@bragram/schemas/user';
 import type { FeedItem, FeedListResponse } from '@bragram/schemas/feed';
 
 interface KakaoProfile {
