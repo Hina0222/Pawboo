@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { LikeButton } from '@/features/like/ui';
 import { FeedAuthor } from '@/features/feed/ui';
@@ -22,13 +21,10 @@ function FeedDetail({ id }: FeedDetailProps) {
 
       {/* 이미지 */}
       <div className="relative aspect-square w-full bg-muted">
-        <Image
+        <img
           src={item.imageUrl}
           alt={`${item.pet.name}의 미션 사진`}
-          className="object-cover"
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          priority
+          className="absolute inset-0 h-full w-full object-cover"
         />
       </div>
 

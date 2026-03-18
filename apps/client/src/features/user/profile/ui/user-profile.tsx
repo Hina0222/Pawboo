@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { FollowButton } from '@/features/follow/toggle/ui';
 import { useGetUserProfileSuspenseQuery } from '../api/useGetUserProfileQuery';
@@ -20,11 +19,10 @@ function UserProfile({ userId }: UserProfileProps) {
         {/* 아바타 */}
         <div className="relative flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[oklch(0.72_0.18_42/40%)] bg-[oklch(0.268_0.007_34.298)] text-4xl">
           {profile.profileImage ? (
-            <Image
+            <img
               src={profile.profileImage}
               alt={profile.nickname}
-              fill
-              className="object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
             />
           ) : (
             '🐾'

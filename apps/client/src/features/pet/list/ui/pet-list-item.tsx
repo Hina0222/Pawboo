@@ -3,7 +3,6 @@
 import React from 'react';
 import type { PetResponse } from '@bragram/schemas/pet';
 import Link from 'next/link';
-import Image from 'next/image';
 
 const PET_EMOJI: Record<string, string> = {
   dog: '🐶',
@@ -22,7 +21,11 @@ function PetListItem({ pet, href }: PetListItemProps) {
         <div className="flex flex-shrink-0 flex-col items-center gap-1.5">
           <div className="relative flex h-16 w-16 items-center justify-center overflow-hidden rounded-full border-2 border-[oklch(0.72_0.18_42/50%)] bg-card text-2xl">
             {pet.imageUrl ? (
-              <Image src={pet.imageUrl} alt={pet.name} fill className="object-cover" />
+              <img
+                src={pet.imageUrl}
+                alt={pet.name}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
             ) : (
               (PET_EMOJI[pet.type] ?? '🐾')
             )}

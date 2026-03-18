@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import type { RankingItem } from '@bragram/schemas/ranking';
 
 const PET_EMOJI: Record<string, string> = {
@@ -20,7 +19,11 @@ export function RankingListItem({ item }: RankingItemProps) {
       {/* 펫 이미지 */}
       <div className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-full bg-[oklch(0.268_0.007_34.298)] text-xl">
         {item.petImageUrl ? (
-          <Image src={item.petImageUrl} alt={item.petName} fill className="object-cover" />
+          <img
+            src={item.petImageUrl}
+            alt={item.petName}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
         ) : (
           petEmoji
         )}
@@ -33,11 +36,10 @@ export function RankingListItem({ item }: RankingItemProps) {
           <div className="flex items-center gap-1">
             {item.ownerProfileImage && (
               <div className="relative h-3.5 w-3.5 overflow-hidden rounded-full">
-                <Image
+                <img
                   src={item.ownerProfileImage}
                   alt={item.ownerNickname}
-                  fill
-                  className="object-cover"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>
             )}

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useInView } from 'react-intersection-observer';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
@@ -46,7 +45,11 @@ function UserSearchList({ query }: UserSearchListProps) {
         >
           <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border border-border bg-card text-lg">
             {user.profileImage ? (
-              <Image src={user.profileImage} alt={user.nickname} fill className="object-cover" />
+              <img
+                src={user.profileImage}
+                alt={user.nickname}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
             ) : (
               '🐾'
             )}

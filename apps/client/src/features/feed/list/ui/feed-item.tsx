@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
 import { LikeButton } from '@/features/like/ui';
@@ -20,13 +19,10 @@ export function FeedItem({ item }: FeedItemProps) {
 
       {/* 이미지 */}
       <div className="relative aspect-square w-full bg-muted">
-        <Image
+        <img
           src={item.imageUrl}
           alt={`${item.pet.name}의 미션 사진`}
-          fill
-          sizes="(max-width: 768px) 100vw, 50vw"
-          className="object-cover"
-          priority={false}
+          className="h-full w-full object-cover"
         />
       </div>
 

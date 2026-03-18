@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { CheckCircle2, ImageOff, Star } from 'lucide-react';
 import { Button } from '@/shared/ui';
 import { useGetTodayMissionSuspenseQuery } from '@/features/mission/today/api/useGetTodayMissionQuery';
@@ -27,11 +26,10 @@ function MissionCard() {
     <div className="overflow-hidden rounded-2xl border border-border bg-card">
       {mission.exampleImageUrl && (
         <div className="relative h-52 w-full">
-          <Image
+          <img
             src={mission.exampleImageUrl}
             alt="미션 예시 이미지"
-            fill
-            className="object-cover"
+            className="absolute inset-0 h-full w-full object-cover"
           />
           {isDone && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/40">

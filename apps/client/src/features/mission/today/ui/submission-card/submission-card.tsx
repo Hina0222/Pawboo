@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { Trash2 } from 'lucide-react';
 import { useGetTodayMissionSuspenseQuery } from '@/features/mission/today/api/useGetTodayMissionQuery';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
@@ -31,14 +30,7 @@ function SubmissionCard() {
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-card">
       <div className="w-full">
-        <Image
-          src={submission.imageUrl}
-          alt="제출 사진"
-          width={400}
-          height={400}
-          priority
-          className="object-cover"
-        />
+        <img src={submission.imageUrl} alt="제출 사진" className="w-full object-cover" />
       </div>
       <div className="flex flex-col gap-2 p-4">
         {submission.comment && <p className="text-sm text-foreground">{submission.comment}</p>}

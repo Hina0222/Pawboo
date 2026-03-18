@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import Image from 'next/image';
 import { Medal, Trophy } from 'lucide-react';
 import { useInView } from 'react-intersection-observer';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
@@ -50,7 +49,11 @@ function PodiumItem({ item, grad, height, medal, isFirst = false }: PodiumItemPr
         )}
       >
         {item.petImageUrl ? (
-          <Image src={item.petImageUrl} alt={item.petName} fill className="object-cover" />
+          <img
+            src={item.petImageUrl}
+            alt={item.petName}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
         ) : (
           petEmoji
         )}

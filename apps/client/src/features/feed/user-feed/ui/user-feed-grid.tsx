@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import Image from 'next/image';
 import { useInView } from 'react-intersection-observer';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { useGetUserFeedsSuspenseInfiniteQuery } from '../api/useGetUserFeedsInfiniteQuery';
@@ -41,7 +40,11 @@ function UserFeedGrid({ userId }: UserFeedGridProps) {
         {feeds.map(item => (
           <Link key={item.id} href={`/feed/${item.id}`}>
             <div className="relative aspect-square overflow-hidden bg-card">
-              <Image src={item.imageUrl} alt={item.pet.name} fill className="object-cover" />
+              <img
+                src={item.imageUrl}
+                alt={item.pet.name}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
             </div>
           </Link>
         ))}

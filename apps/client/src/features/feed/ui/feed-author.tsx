@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { ImageOff } from 'lucide-react';
 import type { FeedItem } from '@bragram/schemas/feed';
 import Link from 'next/link';
@@ -11,12 +10,10 @@ export function FeedAuthor({ pet, owner, createdAt }: FeedAuthorProps) {
       <Link href={`/community/user/${owner.id}`} className="flex items-center gap-2">
         <div className="relative size-8 shrink-0 overflow-hidden rounded-full bg-muted">
           {pet.imageUrl ? (
-            <Image
+            <img
               src={pet.imageUrl}
               alt={pet.name}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">

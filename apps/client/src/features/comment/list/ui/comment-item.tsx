@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { ImageOff, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui';
 import { useAuthStore } from '@/shared/store/auth-store';
@@ -24,12 +23,10 @@ export function CommentItem({ comment, submissionId }: CommentItemProps) {
       <Link href={`/community/user/${comment.author.id}`} className="size-fit">
         <div className="relative size-7 overflow-hidden rounded-full bg-muted">
           {comment.author.profileImage ? (
-            <Image
+            <img
               src={comment.author.profileImage}
               alt={comment.author.nickname}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
+              className="absolute inset-0 h-full w-full object-cover"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">

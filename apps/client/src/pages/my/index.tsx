@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import { BottomNav } from '@/widgets/bottom-nav';
@@ -32,7 +31,11 @@ export default function MyPage() {
           {/* 아바타 */}
           <div className="relative flex h-20 w-20 flex-shrink-0 items-center justify-center overflow-hidden rounded-full border-2 border-[oklch(0.72_0.18_42/40%)] bg-[oklch(0.268_0.007_34.298)] text-4xl">
             {user?.profileImage ? (
-              <Image src={user.profileImage} alt={displayName} fill className="object-cover" />
+              <img
+                src={user.profileImage}
+                alt={displayName}
+                className="absolute inset-0 h-full w-full object-cover"
+              />
             ) : (
               '🐾'
             )}

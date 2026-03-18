@@ -1,5 +1,4 @@
 import {z} from "zod";
-import { PetTypeSchema } from '../pet';
 
 export const MeResponseSchema = z.object({
   id: z.number(),
@@ -25,7 +24,7 @@ export const UserProfileResponseSchema = z.object({
       id: z.number(),
       name: z.string(),
       imageUrl: z.string().nullable(),
-      type: PetTypeSchema,
+      type: z.enum(['cat', 'dog']),
       isActive: z.boolean(),
     }),
   ),

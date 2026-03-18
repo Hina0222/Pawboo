@@ -3,7 +3,6 @@
 import { useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { Camera } from 'lucide-react';
-import Image from 'next/image';
 import { useUpdatePetForm } from '@/features/pet/edit/hooks/useUpdatePetForm';
 import { useGetPetQuery } from '@/features/pet/detail/api/useGetPetQuery';
 import { Button } from '@/shared/ui/button';
@@ -50,13 +49,7 @@ function EditPetForm({ id, onSuccess, onCancel }: EditPetFormProps) {
           className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-brand/50 bg-card transition-colors hover:border-brand"
         >
           {previewUrl ? (
-            <Image
-              src={previewUrl}
-              alt="펫 사진"
-              className="h-full w-full object-cover"
-              width={96}
-              height={96}
-            />
+            <img src={previewUrl} alt="펫 사진" className="h-full w-full object-cover" />
           ) : (
             <div className="flex flex-col items-center gap-1 text-muted-foreground">
               <Camera size={24} />

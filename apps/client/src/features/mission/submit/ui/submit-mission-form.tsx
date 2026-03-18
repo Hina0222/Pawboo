@@ -3,7 +3,6 @@
 import { useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { Camera, ImagePlus, X } from 'lucide-react';
-import Image from 'next/image';
 import { Button } from '@/shared/ui/button';
 import { useSubmitMissionForm } from '@/features/mission/submit/hooks/useSubmitMissionForm';
 
@@ -67,7 +66,11 @@ export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
           className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[oklch(0.72_0.18_42/50%)] bg-card transition-colors hover:border-[oklch(0.72_0.18_42)]"
         >
           {previewUrl ? (
-            <Image src={previewUrl} alt="인증 사진" fill className="object-cover" />
+            <img
+              src={previewUrl}
+              alt="인증 사진"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           ) : (
             <div className="flex flex-col items-center gap-3 text-muted-foreground">
               <ImagePlus size={40} />

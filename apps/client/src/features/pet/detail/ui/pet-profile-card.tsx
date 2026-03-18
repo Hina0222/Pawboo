@@ -3,7 +3,6 @@
 import { Pencil, Star, X } from 'lucide-react';
 import { useGetPetSuspenseQuery } from '@/features/pet/detail/api/useGetPetQuery';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
-import Image from 'next/image';
 import { PetProfileCardError, PetProfileCardSkeleton } from '@/features/pet/detail/ui';
 
 const PET_TYPE_LABEL = { dog: '강아지', cat: '고양이' } as const;
@@ -21,13 +20,7 @@ function PetProfileCard({ id, isEditing, onToggle }: PetProfileCardProps) {
     <section className="mx-5 mb-6 flex items-center gap-4 rounded-2xl border border-border bg-card p-5">
       <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-[oklch(0.268_0.007_34.298)] text-3xl">
         {pet.imageUrl ? (
-          <Image
-            src={pet.imageUrl}
-            alt={pet.name}
-            className="h-full w-full object-cover"
-            width={140}
-            height={140}
-          />
+          <img src={pet.imageUrl} alt={pet.name} className="h-full w-full object-cover" />
         ) : pet.type === 'dog' ? (
           '🐶'
         ) : (
