@@ -16,7 +16,7 @@ export const submitMission = async ({
   values: SubmitMissionFormValues;
 }): Promise<SubmissionResponse> => {
   const formData = new FormData();
-  formData.append('image', values.image);
+  values.images.forEach(file => formData.append('images', file));
   if (values.comment) formData.append('comment', values.comment);
   if (values.hashtags) formData.append('hashtags', JSON.stringify(values.hashtags));
 

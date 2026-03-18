@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
-import { Camera, ImagePlus, X } from 'lucide-react';
+import { ImagePlus, X } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { useSubmitMissionForm } from '@/features/mission/submit/hooks/useSubmitMissionForm';
 
@@ -21,17 +21,30 @@ export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
   } = methods;
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [hashtagInput, setHashtagInput] = useState('');
 
   const hashtags = watch('hashtags') ?? [];
+  const images = watch('images') ?? [];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
-    setPreviewUrl(URL.createObjectURL(file));
-    setValue('image', file, { shouldValidate: true });
+    const files = Array.from(e.target.files ?? []);
+    if (files.length === 0) return;
+    const remaining = 5 - images.length;
+    const added = files.slice(0, remaining);
+    previewUrls.forEach(url => URL.revokeObjectURL(url));
+    const newFiles = [...images, ...added];
+    setPreviewUrls(newFiles.map(f => URL.createObjectURL(f)));
+    setValue('images', newFiles, { shouldValidate: true });
+    e.target.value = '';
+  };
+
+  const removeImage = (index: number) => {
+    URL.revokeObjectURL(previewUrls[index]);
+    const newFiles = images.filter((_, i) => i !== index);
+    const newUrls = previewUrls.filter((_, i) => i !== index);
+    setPreviewUrls(newUrls);
+    setValue('images', newFiles, { shouldValidate: true });
   };
 
   const addHashtag = (value: string) => {
@@ -59,42 +72,38 @@ export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
 
   return (
     <form onSubmit={onSubmit(missionId)} className="flex flex-1 flex-col gap-5 px-5">
-      <FormField label="인증 사진" required error={errors.image?.message as string | undefined}>
-        <button
-          type="button"
-          onClick={() => fileInputRef.current?.click()}
-          className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-[oklch(0.72_0.18_42/50%)] bg-card transition-colors hover:border-[oklch(0.72_0.18_42)]"
-        >
-          {previewUrl ? (
-            <img
-              src={previewUrl}
-              alt="인증 사진"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-          ) : (
-            <div className="flex flex-col items-center gap-3 text-muted-foreground">
-              <ImagePlus size={40} />
-              <div className="text-center">
-                <p className="text-sm font-medium">사진을 추가해주세요</p>
-                <p className="mt-0.5 text-xs">탭하여 갤러리에서 선택</p>
-              </div>
+      <FormField label="인증 사진" required error={errors.images?.message as string | undefined}>
+        <div className="grid grid-cols-3 gap-2">
+          {previewUrls.map((url, i) => (
+            <div key={i} className="relative aspect-square overflow-hidden rounded-xl bg-card">
+              <img src={url} alt={`인증 사진 ${i + 1}`} className="h-full w-full object-cover" />
+              <button
+                type="button"
+                onClick={() => removeImage(i)}
+                className="absolute top-1 right-1 flex size-5 items-center justify-center rounded-full bg-black/60 text-white"
+              >
+                <X size={12} />
+              </button>
             </div>
+          ))}
+          {images.length < 5 && (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex aspect-square items-center justify-center rounded-xl border-2 border-dashed border-[oklch(0.72_0.18_42/50%)] bg-card transition-colors hover:border-[oklch(0.72_0.18_42)]"
+            >
+              <div className="flex flex-col items-center gap-1 text-muted-foreground">
+                <ImagePlus size={24} />
+                <span className="text-xs">{images.length}/5</span>
+              </div>
+            </button>
           )}
-        </button>
-        {previewUrl && (
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="mt-2 flex w-full items-center justify-center gap-1.5 rounded-xl border border-border py-2.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <Camera size={14} />
-            사진 변경
-          </button>
-        )}
+        </div>
         <input
           ref={fileInputRef}
           type="file"
           accept="image/*"
+          multiple
           className="hidden"
           onChange={handleFileChange}
         />

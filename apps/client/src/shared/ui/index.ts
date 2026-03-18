@@ -14,3 +14,11 @@ export {
   DialogTitle,
   DialogTrigger,
 } from './dialog';
+export { Badge, badgeVariants } from './badge';
+export {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from './carousel';

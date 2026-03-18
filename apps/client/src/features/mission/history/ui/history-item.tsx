@@ -15,7 +15,7 @@ function HistoryItem({ submission }: HistoryItemProps) {
     <div className="flex gap-3 py-4">
       <div className="relative size-20 shrink-0 overflow-hidden rounded-lg">
         <img
-          src={submission.imageUrl}
+          src={submission.imageUrls[0]}
           alt="미션 제출 이미지"
           className="h-full w-full object-cover"
         />

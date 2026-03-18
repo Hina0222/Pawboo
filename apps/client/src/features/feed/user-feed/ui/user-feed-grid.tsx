@@ -41,7 +41,7 @@ function UserFeedGrid({ userId }: UserFeedGridProps) {
           <Link key={item.id} href={`/feed/${item.id}`}>
             <div className="relative aspect-square overflow-hidden bg-card">
               <img
-                src={item.imageUrl}
+                src={item.imageUrls[0]}
                 alt={item.pet.name}
                 className="absolute inset-0 h-full w-full object-cover"
               />

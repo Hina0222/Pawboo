@@ -8,6 +8,13 @@ import {
   SubmissionCardSkeleton,
 } from '@/features/mission/today/ui/submission-card';
 import { useDeleteSubmissionMutation } from '@/features/mission/delete/api/useDeleteSubmissionMutation';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/shared/ui';
 
 function SubmissionCard() {
   const { data } = useGetTodayMissionSuspenseQuery();
@@ -29,9 +36,21 @@ function SubmissionCard() {
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-card">
-      <div className="w-full">
-        <img src={submission.imageUrl} alt="제출 사진" className="w-full object-cover" />
-      </div>
+      <Carousel className="w-full">
+        <CarouselContent>
+          {submission.imageUrls.map((url, i) => (
+            <CarouselItem key={i}>
+              <img src={url} alt={`제출 사진 ${i + 1}`} className="w-full object-cover" />
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        {submission.imageUrls.length > 1 && (
+          <>
+            <CarouselPrevious className="left-2" />
+            <CarouselNext className="right-2" />
+          </>
+        )}
+      </Carousel>
       <div className="flex flex-col gap-2 p-4">
         {submission.comment && <p className="text-sm text-foreground">{submission.comment}</p>}
         {submission.hashtags && submission.hashtags.length > 0 && (
