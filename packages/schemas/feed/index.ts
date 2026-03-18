@@ -11,7 +11,7 @@ export const FeedItemSchema = z.object({
   hashtags: z.array(z.string()).nullable(),
   createdAt: z.string(),
   pet: z.object({id: z.number(), name: z.string(), imageUrl: z.string().nullable()}),
-  owner: z.object({nickname: z.string()}),
+  owner: z.object({id: z.number(), nickname: z.string()}),
   missionTitle: z.string(),
   likeCount: z.number(),
   commentCount: z.number(),

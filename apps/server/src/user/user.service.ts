@@ -197,6 +197,7 @@ export class UserService {
         petId: pets.id,
         petName: pets.name,
         petImageUrl: pets.imageUrl,
+        ownerId: users.id,
         ownerNickname: users.nickname,
         missionTitle: missions.title,
       })
@@ -237,7 +238,7 @@ export class UserService {
       hashtags: r.hashtags ?? null,
       createdAt: r.createdAt.toISOString(),
       pet: { id: r.petId, name: r.petName, imageUrl: r.petImageUrl ?? null },
-      owner: { nickname: r.ownerNickname },
+      owner: { id: r.ownerId, nickname: r.ownerNickname },
       missionTitle: r.missionTitle,
       likeCount: r.likeCount,
       commentCount: r.commentCount,
