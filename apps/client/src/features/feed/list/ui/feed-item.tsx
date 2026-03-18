@@ -2,8 +2,9 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { MessageCircle, ImageOff } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 import { LikeButton } from '@/features/like/ui';
+import { FeedAuthor } from '@/features/feed/ui';
 import type { FeedItem as FeedItemType } from '@bragram/schemas/feed';
 
 interface FeedItemProps {
@@ -14,30 +15,7 @@ export function FeedItem({ item }: FeedItemProps) {
   return (
     <article className="flex flex-col gap-3 border-b border-border pb-4">
       {/* 작성자 정보 */}
-      <div className="flex items-center gap-2 px-5">
-        <div className="relative size-8 shrink-0 overflow-hidden rounded-full bg-muted">
-          {item.pet.imageUrl ? (
-            <Image
-              src={item.pet.imageUrl}
-              alt={item.pet.name}
-              fill
-              sizes="(max-width: 768px) 100vw, 50vw"
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex h-full w-full items-center justify-center">
-              <ImageOff size={14} className="text-muted-foreground" />
-            </div>
-          )}
-        </div>
-        <div className="flex flex-col">
-          <span className="text-sm font-medium text-foreground">{item.pet.name}</span>
-          <span className="text-xs text-muted-foreground">{item.owner.nickname}</span>
-        </div>
-        <span className="ml-auto text-xs text-muted-foreground">
-          {new Date(item.createdAt).toLocaleDateString('ko-KR')}
-        </span>
-      </div>
+      <FeedAuthor pet={item.pet} owner={item.owner} createdAt={item.createdAt} />
 
       {/* 이미지 */}
       <div className="relative aspect-square w-full bg-muted">
