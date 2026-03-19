@@ -9,17 +9,17 @@ import { useAuthStore } from '@/shared/store/auth-store';
 const SECTIONS = [
   {
     title: '계정',
-    items: [{ icon: User, label: '프로필 편집', action: 'profile' }],
+    items: [{ icon: User, label: '프로필 편집', action: 'profile', href: '/my/settings/profile' }],
   },
   {
     title: '알림',
-    items: [{ icon: Bell, label: '알림 설정', action: 'notifications' }],
+    items: [{ icon: Bell, label: '알림 설정', action: 'notifications', href: '' }],
   },
   {
     title: '기타',
     items: [
-      { icon: Shield, label: '개인정보처리방침', action: 'privacy' },
-      { icon: HelpCircle, label: '고객센터', action: 'help' },
+      { icon: Shield, label: '개인정보처리방침', action: 'privacy', href: '' },
+      { icon: HelpCircle, label: '고객센터', action: 'help', href: '' },
     ],
   },
 ];
@@ -73,6 +73,7 @@ export default function MySettingsPage() {
               {section.items.map((item, idx) => (
                 <button
                   key={item.action}
+                  onClick={() => item.href && router.push(item.href)}
                   className={`flex w-full items-center gap-3 px-4 py-4 text-left transition-colors hover:bg-[oklch(0.268_0.007_34.298)] ${
                     idx < section.items.length - 1 ? 'border-b border-border' : ''
                   }`}
