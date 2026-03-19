@@ -14,7 +14,7 @@ const stepFields: Record<number, (keyof CreatePetFormValues)[]> = {
   2: ['name', 'breed', 'birthDate', 'bio'],
 };
 
-export function useCreatePetForm() {
+export function useCreatePetForm(redirectTo = '/') {
   const [step, setStep] = useState(1);
   const router = useRouter();
   const { mutate } = useCreatePetMutation();
@@ -45,7 +45,7 @@ export function useCreatePetForm() {
   const onSubmit = (data: CreatePetFormValues) => {
     mutate(data, {
       onSuccess: () => {
-        router.push('/');
+        router.push(redirectTo);
       },
     });
   };

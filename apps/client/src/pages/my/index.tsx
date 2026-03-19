@@ -67,7 +67,7 @@ export default function MyPage() {
         <h2 className="mb-3 text-sm font-semibold text-foreground">내 반려동물</h2>
         <div className="scrollbar-hide flex gap-4 overflow-x-auto pb-1">
           <MyPetList />
-          <Link href="" className="flex flex-shrink-0 flex-col items-center gap-1.5">
+          <Link href="/my/pets/new" className="flex flex-shrink-0 flex-col items-center gap-1.5">
             <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-dashed border-border bg-card text-muted-foreground transition-colors hover:border-[oklch(0.72_0.18_42/50%)]">
               <span className="text-xl">+</span>
             </div>

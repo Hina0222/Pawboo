@@ -7,8 +7,13 @@ import { FormProvider } from 'react-hook-form';
 import { Button } from '@/shared/ui';
 import { useCreatePetForm } from '@/features/pet/create/hooks/useCreatePetForm';
 
-export function CreatePetForm() {
-  const { step, methods, canNext, handleButtonClick, handleBack, TOTAL_STEPS } = useCreatePetForm();
+interface CreatePetFormProps {
+  redirectTo?: string;
+}
+
+export function CreatePetForm({ redirectTo }: CreatePetFormProps) {
+  const { step, methods, canNext, handleButtonClick, handleBack, TOTAL_STEPS } =
+    useCreatePetForm(redirectTo);
 
   return (
     <>
