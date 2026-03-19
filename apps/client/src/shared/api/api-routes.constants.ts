@@ -82,6 +82,10 @@ export const API_ROUTES = {
     },
   },
   USERS: {
+    UPDATE_ME: {
+      URL: '/users/me',
+      METHOD: 'PATCH',
+    },
     SEARCH: {
       URL: '/users/search',
       METHOD: 'GET',

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useCreatePetMutation } from '@/features/pet/create/api/useCreatePetMutation';
 import { CreatePetFormSchema, CreatePetFormValues } from '@/features/pet/create/model/schema';
 
@@ -15,6 +16,7 @@ const stepFields: Record<number, (keyof CreatePetFormValues)[]> = {
 
 export function useCreatePetForm() {
   const [step, setStep] = useState(1);
+  const router = useRouter();
   const { mutate } = useCreatePetMutation();
 
   const methods = useForm<CreatePetFormValues>({
@@ -41,7 +43,11 @@ export function useCreatePetForm() {
   };
 
   const onSubmit = (data: CreatePetFormValues) => {
-    mutate(data);
+    mutate(data, {
+      onSuccess: () => {
+        router.push('/');
+      },
+    });
   };
 
   const handleNext = async () => {

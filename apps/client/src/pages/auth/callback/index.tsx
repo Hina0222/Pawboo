@@ -15,7 +15,7 @@ export default function AuthCallbackPage() {
       .get<MeResponse>('/users/me')
       .then(user => {
         setAuth(user);
-        router.replace('/');
+        router.replace(user.nickname === null ? '/onboarding/profile' : '/');
       })
       .catch(() => {
         router.replace('/');
