@@ -3,8 +3,9 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
-import { eq, ilike, and, gt, lt, inArray, desc } from 'drizzle-orm';
+import { eq, ne, ilike, and, gt, lt, inArray, desc } from 'drizzle-orm';
 import type { DrizzleDB } from '../database/database.provider';
 import { DRIZZLE_ORM } from '../database/database.provider';
 import {
@@ -262,6 +263,17 @@ export class UserService {
 
     if (input.nickname === undefined && imageBuffer === undefined) {
       throw new BadRequestException('변경할 내용이 없습니다.');
+    }
+
+    if (input.nickname !== undefined) {
+      const existing = await this.db
+        .select({ id: users.id })
+        .from(users)
+        .where(and(eq(users.nickname, input.nickname), ne(users.id, userId)))
+        .limit(1);
+      if (existing.length > 0) {
+        throw new ConflictException('이미 사용 중인 닉네임입니다.');
+      }
     }
 
     let profileImage = user.profileImage;

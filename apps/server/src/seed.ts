@@ -187,7 +187,7 @@ async function seed() {
   console.log('👤 Inserting 100 users...');
   const userValues = Array.from({ length: 100 }, (_, i) => ({
     kakaoId: `test_kakao_${i + 5}`,
-    nickname: `${pick(SURNAMES, i)}${pick(GIVEN_NAMES, i * 3 + 1)}`,
+    nickname: `${pick(SURNAMES, i)}${pick(GIVEN_NAMES, i * 3 + 1)}${i + 1}`,
   }));
 
   await db.insert(users).values(userValues).onConflictDoNothing();
