@@ -6,7 +6,7 @@ type FeedAuthorProps = Pick<FeedItem, 'pet' | 'owner' | 'createdAt'>;
 
 export function FeedAuthor({ pet, owner, createdAt }: FeedAuthorProps) {
   return (
-    <div className="flex items-center px-5">
+    <div className="flex items-center p-4">
       <Link href={`/community/user/${owner.id}`} className="flex items-center gap-2">
         <div className="relative size-8 shrink-0 overflow-hidden rounded-full bg-muted">
           {pet.imageUrl ? (
@@ -22,7 +22,7 @@ export function FeedAuthor({ pet, owner, createdAt }: FeedAuthorProps) {
           )}
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-medium text-foreground hover:underline">
+          <span className="text-sm font-bold text-foreground hover:underline">
             {owner.nickname}
           </span>
           <span className="text-xs text-muted-foreground">{pet.name}</span>

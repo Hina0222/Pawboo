@@ -17,35 +17,27 @@ export function BottomNav() {
   const router = useRouter();
 
   return (
-    <nav className="fixed bottom-0 left-1/2 z-50 w-full max-w-[390px] -translate-x-1/2 border-t border-border bg-card">
-      <div className="flex h-16 items-center justify-around">
-        {tabs.map(({ href, icon: Icon, label }) => {
-          const active = pathname === href;
-          return (
-            <button
-              key={href}
-              onClick={() => router.push(href)}
-              className="flex flex-1 flex-col items-center gap-1 py-2"
+    <nav className="fixed bottom-0 left-1/2 z-50 flex h-20 w-full max-w-[390px] -translate-x-1/2 items-center justify-around rounded-t-3xl border-t border-primary/10 bg-card/95 px-4 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] backdrop-blur-md">
+      {tabs.map(({ href, icon: Icon, label }) => {
+        const active = pathname === href;
+        return (
+          <button
+            key={href}
+            onClick={() => router.push(href)}
+            className="flex flex-1 flex-col items-center gap-1 py-2 transition-colors duration-200"
+          >
+            <Icon size={22} className={cn(active ? 'text-primary' : 'text-muted-foreground')} />
+            <span
+              className={cn(
+                'text-[10px] font-medium',
+                active ? 'text-primary' : 'text-muted-foreground'
+              )}
             >
-              <Icon
-                size={22}
-                className={cn(
-                  'transition-colors',
-                  active ? 'text-[oklch(0.72_0.18_42)]' : 'text-muted-foreground'
-                )}
-              />
-              <span
-                className={cn(
-                  'text-[10px] font-medium transition-colors',
-                  active ? 'text-[oklch(0.72_0.18_42)]' : 'text-muted-foreground'
-                )}
-              >
-                {label}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+              {label}
+            </span>
+          </button>
+        );
+      })}
     </nav>
   );
 }

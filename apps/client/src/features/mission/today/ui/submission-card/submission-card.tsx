@@ -35,12 +35,14 @@ function SubmissionCard() {
   };
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-border bg-card">
+    <div className="overflow-hidden rounded-2xl bg-card shadow-sm">
       <Carousel className="w-full">
         <CarouselContent>
           {submission.imageUrls.map((url, i) => (
             <CarouselItem key={i}>
-              <img src={url} alt={`제출 사진 ${i + 1}`} className="w-full object-cover" />
+              <div className="relative aspect-square w-full bg-muted">
+                <img src={url} alt={`제출 사진 ${i + 1}`} className="h-full w-full object-cover" />
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -58,7 +60,7 @@ function SubmissionCard() {
             {submission.hashtags.map(tag => (
               <span
                 key={tag}
-                className="rounded-full bg-[oklch(0.72_0.18_42/10%)] px-2.5 py-1 text-xs text-[oklch(0.72_0.18_42)]"
+                className="rounded-full bg-primary/10 px-2.5 py-1 text-xs text-primary"
               >
                 #{tag}
               </span>

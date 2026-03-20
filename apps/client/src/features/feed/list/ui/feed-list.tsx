@@ -36,7 +36,7 @@ function FeedList({ sort = 'latest' }: FeedListProps) {
   }
 
   return (
-    <div className="flex flex-col gap-4 pt-4">
+    <div className="flex flex-col gap-6 px-4 pt-4">
       {feeds.map(item => (
         <FeedItem key={item.id} item={item} />
       ))}

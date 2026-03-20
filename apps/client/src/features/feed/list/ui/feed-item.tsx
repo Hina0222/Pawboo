@@ -20,7 +20,7 @@ interface FeedItemProps {
 
 export function FeedItem({ item }: FeedItemProps) {
   return (
-    <article className="flex flex-col gap-3 border-b border-border pb-4">
+    <article className="overflow-hidden rounded-2xl bg-card shadow-sm">
       {/* 작성자 정보 */}
       <FeedAuthor pet={item.pet} owner={item.owner} createdAt={item.createdAt} />
 
@@ -47,30 +47,34 @@ export function FeedItem({ item }: FeedItemProps) {
         )}
       </Carousel>
 
+      {/* 좋아요 / 댓글 */}
+      <div className="flex items-center justify-between px-4 py-2">
+        <div className="flex items-center gap-1">
+          <LikeButton
+            submissionId={item.id}
+            initialLikeCount={item.likeCount}
+            initialIsLiked={item.isLiked}
+          />
+          <Link
+            href={`/feed/${item.id}`}
+            className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent"
+          >
+            <MessageCircle size={16} />
+            <span>{item.commentCount}</span>
+          </Link>
+        </div>
+      </div>
+
       {/* 미션 태그 + 해시태그 */}
-      <div className="flex flex-wrap items-center gap-1.5 px-5">
-        <Badge>{item.missionTitle}</Badge>
+      <div className="flex flex-wrap items-center gap-1.5 px-4 pb-4">
+        <Badge className="border-transparent bg-primary/10 text-[10px] font-bold tracking-wider text-primary uppercase">
+          {item.missionTitle}
+        </Badge>
         {item.hashtags?.map(tag => (
           <span key={tag} className="text-xs text-muted-foreground">
             #{tag}
           </span>
         ))}
-      </div>
-
-      {/* 좋아요 / 댓글 */}
-      <div className="flex items-center gap-1 px-4">
-        <LikeButton
-          submissionId={item.id}
-          initialLikeCount={item.likeCount}
-          initialIsLiked={item.isLiked}
-        />
-        <Link
-          href={`/feed/${item.id}`}
-          className="flex items-center gap-1.5 rounded-md px-2 py-1 text-xs text-muted-foreground hover:bg-accent"
-        >
-          <MessageCircle size={16} />
-          <span>{item.commentCount}</span>
-        </Link>
       </div>
     </article>
   );

@@ -26,14 +26,14 @@ function MissionHistory() {
 
   if (histories.length === 0) {
     return (
-      <div className="flex flex-col items-center gap-3 px-5 py-16 text-center text-muted-foreground">
+      <div className="flex flex-col items-center gap-3 py-16 text-center text-muted-foreground">
         <p className="text-sm">미션 히스토리가 없습니다.</p>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col divide-y px-5">
+    <div className="relative space-y-6">
       {histories.map(submission => (
         <HistoryItem key={submission.id} submission={submission} />
       ))}
