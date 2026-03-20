@@ -3,7 +3,7 @@
 import { Dialog, DialogContent, DialogTitle } from '@/shared/ui';
 import { CommentList } from '@/features/comment/list/ui';
 import { CreateCommentForm } from '@/features/comment/create/ui';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import { FeedDetail } from '@/features/feed/detail/ui';
 
 interface FeedDetailModalProps {
@@ -12,10 +12,22 @@ interface FeedDetailModalProps {
 
 function FeedDetailModal({ id }: FeedDetailModalProps) {
   const router = useRouter();
+  const pathname = usePathname();
+
+  if (pathname !== `/feed/${id}`) {
+    return null;
+  }
 
   return (
     <Dialog open onOpenChange={open => !open && router.back()}>
-      <DialogContent aria-describedby={undefined}>
+      <DialogContent
+        aria-describedby={undefined}
+        onPointerDownOutside={e => {
+          if (e.detail.originalEvent.button !== 0) {
+            e.preventDefault();
+          }
+        }}
+      >
         <DialogTitle className="sr-only">피드 상세</DialogTitle>
         <FeedDetail id={Number(id)} />
         <div className="flex-1 overflow-y-auto px-5 py-4">
