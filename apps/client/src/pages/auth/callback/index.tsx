@@ -2,25 +2,20 @@
 
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { apiClient } from '@/shared/api';
-import { useAuthStore } from '@/shared/store/auth-store';
-import type { MeResponse } from '@bragram/schemas/user';
+import { useMeQuery } from '@/features/user/me/api/useMeQuery';
 
 export default function AuthCallbackPage() {
   const router = useRouter();
-  const { setAuth } = useAuthStore();
+  const { data: user, isError } = useMeQuery();
 
   useEffect(() => {
-    apiClient
-      .get<MeResponse>('/users/me')
-      .then(user => {
-        setAuth(user);
-        router.replace(user.nickname === null ? '/onboarding/profile' : '/');
-      })
-      .catch(() => {
-        router.replace('/');
-      });
-  }, [router, setAuth]);
+    if (user) {
+      router.replace(user.nickname === null ? '/onboarding/profile' : '/');
+    }
+    if (isError) {
+      router.replace('/signin');
+    }
+  }, [user, isError, router]);
 
   return <div>로그인 처리 중...</div>;
 }

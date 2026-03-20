@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
+import { useMeQuery } from '@/features/user/me/api/useMeQuery';
 import { useGetCommentsSuspenseInfiniteQuery } from '../api/useGetCommentsInfiniteQuery';
 import { CommentItem } from './comment-item';
 import { CommentListSkeleton } from './comment-list-skeleton';
@@ -13,6 +14,7 @@ interface CommentListProps {
 }
 
 function CommentList({ submissionId }: CommentListProps) {
+  const { data: me } = useMeQuery();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetCommentsSuspenseInfiniteQuery(submissionId);
 
@@ -37,7 +39,12 @@ function CommentList({ submissionId }: CommentListProps) {
   return (
     <div className="flex flex-col gap-4">
       {comments.map(comment => (
-        <CommentItem key={comment.id} comment={comment} submissionId={submissionId} />
+        <CommentItem
+          key={comment.id}
+          comment={comment}
+          submissionId={submissionId}
+          isOwner={me?.id === comment.author.id}
+        />
       ))}
       <div ref={ref}>
         {isFetchingNextPage && (

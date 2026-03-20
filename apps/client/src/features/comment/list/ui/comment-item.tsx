@@ -2,7 +2,6 @@
 
 import { ImageOff, Trash2 } from 'lucide-react';
 import { Button } from '@/shared/ui';
-import { useAuthStore } from '@/shared/store/auth-store';
 import { useDeleteCommentMutation } from '@/features/comment/delete/api/useDeleteCommentMutation';
 import type { CommentItem as CommentItemType } from '@bragram/schemas/comment';
 import Link from 'next/link';
@@ -10,13 +9,11 @@ import Link from 'next/link';
 interface CommentItemProps {
   comment: CommentItemType;
   submissionId: number;
+  isOwner: boolean;
 }
 
-export function CommentItem({ comment, submissionId }: CommentItemProps) {
-  const currentUser = useAuthStore(state => state.user);
+export function CommentItem({ comment, submissionId, isOwner }: CommentItemProps) {
   const { mutate: deleteComment, isPending } = useDeleteCommentMutation(submissionId);
-
-  const isOwner = currentUser?.id === comment.author.id;
 
   return (
     <div className="flex gap-2.5">

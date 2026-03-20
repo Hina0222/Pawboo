@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '@/app/styles/globals.css';
 import { QueryProvider } from '@/app/providers';
-import { AuthInitializer } from '@/app/providers/auth-initializer';
 import { Toaster } from '@/shared/ui';
 
 const pretendard = localFont({
@@ -28,10 +27,8 @@ export default function RootLayout({
       <body className={`${pretendard.className} dark antialiased`}>
         <div className="mx-auto flex h-full min-h-dvh max-w-[390px] flex-col">
           <QueryProvider>
-            <AuthInitializer>
-              {children}
-              {modal}
-            </AuthInitializer>
+            {children}
+            {modal}
           </QueryProvider>
         </div>
         <Toaster position="top-center" />

@@ -2,9 +2,8 @@
 
 import { ChevronLeft, ChevronRight, Bell, Shield, HelpCircle, LogOut, User } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { useMutation } from '@tanstack/react-query';
-import { apiClient } from '@/shared/api';
-import { useAuthStore } from '@/shared/store/auth-store';
+import { useMeQuery } from '@/features/user/me/api/useMeQuery';
+import { useLogoutMutation } from '@/features/user/me/api/useLogoutMutation';
 
 const SECTIONS = [
   {
@@ -26,15 +25,8 @@ const SECTIONS = [
 
 export default function MySettingsPage() {
   const router = useRouter();
-  const { clearAuth, user } = useAuthStore();
-
-  const { mutate: logout, isPending } = useMutation({
-    mutationFn: () => apiClient.post('/auth/logout'),
-    onSettled: () => {
-      clearAuth();
-      router.replace('/signin');
-    },
-  });
+  const { data: user } = useMeQuery();
+  const { mutate: logout, isPending } = useLogoutMutation();
 
   return (
     <>

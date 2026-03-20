@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { useAuthStore } from '@/shared/store/auth-store';
+import { getQueryClient } from '@/shared/api/get-query-client';
+import { userQueryKeys } from '@/entities/user/model/user.query-key';
+
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   withCredentials: true,
@@ -16,6 +18,14 @@ axiosInstance.interceptors.request.use(async config => {
   return config;
 });
 
+function handleAuthFailure() {
+  const queryClient = getQueryClient();
+  queryClient.removeQueries({ queryKey: userQueryKeys.me() });
+  if (typeof window !== 'undefined') {
+    window.location.href = '/signin';
+  }
+}
+
 let refreshPromise: Promise<void> | null = null;
 
 axiosInstance.interceptors.response.use(
@@ -28,7 +38,7 @@ axiosInstance.interceptors.response.use(
     }
 
     if (originalRequest.url?.includes('/auth/refresh')) {
-      useAuthStore.getState().clearAuth();
+      handleAuthFailure();
       return Promise.reject(error);
     }
 
@@ -45,7 +55,7 @@ axiosInstance.interceptors.response.use(
       await refreshPromise;
       return axiosInstance(originalRequest);
     } catch {
-      useAuthStore.getState().clearAuth();
+      handleAuthFailure();
       return Promise.reject(error);
     }
   }

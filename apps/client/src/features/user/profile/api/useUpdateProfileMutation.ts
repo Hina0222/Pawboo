@@ -2,7 +2,9 @@
 
 import { useMutation } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api';
+import { getQueryClient } from '@/shared/api/get-query-client';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
+import { userQueryKeys } from '@/entities/user/model/user.query-key';
 import type { ProfileUpdateRequest, MeResponse } from '@bragram/schemas/user';
 import { toast } from 'sonner';
 
@@ -17,9 +19,12 @@ const updateProfile = async ({ nickname, image }: UpdateProfileParams): Promise<
 };
 
 export const updateProfileMutationOptions = () => {
+  const queryClient = getQueryClient();
+
   return {
     mutationFn: updateProfile,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: userQueryKeys.me() });
       toast.success('프로필이 업데이트되었습니다.');
     },
     onError: (error: Error) => {

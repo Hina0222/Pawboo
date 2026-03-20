@@ -3,12 +3,12 @@
 import { Settings } from 'lucide-react';
 import Link from 'next/link';
 import { BottomNav } from '@/widgets/bottom-nav';
-import { useAuthStore } from '@/shared/store/auth-store';
+import { useMeQuery } from '@/features/user/me/api/useMeQuery';
 import { UserFeedGrid } from '@/features/feed/user-feed/ui';
 import { MyPetList } from '@/widgets/pet';
 
 export default function MyPage() {
-  const { user } = useAuthStore();
+  const { data: user } = useMeQuery();
 
   const displayName = user?.nickname ?? '집사님';
 

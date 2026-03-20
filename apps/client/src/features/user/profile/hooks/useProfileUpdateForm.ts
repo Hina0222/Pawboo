@@ -4,7 +4,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useUpdateProfileMutation } from '@/features/user/profile/api/useUpdateProfileMutation';
-import { useAuthStore } from '@/shared/store/auth-store';
+import { useMeQuery } from '@/features/user/me/api/useMeQuery';
 import {
   ProfileSetupFormSchema,
   type ProfileSetupFormValues,
@@ -12,7 +12,7 @@ import {
 
 export function useProfileUpdateForm() {
   const router = useRouter();
-  const { user, setAuth } = useAuthStore();
+  const { data: user } = useMeQuery();
   const { mutate, isPending } = useUpdateProfileMutation();
 
   const methods = useForm<ProfileSetupFormValues>({
@@ -29,10 +29,7 @@ export function useProfileUpdateForm() {
 
   const onSubmit = methods.handleSubmit((data: ProfileSetupFormValues) => {
     mutate(data, {
-      onSuccess: updated => {
-        if (user) {
-          setAuth({ ...user, nickname: updated.nickname, profileImage: updated.profileImage });
-        }
+      onSuccess: () => {
         router.back();
       },
       onError: (error: Error) => {

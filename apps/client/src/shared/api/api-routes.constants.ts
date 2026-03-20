@@ -81,7 +81,21 @@ export const API_ROUTES = {
       METHOD: 'GET',
     },
   },
+  AUTH: {
+    REFRESH: {
+      URL: '/auth/refresh',
+      METHOD: 'POST',
+    },
+    LOGOUT: {
+      URL: '/auth/logout',
+      METHOD: 'POST',
+    },
+  },
   USERS: {
+    GET_ME: {
+      URL: '/users/me',
+      METHOD: 'GET',
+    },
     UPDATE_ME: {
       URL: '/users/me',
       METHOD: 'PATCH',
