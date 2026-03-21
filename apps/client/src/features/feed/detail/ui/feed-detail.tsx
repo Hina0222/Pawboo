@@ -32,7 +32,7 @@ function FeedDetail({ id }: FeedDetailProps) {
         <CarouselContent>
           {item.imageUrls.map((url, i) => (
             <CarouselItem key={i}>
-              <div className="relative aspect-square w-full bg-muted">
+              <div className="relative aspect-square max-h-[60svh] w-full bg-muted">
                 <img
                   src={url}
                   alt={`${item.pet.name}의 미션 사진 ${i + 1}`}
