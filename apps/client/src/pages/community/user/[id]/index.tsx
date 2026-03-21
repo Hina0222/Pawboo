@@ -5,7 +5,6 @@ import { BottomNav } from '@/widgets/bottom-nav';
 import { UserPetList } from '@/widgets/pet';
 import { ServerFetchBoundary } from '@/shared/boundary/server-fetch-boundary';
 import { getUserProfileQueryOptions } from '@/features/user/profile/api/useGetUserProfileQuery';
-import { getUserFeedsInfiniteQueryOptions } from '@/features/feed/user-feed/api/useGetUserFeedsInfiniteQuery';
 
 interface UserProfilePageProps {
   params: Promise<{ id: string }>;
@@ -18,10 +17,7 @@ export default async function UserProfilePage({ params }: UserProfilePageProps) 
   return (
     <div className="pb-20">
       <BackHeader title="프로필" />
-      <ServerFetchBoundary
-        queryOptions={getUserProfileQueryOptions(userId)}
-        infiniteQueryOptions={getUserFeedsInfiniteQueryOptions(userId)}
-      >
+      <ServerFetchBoundary queryOptions={getUserProfileQueryOptions(userId)}>
         <UserProfile userId={userId} />
 
         <section className="px-5 pb-6">

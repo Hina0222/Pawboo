@@ -5,7 +5,6 @@ import { CreateCommentForm } from '@/features/comment/create/ui';
 import { FeedDetail } from '@/features/feed/detail/ui';
 import { ServerFetchBoundary } from '@/shared/boundary/server-fetch-boundary';
 import { getFeedQueryOptions } from '@/features/feed/detail/api/useGetFeedQuery';
-import { getCommentsInfiniteQueryOptions } from '@/features/comment/list/api/useGetCommentsInfiniteQuery';
 
 interface FeedPageProps {
   params: Promise<{ id: string }>;
@@ -19,10 +18,7 @@ export default async function FeedPage({ params }: FeedPageProps) {
     <div className="flex flex-col pb-6">
       <TitleHeader title="피드" />
 
-      <ServerFetchBoundary
-        queryOptions={getFeedQueryOptions(feedId)}
-        infiniteQueryOptions={getCommentsInfiniteQueryOptions(feedId)}
-      >
+      <ServerFetchBoundary queryOptions={getFeedQueryOptions(feedId)}>
         <FeedDetail id={feedId} />
 
         <div className="mt-4 px-5 pt-4">
