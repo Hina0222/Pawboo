@@ -22,6 +22,7 @@ function FeedDetailModal({ id }: FeedDetailModalProps) {
     <Dialog open onOpenChange={open => !open && router.back()}>
       <DialogContent
         aria-describedby={undefined}
+        className="gap-0 overflow-hidden p-0 md:max-w-3xl"
         onPointerDownOutside={e => {
           if (e.detail.originalEvent.button !== 0) {
             e.preventDefault();
@@ -29,12 +30,18 @@ function FeedDetailModal({ id }: FeedDetailModalProps) {
         }}
       >
         <DialogTitle className="sr-only">피드 상세</DialogTitle>
-        <FeedDetail id={Number(id)} />
-        <div className="flex-1 overflow-y-auto px-5 py-4">
-          <CommentList submissionId={id} />
-        </div>
-        <div className="shrink-0 px-5 pb-6">
-          <CreateCommentForm submissionId={id} />
+        <div className="flex flex-col md:flex-row">
+          <div className="md:flex-1 md:overflow-y-auto">
+            <FeedDetail id={Number(id)} />
+          </div>
+          <div className="flex flex-col md:border-l">
+            <div className="hidden flex-1 overflow-y-auto px-5 py-4 md:block">
+              <CommentList submissionId={id} />
+            </div>
+            <div className="shrink-0 px-5 py-4">
+              <CreateCommentForm submissionId={id} />
+            </div>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

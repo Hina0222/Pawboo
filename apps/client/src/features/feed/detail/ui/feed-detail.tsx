@@ -23,7 +23,7 @@ function FeedDetail({ id }: FeedDetailProps) {
   const { data: item } = useGetFeedSuspenseQuery(id);
 
   return (
-    <article className="flex flex-col gap-3 border-b border-border pb-4">
+    <article className="flex flex-col gap-3">
       {/* 작성자 정보 */}
       <FeedAuthor pet={item.pet} owner={item.owner} />
 
@@ -50,7 +50,7 @@ function FeedDetail({ id }: FeedDetailProps) {
         )}
       </Carousel>
 
-      <div className="space-y-1">
+      <div className="space-y-1 px-4">
         {/* 제출 코멘트 */}
         {item.comment && <p className="text-sm text-foreground">{item.comment}</p>}
 
