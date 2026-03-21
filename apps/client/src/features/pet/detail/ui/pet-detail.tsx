@@ -30,17 +30,19 @@ function PetDetail({ id }: PetDetailProps) {
       <InfoRow label="주간 점수" value={String(pet.weeklyScore)} />
       <InfoRow label="월간 점수" value={String(pet.monthlyScore)} />
 
-      <button
+      <Button
+        variant="outline"
+        size="sm"
         onClick={e => {
           e.preventDefault();
           e.stopPropagation();
           deletePet(pet.id);
         }}
-        className="mt-1 flex items-center justify-center gap-1.5 rounded-xl border border-destructive/40 py-2 text-xs font-medium text-destructive transition-colors hover:bg-destructive/5 disabled:opacity-50"
+        className="mt-1 w-full border-destructive/40 text-destructive hover:bg-destructive/5 hover:text-destructive"
       >
         <Trash2 size={13} />
         삭제하기
-      </button>
+      </Button>
       {!pet.isActive && (
         <Button
           variant="outline"

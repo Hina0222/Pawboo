@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/shared/ui/button';
 import { useFollowMutation } from '../api/useFollowMutation';
 import { useUnfollowMutation } from '../api/useUnfollowMutation';
 
@@ -23,16 +24,14 @@ export function FollowButton({ userId, isFollowing }: FollowButtonProps) {
   };
 
   return (
-    <button
+    <Button
+      variant={isFollowing ? 'outline' : 'default'}
+      size="sm"
       onClick={handleClick}
       disabled={isPending}
-      className={
-        isFollowing
-          ? 'rounded-lg border border-border px-5 py-1.5 text-sm font-medium text-foreground transition-colors hover:bg-muted disabled:opacity-50'
-          : 'rounded-lg bg-primary px-5 py-1.5 text-sm font-medium text-primary-foreground transition-colors hover:opacity-90 disabled:opacity-50'
-      }
+      className="rounded-lg px-5"
     >
       {isFollowing ? '팔로잉' : '팔로우'}
-    </button>
+    </Button>
   );
 }

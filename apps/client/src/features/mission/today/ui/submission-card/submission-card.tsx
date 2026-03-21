@@ -9,6 +9,7 @@ import {
 } from '@/features/mission/today/ui/submission-card';
 import { useDeleteSubmissionMutation } from '@/features/mission/delete/api/useDeleteSubmissionMutation';
 import {
+  Button,
   Carousel,
   CarouselContent,
   CarouselItem,
@@ -67,14 +68,16 @@ function SubmissionCard() {
             ))}
           </div>
         )}
-        <button
+        <Button
+          variant="outline"
+          size="sm"
           onClick={handleDelete}
           disabled={isPending}
-          className="mt-1 flex items-center justify-center gap-1.5 rounded-xl border border-destructive/40 py-2 text-xs font-medium text-destructive transition-colors hover:bg-destructive/5 disabled:opacity-50"
+          className="mt-1 w-full border-destructive/40 text-destructive hover:bg-destructive/5 hover:text-destructive"
         >
           <Trash2 size={13} />
           {isPending ? '삭제 중...' : '제출 삭제'}
-        </button>
+        </Button>
       </div>
     </div>
   );
