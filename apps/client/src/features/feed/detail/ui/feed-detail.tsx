@@ -49,6 +49,9 @@ function FeedDetail({ id }: FeedDetailProps) {
         )}
       </Carousel>
 
+      {/* 제출 코멘트 */}
+      {item.comment && <p className="px-5 text-sm text-foreground">{item.comment}</p>}
+
       {/* 미션 태그 + 해시태그 */}
       <div className="flex flex-wrap items-center gap-1.5 px-5">
         <Badge>{item.missionTitle}</Badge>

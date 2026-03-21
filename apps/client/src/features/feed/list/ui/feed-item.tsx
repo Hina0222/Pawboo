@@ -65,6 +65,9 @@ export function FeedItem({ item }: FeedItemProps) {
         </div>
       </div>
 
+      {/* 제출 코멘트 */}
+      {item.comment && <p className="px-4 pb-2 text-xs text-foreground">{item.comment}</p>}
+
       {/* 미션 태그 + 해시태그 */}
       <div className="flex flex-wrap items-center gap-1.5 px-4 pb-4">
         <Badge className="border-transparent bg-primary/10 text-[10px] font-bold tracking-wider text-primary uppercase">
