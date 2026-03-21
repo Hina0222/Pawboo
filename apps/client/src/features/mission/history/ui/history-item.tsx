@@ -1,20 +1,9 @@
 import { Check } from 'lucide-react';
 import type { SubmissionResponse } from '@bragram/schemas/mission';
+import { timeAgo } from '@/shared/lib/utils';
 
 interface HistoryItemProps {
   submission: SubmissionResponse;
-}
-
-function formatRelativeDate(date: Date | string): string {
-  const diff = Date.now() - new Date(date).getTime();
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-  if (hours < 1) return '방금 전';
-  if (hours < 24) return `${hours}시간 전`;
-  if (days === 1) return '어제';
-  if (days < 7) return `${days}일 전`;
-  return new Date(date).toLocaleDateString('ko-KR', { month: 'long', day: 'numeric' });
 }
 
 function HistoryItem({ submission }: HistoryItemProps) {
@@ -30,7 +19,7 @@ function HistoryItem({ submission }: HistoryItemProps) {
         <div className="mb-2 flex items-start justify-between gap-2">
           <h4 className="text-sm font-bold">미션 인증 완료</h4>
           <span className="shrink-0 text-[10px] text-muted-foreground">
-            {formatRelativeDate(submission.createdAt)}
+            {timeAgo(submission.createdAt)}
           </span>
         </div>
 
