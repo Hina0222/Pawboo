@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${pretendard.className} antialiased`}>
+      <body className={`${pretendard.className} dark antialiased`}>
         <div className="mx-auto flex h-full min-h-dvh max-w-[390px] flex-col">
           <QueryProvider>
             {children}

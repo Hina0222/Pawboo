@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
 import { MessageCircle } from 'lucide-react';
 import { LikeButton } from '@/features/like/ui';
@@ -18,7 +19,7 @@ interface FeedItemProps {
   item: FeedItemType;
 }
 
-export function FeedItem({ item }: FeedItemProps) {
+export const FeedItem = memo(function FeedItem({ item }: FeedItemProps) {
   return (
     <article className="overflow-hidden rounded-2xl bg-card shadow-sm">
       {/* 작성자 정보 */}
@@ -81,4 +82,4 @@ export function FeedItem({ item }: FeedItemProps) {
       </div>
     </article>
   );
-}
+});

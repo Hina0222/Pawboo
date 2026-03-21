@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
+import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
-import { useGetFeedsSuspenseInfiniteQuery } from '../api/useGetFeedsInfiniteQuery';
-import { FeedItem } from './feed-item';
-import { FeedListSkeleton } from './feed-list-skeleton';
-import { FeedListError } from './feed-list-error';
 import type { FeedQuery } from '@bragram/schemas/feed';
+import { useGetFeedsSuspenseInfiniteQuery } from '@/features/feed/list/api/useGetFeedsInfiniteQuery';
+import { FeedItem, FeedListSkeleton, FeedListError } from '@/features/feed/list/ui';
 
 interface FeedListProps {
   sort?: FeedQuery['sort'];
@@ -18,6 +17,7 @@ function FeedList({ sort = 'latest' }: FeedListProps) {
     useGetFeedsSuspenseInfiniteQuery(sort);
 
   const { ref, inView } = useInView();
+  const listRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -26,6 +26,13 @@ function FeedList({ sort = 'latest' }: FeedListProps) {
   }, [inView, hasNextPage, fetchNextPage]);
 
   const feeds = data.pages.flatMap(page => page.data);
+
+  const virtualizer = useWindowVirtualizer({
+    count: feeds.length + (hasNextPage ? 1 : 0),
+    estimateSize: index => (index === feeds.length ? 40 : 574),
+    overscan: 3,
+    measureElement: el => el.getBoundingClientRect().height,
+  });
 
   if (feeds.length === 0) {
     return (
@@ -36,13 +43,36 @@ function FeedList({ sort = 'latest' }: FeedListProps) {
   }
 
   return (
-    <div className="flex flex-col gap-6 px-4 pt-4">
-      {feeds.map(item => (
-        <FeedItem key={item.id} item={item} />
+    <div
+      ref={listRef}
+      className="px-4 pt-4"
+      style={{ position: 'relative', height: virtualizer.getTotalSize() }}
+    >
+      {virtualizer.getVirtualItems().map(virtualRow => (
+        <div
+          key={virtualRow.key}
+          data-index={virtualRow.index}
+          ref={virtualizer.measureElement}
+          className="pb-6"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            transform: `translateY(${virtualRow.start - virtualizer.options.scrollMargin}px)`,
+          }}
+        >
+          {virtualRow.index < feeds.length ? (
+            <FeedItem item={feeds[virtualRow.index]} />
+          ) : (
+            <div ref={ref} className="flex justify-center py-4">
+              {isFetchingNextPage && (
+                <p className="text-xs text-muted-foreground">불러오는 중...</p>
+              )}
+            </div>
+          )}
+        </div>
       ))}
-      <div ref={ref} className="flex justify-center py-4">
-        {isFetchingNextPage && <p className="text-xs text-muted-foreground">불러오는 중...</p>}
-      </div>
     </div>
   );
 }
