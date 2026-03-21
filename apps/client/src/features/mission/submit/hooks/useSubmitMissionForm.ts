@@ -7,8 +7,10 @@ import {
   type SubmitMissionFormValues,
 } from '@/features/mission/submit/model/schema';
 import { useSubmitMissionMutation } from '@/features/mission/submit/api/useSubmitMissionMutation';
+import { useRouter } from 'next/navigation';
 
 export const useSubmitMissionForm = () => {
+  const router = useRouter();
   const { mutate, isPending } = useSubmitMissionMutation();
 
   const methods = useForm<SubmitMissionFormValues>({
@@ -22,7 +24,14 @@ export const useSubmitMissionForm = () => {
 
   const onSubmit = (missionId: number) =>
     methods.handleSubmit((data: SubmitMissionFormValues) => {
-      mutate({ missionId, values: data });
+      mutate(
+        { missionId, values: data },
+        {
+          onSuccess: () => {
+            router.push('/mission');
+          },
+        }
+      );
     });
 
   return { methods, onSubmit, isPending };
