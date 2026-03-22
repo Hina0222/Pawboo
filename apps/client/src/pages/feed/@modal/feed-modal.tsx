@@ -3,12 +3,12 @@ import { ServerFetchBoundary } from '@/shared/boundary/server-fetch-boundary';
 import { getFeedQueryOptions } from '@/features/feed/detail/api/useGetFeedQuery';
 
 interface FeedModalProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ feedId: string }>;
 }
 
 export default async function FeedModal({ params }: FeedModalProps) {
-  const { id } = await params;
-  const feedId = Number(id);
+  const { feedId: feedIdParam } = await params;
+  const feedId = Number(feedIdParam);
 
   return (
     <ServerFetchBoundary queryOptions={getFeedQueryOptions(feedId)}>

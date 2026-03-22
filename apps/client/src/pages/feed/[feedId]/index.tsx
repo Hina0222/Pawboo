@@ -7,12 +7,12 @@ import { ServerFetchBoundary } from '@/shared/boundary/server-fetch-boundary';
 import { getFeedQueryOptions } from '@/features/feed/detail/api/useGetFeedQuery';
 
 interface FeedPageProps {
-  params: Promise<{ id: string }>;
+  params: Promise<{ feedId: string }>;
 }
 
 export default async function FeedPage({ params }: FeedPageProps) {
-  const { id } = await params;
-  const feedId = Number(id);
+  const { feedId: feedIdParam } = await params;
+  const feedId = Number(feedIdParam);
 
   return (
     <div className="flex flex-col pb-6">
