@@ -22,7 +22,7 @@ function handleAuthFailure() {
   const queryClient = getQueryClient();
   queryClient.removeQueries({ queryKey: userQueryKeys.me() });
   if (typeof window !== 'undefined') {
-    window.location.href = '/signin';
+    window.location.href = '/api/auth/clear';
   }
 }
 
