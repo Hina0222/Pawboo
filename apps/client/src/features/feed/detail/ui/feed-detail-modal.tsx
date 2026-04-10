@@ -3,8 +3,9 @@
 import { Dialog, DialogContent, DialogTitle } from '@/shared/ui';
 import { CommentList } from '@/features/comment/list/ui';
 import { CreateCommentForm } from '@/features/comment/create/ui';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter, usePathname } from '@/app/i18n/navigation';
 import { FeedDetail } from '@/features/feed/detail/ui';
+import { useTranslations } from 'next-intl';
 
 interface FeedDetailModalProps {
   id: number;
@@ -13,6 +14,7 @@ interface FeedDetailModalProps {
 function FeedDetailModal({ id }: FeedDetailModalProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const t = useTranslations('feed');
 
   if (pathname !== `/feed/${id}`) {
     return null;
@@ -29,7 +31,7 @@ function FeedDetailModal({ id }: FeedDetailModalProps) {
           }
         }}
       >
-        <DialogTitle className="sr-only">피드 상세</DialogTitle>
+        <DialogTitle className="sr-only">{t('detail')}</DialogTitle>
         <div className="flex flex-col md:h-full md:flex-row md:overflow-hidden">
           <div className="md:min-h-0 md:flex-1">
             <FeedDetail id={Number(id)} />

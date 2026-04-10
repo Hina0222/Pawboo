@@ -5,12 +5,14 @@ import { cn } from '@/shared/lib/utils';
 import { FormProvider } from 'react-hook-form';
 import { Button } from '@/shared/ui';
 import { useCreatePetForm } from '@/features/pet/create/hooks/useCreatePetForm';
+import { useTranslations } from 'next-intl';
 
 interface CreatePetFormProps {
   redirectTo?: string;
 }
 
 export function CreatePetForm({ redirectTo }: CreatePetFormProps) {
+  const tc = useTranslations('common');
   const { step, methods, canNext, handleButtonClick, handleBack, TOTAL_STEPS } =
     useCreatePetForm(redirectTo);
 
@@ -47,7 +49,7 @@ export function CreatePetForm({ redirectTo }: CreatePetFormProps) {
             className="h-13 flex-1 rounded-2xl bg-primary text-base font-semibold text-primary-foreground hover:bg-primary/90"
             onClick={handleBack}
           >
-            이전
+            {tc('previous')}
           </Button>
         )}
         <Button
@@ -56,7 +58,7 @@ export function CreatePetForm({ redirectTo }: CreatePetFormProps) {
           onClick={handleButtonClick}
           disabled={!canNext()}
         >
-          {step === TOTAL_STEPS ? '완료하기' : '다음'}
+          {step === TOTAL_STEPS ? tc('complete') : tc('next')}
         </Button>
       </div>
     </>

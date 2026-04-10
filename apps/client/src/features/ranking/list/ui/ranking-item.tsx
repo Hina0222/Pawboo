@@ -1,4 +1,7 @@
+'use client';
+
 import type { RankingItem } from '@bragram/schemas/ranking';
+import { useTranslations } from 'next-intl';
 
 const PET_EMOJI: Record<string, string> = {
   dog: '🐶',
@@ -10,6 +13,7 @@ interface RankingItemProps {
 }
 
 export function RankingListItem({ item }: RankingItemProps) {
+  const tc = useTranslations('common');
   const petEmoji = PET_EMOJI[item.petType] ?? '🐾';
 
   return (
@@ -47,7 +51,7 @@ export function RankingListItem({ item }: RankingItemProps) {
           </div>
         </div>
         <span className="rounded-full bg-secondary px-2 py-0.5 text-[10px] text-muted-foreground">
-          {item.petType === 'dog' ? '강아지' : '고양이'}
+          {item.petType === 'dog' ? tc('dog') : tc('cat')}
         </span>
       </div>
 

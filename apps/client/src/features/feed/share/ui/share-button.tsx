@@ -3,18 +3,20 @@
 import { Share2 } from 'lucide-react';
 import { Button } from '@/shared/ui';
 import { toast } from 'sonner';
+import { useTranslations } from 'next-intl';
 
 interface ShareButtonProps {
   feedId: number;
 }
 
 export function ShareButton({ feedId }: ShareButtonProps) {
+  const t = useTranslations('feed');
   const handleCopyLink = async () => {
     try {
       await navigator.clipboard.writeText(`${window.location.origin}/feed/${feedId}`);
-      toast.success('링크가 복사되었습니다');
+      toast.success(t('linkCopied'));
     } catch {
-      toast.error('링크 복사에 실패했습니다');
+      toast.error(t('linkCopyFailed'));
     }
   };
 

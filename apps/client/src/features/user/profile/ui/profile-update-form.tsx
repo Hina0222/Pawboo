@@ -2,11 +2,14 @@
 
 import { useRef, useState } from 'react';
 import { Camera, ChevronLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/app/i18n/navigation';
 import { Button } from '@/shared/ui';
 import { useProfileUpdateForm } from '@/features/user/profile/hooks/useProfileUpdateForm';
+import { useTranslations } from 'next-intl';
 
 export function ProfileUpdateForm() {
+  const t = useTranslations('profile');
+  const tc = useTranslations('common');
   const router = useRouter();
   const { methods, canSubmit, isPending, onSubmit, currentProfileImage } = useProfileUpdateForm();
   const { setValue, register, formState } = methods;
@@ -33,7 +36,7 @@ export function ProfileUpdateForm() {
         >
           <ChevronLeft size={24} />
         </button>
-        <h1 className="text-base font-semibold text-foreground">프로필 편집</h1>
+        <h1 className="text-base font-semibold text-foreground">{t('edit')}</h1>
       </header>
 
       <form onSubmit={onSubmit} className="flex flex-1 flex-col">
@@ -44,11 +47,11 @@ export function ProfileUpdateForm() {
             className="relative flex h-28 w-28 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-primary/50 bg-card transition-colors hover:border-primary"
           >
             {previewUrl ? (
-              <img src={previewUrl} alt="프로필 사진" className="h-full w-full object-cover" />
+              <img src={previewUrl} alt={t('photo')} className="h-full w-full object-cover" />
             ) : (
               <div className="flex flex-col items-center gap-1.5 text-muted-foreground">
                 <Camera size={24} />
-                <span className="text-xs">사진 변경</span>
+                <span className="text-xs">{t('changePhoto')}</span>
               </div>
             )}
           </button>
@@ -62,10 +65,12 @@ export function ProfileUpdateForm() {
           />
 
           <div className="w-full max-w-sm">
-            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">닉네임</label>
+            <label className="mb-1.5 block text-xs font-medium text-muted-foreground">
+              {t('nickname')}
+            </label>
             <input
               {...register('nickname')}
-              placeholder="닉네임을 입력해주세요"
+              placeholder={t('nicknamePlaceholder')}
               maxLength={20}
               className="h-12 w-full rounded-xl border border-border bg-card px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
             />
@@ -83,7 +88,7 @@ export function ProfileUpdateForm() {
           onClick={onSubmit}
           disabled={!canSubmit}
         >
-          {isPending ? '저장 중...' : '저장'}
+          {isPending ? tc('saving') : tc('save')}
         </Button>
       </div>
     </>

@@ -5,12 +5,14 @@ import { FollowButton } from '@/features/follow/toggle/ui';
 import { useGetUserProfileSuspenseQuery } from '../api/useGetUserProfileQuery';
 import { UserProfileSkeleton } from './user-profile-skeleton';
 import { UserProfileError } from './user-profile-error';
+import { useTranslations } from 'next-intl';
 
 interface UserProfileProps {
   userId: number;
 }
 
 function UserProfile({ userId }: UserProfileProps) {
+  const t = useTranslations('profile');
   const { data: profile } = useGetUserProfileSuspenseQuery(userId);
 
   return (
@@ -32,8 +34,8 @@ function UserProfile({ userId }: UserProfileProps) {
         {/* Stats */}
         <div className="flex flex-1 gap-6">
           {[
-            { label: '팔로워', value: profile.followerCount },
-            { label: '팔로잉', value: profile.followingCount },
+            { label: t('followers'), value: profile.followerCount },
+            { label: t('following'), value: profile.followingCount },
           ].map(({ label, value }) => (
             <div key={label} className="flex flex-col items-center">
               <span className="text-lg font-bold text-foreground">{value}</span>
@@ -47,7 +49,7 @@ function UserProfile({ userId }: UserProfileProps) {
       <div className="mt-4 flex items-center justify-between">
         <div>
           <p className="text-sm font-semibold text-foreground">{profile.nickname}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">반려동물과 함께하는 일상 🐾</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{t('bio')}</p>
         </div>
         <FollowButton userId={userId} isFollowing={profile.isFollowing} />
       </div>

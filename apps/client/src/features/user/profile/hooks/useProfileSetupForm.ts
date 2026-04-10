@@ -2,7 +2,7 @@
 
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/app/i18n/navigation';
 import { useUpdateProfileMutation } from '@/features/user/profile/api/useUpdateProfileMutation';
 import {
   ProfileSetupFormSchema,

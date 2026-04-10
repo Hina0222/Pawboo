@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
+import { useTranslations } from 'next-intl';
 import { useMeQuery } from '@/features/user/me/api/useMeQuery';
 import { useGetCommentsSuspenseInfiniteQuery } from '../api/useGetCommentsInfiniteQuery';
 import { CommentItem } from './comment-item';
@@ -14,6 +15,8 @@ interface CommentListProps {
 }
 
 function CommentList({ submissionId }: CommentListProps) {
+  const t = useTranslations('comment');
+  const tc = useTranslations('common');
   const { data: me } = useMeQuery();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetCommentsSuspenseInfiniteQuery(submissionId);
@@ -31,7 +34,7 @@ function CommentList({ submissionId }: CommentListProps) {
   if (comments.length === 0) {
     return (
       <div className="flex items-center justify-center py-8 text-muted-foreground">
-        <p className="text-sm">첫 댓글을 남겨보세요.</p>
+        <p className="text-sm">{t('firstComment')}</p>
       </div>
     );
   }
@@ -48,7 +51,7 @@ function CommentList({ submissionId }: CommentListProps) {
       ))}
       <div ref={ref}>
         {isFetchingNextPage && (
-          <p className="py-2 text-center text-xs text-muted-foreground">불러오는 중...</p>
+          <p className="py-2 text-center text-xs text-muted-foreground">{tc('loading')}</p>
         )}
       </div>
     </div>

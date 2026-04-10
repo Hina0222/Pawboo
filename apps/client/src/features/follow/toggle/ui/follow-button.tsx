@@ -3,6 +3,7 @@
 import { Button } from '@/shared/ui/button';
 import { useFollowMutation } from '../api/useFollowMutation';
 import { useUnfollowMutation } from '../api/useUnfollowMutation';
+import { useTranslations } from 'next-intl';
 
 interface FollowButtonProps {
   userId: number;
@@ -10,6 +11,7 @@ interface FollowButtonProps {
 }
 
 export function FollowButton({ userId, isFollowing }: FollowButtonProps) {
+  const t = useTranslations('follow');
   const { mutate: follow, isPending: isFollowPending } = useFollowMutation(userId);
   const { mutate: unfollow, isPending: isUnfollowing } = useUnfollowMutation(userId);
 
@@ -31,7 +33,7 @@ export function FollowButton({ userId, isFollowing }: FollowButtonProps) {
       disabled={isPending}
       className="rounded-lg px-5"
     >
-      {isFollowing ? '팔로잉' : '팔로우'}
+      {isFollowing ? t('following') : t('follow')}
     </Button>
   );
 }

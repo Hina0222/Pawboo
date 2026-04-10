@@ -1,22 +1,24 @@
 'use client';
 
 import { Settings } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/app/i18n/navigation';
 import { BottomNav } from '@/widgets/bottom-nav';
 import { useMeQuery } from '@/features/user/me/api/useMeQuery';
 import { UserFeedGrid } from '@/features/feed/user-feed/ui';
 import { MyPetList } from '@/widgets/pet';
 import { TitleHeader } from '@/widgets/header';
+import { useTranslations } from 'next-intl';
 
 export default function MyPage() {
   const { data: user } = useMeQuery();
+  const t = useTranslations('my');
 
-  const displayName = user?.nickname ?? '집사님';
+  const displayName = user?.nickname ?? t('defaultNickname');
 
   return (
     <div className="pb-20">
       <TitleHeader
-        title="내 정보"
+        title={t('title')}
         right={
           <Link
             href="/my/settings"
@@ -46,8 +48,8 @@ export default function MyPage() {
           {/* Stats */}
           <div className="flex flex-1 gap-6">
             {[
-              { label: '팔로워', value: user?.followerCount ?? 0 },
-              { label: '팔로잉', value: user?.followingCount ?? 0 },
+              { label: t('followers'), value: user?.followerCount ?? 0 },
+              { label: t('following'), value: user?.followingCount ?? 0 },
             ].map(({ label, value }) => (
               <div key={label} className="flex flex-col items-center">
                 <span className="text-lg font-bold text-foreground">{value}</span>
@@ -60,20 +62,20 @@ export default function MyPage() {
         {/* 닉네임 */}
         <div className="mt-4">
           <p className="text-sm font-semibold text-foreground">{displayName}</p>
-          <p className="mt-0.5 text-xs text-muted-foreground">반려동물과 함께하는 일상 🐾</p>
+          <p className="mt-0.5 text-xs text-muted-foreground">{t('tagline')}</p>
         </div>
       </section>
 
       {/* 내 펫 가로 스크롤 */}
       <section className="px-5 pb-6">
-        <h2 className="mb-3 text-sm font-semibold text-foreground">내 반려동물</h2>
+        <h2 className="mb-3 text-sm font-semibold text-foreground">{t('myPets')}</h2>
         <div className="scrollbar-hide flex gap-4 overflow-x-auto pb-1">
           <MyPetList />
           <Link href="/my/pets/new" className="flex flex-shrink-0 flex-col items-center gap-1.5">
             <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-dashed border-border bg-card text-muted-foreground transition-colors hover:border-primary/50">
               <span className="text-xl">+</span>
             </div>
-            <span className="text-xs text-muted-foreground">추가</span>
+            <span className="text-xs text-muted-foreground">{t('add')}</span>
           </Link>
         </div>
       </section>

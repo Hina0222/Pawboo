@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
+import { useTranslations } from 'next-intl';
 import type { FeedQuery } from '@bragram/schemas/feed';
 import { useGetFeedsSuspenseInfiniteQuery } from '@/features/feed/list/api/useGetFeedsInfiniteQuery';
 import { FeedItem, FeedListSkeleton, FeedListError } from '@/features/feed/list/ui';
@@ -13,6 +14,8 @@ interface FeedListProps {
 }
 
 function FeedList({ sort = 'latest' }: FeedListProps) {
+  const t = useTranslations('feed');
+  const tc = useTranslations('common');
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetFeedsSuspenseInfiniteQuery(sort);
 
@@ -37,7 +40,7 @@ function FeedList({ sort = 'latest' }: FeedListProps) {
   if (feeds.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-        <p className="text-sm">아직 피드가 없습니다.</p>
+        <p className="text-sm">{t('noFeeds')}</p>
       </div>
     );
   }
@@ -67,7 +70,7 @@ function FeedList({ sort = 'latest' }: FeedListProps) {
           ) : (
             <div ref={ref} className="flex justify-center py-4">
               {isFetchingNextPage && (
-                <p className="text-xs text-muted-foreground">불러오는 중...</p>
+                <p className="text-xs text-muted-foreground">{tc('loading')}</p>
               )}
             </div>
           )}

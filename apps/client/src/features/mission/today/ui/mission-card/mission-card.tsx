@@ -1,12 +1,14 @@
 'use client';
 
 import { CheckCircle2, ImageOff, Star } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/app/i18n/navigation';
 import { useGetTodayMissionSuspenseQuery } from '@/features/mission/today/api/useGetTodayMissionQuery';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { MissionCardError, MissionCardSkeleton } from '@/features/mission/today/ui/mission-card';
+import { useTranslations } from 'next-intl';
 
 function MissionCard() {
+  const t = useTranslations('mission');
   const { data } = useGetTodayMissionSuspenseQuery();
   const { mission, submission } = data;
 
@@ -16,7 +18,7 @@ function MissionCard() {
     return (
       <div className="flex flex-col items-center gap-3 px-5 py-16 text-center text-muted-foreground">
         <ImageOff size={40} />
-        <p className="text-sm">오늘의 미션이 아직 준비되지 않았습니다.</p>
+        <p className="text-sm">{t('notReady')}</p>
       </div>
     );
   }
@@ -31,12 +33,13 @@ function MissionCard() {
           </span>
           <span className="flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-primary-foreground">
             <Star size={11} fill="currentColor" />
-            {mission.baseScore}점
+            {mission.baseScore}
+            {t('points')}
           </span>
           {isDone && (
             <span className="flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-primary-foreground">
               <CheckCircle2 size={11} />
-              완료
+              {t('completed')}
             </span>
           )}
         </div>
@@ -46,14 +49,14 @@ function MissionCard() {
           <div className="relative h-40 w-full overflow-hidden rounded-xl">
             <img
               src={mission.exampleImageUrl}
-              alt="미션 예시 이미지"
+              alt={t('exampleImage')}
               className="absolute inset-0 h-full w-full object-cover"
             />
             {isDone && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40">
                 <div className="flex items-center gap-1.5 rounded-full bg-white/90 px-4 py-1.5 text-sm font-semibold text-primary">
                   <CheckCircle2 size={16} />
-                  완료
+                  {t('completed')}
                 </div>
               </div>
             )}
@@ -74,7 +77,7 @@ function MissionCard() {
             href={`/mission/${mission.id}/upload`}
             className="self-start rounded-lg bg-primary-foreground px-5 py-2.5 text-sm font-bold text-primary transition-transform active:scale-95"
           >
-            참여하기
+            {t('participate')}
           </Link>
         )}
       </div>

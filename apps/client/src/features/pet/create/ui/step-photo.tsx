@@ -4,8 +4,11 @@ import { useRef, useState } from 'react';
 import { Camera } from 'lucide-react';
 import { useFormContext } from 'react-hook-form';
 import type { CreatePetFormValues } from '@/features/pet/create/model/schema';
+import { useTranslations } from 'next-intl';
 
 export function StepPhoto() {
+  const t = useTranslations('pet');
+  const tc = useTranslations('common');
   const { setValue, getValues } = useFormContext<CreatePetFormValues>();
   const [previewUrl, setPreviewUrl] = useState<string | null>(() => {
     const file = getValues('image');
@@ -27,9 +30,9 @@ export function StepPhoto() {
   return (
     <div className="flex flex-col items-center gap-6">
       <div className="text-center">
-        <h2 className="mb-2 text-2xl font-bold text-foreground">프로필 사진</h2>
+        <h2 className="mb-2 text-2xl font-bold text-foreground">{t('profilePhoto')}</h2>
         <p className="text-sm text-muted-foreground">
-          반려동물 사진을 등록해주세요 <span className="text-xs">(선택)</span>
+          {t('registerPhoto')} <span className="text-xs">{t('optional')}</span>
         </p>
       </div>
 
@@ -39,11 +42,11 @@ export function StepPhoto() {
         className="relative mt-4 flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-primary/50 bg-card transition-colors hover:border-primary"
       >
         {previewUrl ? (
-          <img src={previewUrl} alt="펫 사진" className="h-full w-full object-cover" />
+          <img src={previewUrl} alt={t('petPhoto')} className="h-full w-full object-cover" />
         ) : (
           <div className="flex flex-col items-center gap-2 text-muted-foreground">
             <Camera size={28} />
-            <span className="text-xs">사진 추가</span>
+            <span className="text-xs">{tc('addPhoto')}</span>
           </div>
         )}
       </button>
@@ -57,9 +60,9 @@ export function StepPhoto() {
       />
 
       <p className="mt-2 text-center text-xs text-muted-foreground">
-        탭하여 갤러리에서 사진을 선택하거나
+        {t('tapToSelect')}
         <br />
-        카메라로 바로 촬영하세요
+        {t('takePhoto')}
       </p>
     </div>
   );

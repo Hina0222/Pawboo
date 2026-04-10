@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Medal, Trophy } from 'lucide-react';
 import { useInView } from 'react-intersection-observer';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
+import { useTranslations } from 'next-intl';
 import { cn } from '@/shared/lib/utils';
 import type { RankingItem, RankingQuery } from '@bragram/schemas/ranking';
 import { useGetRankingsInfiniteQuery } from '../api/useGetRankingsInfiniteQuery';
@@ -37,6 +38,7 @@ interface PodiumItemProps {
 }
 
 function PodiumItem({ item, grad, height, medal, isFirst = false }: PodiumItemProps) {
+  const tr = useTranslations('ranking');
   const petEmoji = PET_EMOJI[item.petType] ?? '🐾';
 
   return (
@@ -69,7 +71,10 @@ function PodiumItem({ item, grad, height, medal, isFirst = false }: PodiumItemPr
         )}
       >
         <Medal size={13} className={medal} />
-        <span className="text-xs font-bold text-white">{item.rank}위</span>
+        <span className="text-xs font-bold text-white">
+          {item.rank}
+          {tr('rankSuffix')}
+        </span>
         <span className="text-[10px] text-white/70">
           {item.score >= 1000 ? `${(item.score / 1000).toFixed(1)}K` : item.score}
         </span>
@@ -83,6 +88,8 @@ interface RankingListProps {
 }
 
 function RankingList({ type = 'all' }: RankingListProps) {
+  const t = useTranslations('ranking');
+  const tc = useTranslations('common');
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetRankingsInfiniteQuery(type);
 
@@ -103,7 +110,7 @@ function RankingList({ type = 'all' }: RankingListProps) {
   if (allItems.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-        <p className="text-sm">아직 랭킹 데이터가 없습니다.</p>
+        <p className="text-sm">{t('noData')}</p>
       </div>
     );
   }
@@ -154,7 +161,7 @@ function RankingList({ type = 'all' }: RankingListProps) {
 
       {/* 무한 스크롤 트리거 */}
       <div ref={ref} className="flex justify-center py-4">
-        {isFetchingNextPage && <p className="text-xs text-muted-foreground">불러오는 중...</p>}
+        {isFetchingNextPage && <p className="text-xs text-muted-foreground">{tc('loading')}</p>}
       </div>
     </div>
   );

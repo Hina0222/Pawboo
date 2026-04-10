@@ -14,8 +14,9 @@ import {
 } from '@/shared/ui';
 import { useDeleteCommentMutation } from '@/features/comment/delete/api/useDeleteCommentMutation';
 import type { CommentItem as CommentItemType } from '@bragram/schemas/comment';
-import Link from 'next/link';
+import { Link } from '@/app/i18n/navigation';
 import { timeAgo } from '@/shared/lib/utils';
+import { useTranslations } from 'next-intl';
 
 interface CommentItemProps {
   comment: CommentItemType;
@@ -24,6 +25,8 @@ interface CommentItemProps {
 }
 
 export function CommentItem({ comment, submissionId, isOwner }: CommentItemProps) {
+  const t = useTranslations('comment');
+  const tc = useTranslations('common');
   const { mutate: deleteComment, isPending } = useDeleteCommentMutation(submissionId);
 
   return (
@@ -67,13 +70,13 @@ export function CommentItem({ comment, submissionId, isOwner }: CommentItemProps
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>댓글 삭제</DialogTitle>
-              <DialogDescription>댓글을 삭제하시겠습니까?</DialogDescription>
+              <DialogTitle>{t('deleteTitle')}</DialogTitle>
+              <DialogDescription>{t('deleteConfirm')}</DialogDescription>
             </DialogHeader>
             <DialogFooter className="gap-2">
               <DialogClose asChild>
                 <Button variant="outline" disabled={isPending}>
-                  취소
+                  {tc('cancel')}
                 </Button>
               </DialogClose>
               <Button
@@ -81,7 +84,7 @@ export function CommentItem({ comment, submissionId, isOwner }: CommentItemProps
                 onClick={() => deleteComment(comment.id)}
                 disabled={isPending}
               >
-                {isPending ? '삭제 중...' : '삭제'}
+                {isPending ? tc('deleting') : tc('delete')}
               </Button>
             </DialogFooter>
           </DialogContent>

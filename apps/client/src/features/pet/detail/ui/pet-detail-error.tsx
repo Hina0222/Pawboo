@@ -1,10 +1,15 @@
+'use client';
+
 import type { FallbackProps } from 'react-error-boundary';
+import { useTranslations } from 'next-intl';
 
 function PetDetailError({ resetErrorBoundary }: FallbackProps) {
+  const t = useTranslations('pet');
+  const tc = useTranslations('common');
   return (
     <div className="px-5 py-4 text-sm text-destructive">
-      <p>펫 정보를 불러오지 못했어요.</p>
-      <button onClick={resetErrorBoundary}>다시 시도</button>
+      <p>{t('loadError')}</p>
+      <button onClick={resetErrorBoundary}>{tc('retry')}</button>
     </div>
   );
 }

@@ -4,13 +4,16 @@ import { Controller, useFormContext } from 'react-hook-form';
 import type { PetGender } from '@bragram/schemas/pet';
 import type { CreatePetFormValues } from '@/features/pet/create/model/schema';
 import { cn } from '@/shared/lib/utils';
-
-const genderTypes = [
-  { val: 'male' as PetGender, label: '남아 ♂' },
-  { val: 'female' as PetGender, label: '여아 ♀' },
-];
+import { useTranslations } from 'next-intl';
 
 export function StepBasicInfo() {
+  const t = useTranslations('pet');
+
+  const genderTypes = [
+    { val: 'male' as PetGender, label: t('maleSymbol') },
+    { val: 'female' as PetGender, label: t('femaleSymbol') },
+  ];
+
   const {
     control,
     register,
@@ -20,20 +23,20 @@ export function StepBasicInfo() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="mb-2 text-2xl font-bold text-foreground">기본 정보</h2>
-        <p className="text-sm text-muted-foreground">반려동물에 대해 알려주세요</p>
+        <h2 className="mb-2 text-2xl font-bold text-foreground">{t('basicInfo')}</h2>
+        <p className="text-sm text-muted-foreground">{t('tellAbout')}</p>
       </div>
 
       <div className="flex flex-col gap-4">
         {/* 이름 */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-foreground">
-            이름 <span className="text-primary">*</span>
+            {t('name')} <span className="text-primary">*</span>
           </label>
           <input
             {...register('name')}
             type="text"
-            placeholder="반려동물 이름"
+            placeholder={t('namePlaceholder')}
             className={cn(
               'h-12 w-full rounded-xl border bg-card px-4 text-foreground transition-colors placeholder:text-muted-foreground focus:outline-none',
               errors.name
@@ -47,12 +50,12 @@ export function StepBasicInfo() {
         {/* 품종 */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-foreground">
-            품종 <span className="text-xs text-muted-foreground">(선택)</span>
+            {t('breed')} <span className="text-xs text-muted-foreground">{t('optional')}</span>
           </label>
           <input
             {...register('breed')}
             type="text"
-            placeholder="예: 말티즈, 코리안숏헤어"
+            placeholder={t('breedPlaceholder')}
             className={cn(
               'h-12 w-full rounded-xl border bg-card px-4 text-foreground transition-colors placeholder:text-muted-foreground focus:outline-none',
               errors.breed
@@ -66,7 +69,7 @@ export function StepBasicInfo() {
         {/* 성별 */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-foreground">
-            성별 <span className="text-xs text-muted-foreground">(선택)</span>
+            {t('gender')} <span className="text-xs text-muted-foreground">{t('optional')}</span>
           </label>
           <Controller
             name="gender"
@@ -96,7 +99,7 @@ export function StepBasicInfo() {
         {/* 생년월일 */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-foreground">
-            생년월일 <span className="text-xs text-muted-foreground">(선택)</span>
+            {t('birthDate')} <span className="text-xs text-muted-foreground">{t('optional')}</span>
           </label>
           <input
             {...register('birthDate')}
@@ -116,11 +119,12 @@ export function StepBasicInfo() {
         {/* 소개 */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-medium text-foreground">
-            소개 <span className="text-xs text-muted-foreground">(선택)</span>
+            {t('introduction')}{' '}
+            <span className="text-xs text-muted-foreground">{t('optional')}</span>
           </label>
           <textarea
             {...register('bio')}
-            placeholder="반려동물을 소개해주세요 (최대 60자)"
+            placeholder={t('introPlaceholder')}
             maxLength={60}
             rows={3}
             className={cn(

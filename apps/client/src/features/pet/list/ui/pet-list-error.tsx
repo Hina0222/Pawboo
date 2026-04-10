@@ -1,10 +1,15 @@
+'use client';
+
 import type { FallbackProps } from 'react-error-boundary';
+import { useTranslations } from 'next-intl';
 
 function PetListError({ resetErrorBoundary }: FallbackProps) {
+  const t = useTranslations('pet');
+  const tc = useTranslations('common');
   return (
     <div className="px-5 py-4 text-sm text-destructive">
-      <p>목록을 불러오지 못했어요.</p>
-      <button onClick={resetErrorBoundary}>다시 시도</button>
+      <p>{t('listLoadError')}</p>
+      <button onClick={resetErrorBoundary}>{tc('retry')}</button>
     </div>
   );
 }

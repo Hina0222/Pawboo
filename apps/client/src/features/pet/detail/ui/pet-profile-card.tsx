@@ -4,8 +4,7 @@ import { Pencil, Star, X } from 'lucide-react';
 import { useGetPetSuspenseQuery } from '@/features/pet/detail/api/useGetPetQuery';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { PetProfileCardError, PetProfileCardSkeleton } from '@/features/pet/detail/ui';
-
-const PET_TYPE_LABEL = { dog: '강아지', cat: '고양이' } as const;
+import { useTranslations } from 'next-intl';
 
 interface PetProfileCardProps {
   id: number;
@@ -14,6 +13,8 @@ interface PetProfileCardProps {
 }
 
 function PetProfileCard({ id, isEditing, onToggle }: PetProfileCardProps) {
+  const t = useTranslations('pet');
+  const tc = useTranslations('common');
   const { data: pet } = useGetPetSuspenseQuery(id);
 
   return (
@@ -33,12 +34,12 @@ function PetProfileCard({ id, isEditing, onToggle }: PetProfileCardProps) {
           {pet.isActive && (
             <span className="flex items-center gap-0.5 rounded-full bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">
               <Star size={10} className="fill-current" />
-              대표
+              {t('representative')}
             </span>
           )}
         </div>
         <span className="mt-0.5 inline-block rounded-md bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
-          {PET_TYPE_LABEL[pet.type]}
+          {tc(pet.type)}
         </span>
       </div>
       {onToggle && (

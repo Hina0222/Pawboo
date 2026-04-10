@@ -8,27 +8,28 @@ import { PetDetailError, PetDetailSkeleton } from '@/features/pet/detail/ui';
 import { Trash2 } from 'lucide-react';
 import React from 'react';
 import { useDeletePetMutation } from '@/features/pet/delete/api/useDeletePetMutation';
-
-const GENDER_LABEL = { male: '수컷', female: '암컷' } as const;
+import { useTranslations } from 'next-intl';
 
 interface PetDetailProps {
   id: number;
 }
 
 function PetDetail({ id }: PetDetailProps) {
+  const t = useTranslations('pet');
+  const tc = useTranslations('common');
   const { data: pet } = useGetPetSuspenseQuery(id);
   const { mutate: activatePet, isPending } = useActivatePetMutation();
   const { mutate: deletePet } = useDeletePetMutation();
 
   return (
     <section className="flex flex-col gap-px px-5">
-      <InfoRow label="품종" value={pet.breed} />
-      <InfoRow label="생년월일" value={pet.birthDate} />
-      <InfoRow label="성별" value={pet.gender ? GENDER_LABEL[pet.gender] : null} />
-      <InfoRow label="소개" value={pet.bio} />
-      <InfoRow label="총 점수" value={String(pet.score)} />
-      <InfoRow label="주간 점수" value={String(pet.weeklyScore)} />
-      <InfoRow label="월간 점수" value={String(pet.monthlyScore)} />
+      <InfoRow label={t('breed')} value={pet.breed} />
+      <InfoRow label={t('birthDate')} value={pet.birthDate} />
+      <InfoRow label={t('gender')} value={pet.gender ? tc(pet.gender) : null} />
+      <InfoRow label={t('introduction')} value={pet.bio} />
+      <InfoRow label={t('totalScore')} value={String(pet.score)} />
+      <InfoRow label={t('weeklyScore')} value={String(pet.weeklyScore)} />
+      <InfoRow label={t('monthlyScore')} value={String(pet.monthlyScore)} />
 
       <Button
         variant="outline"
@@ -41,7 +42,7 @@ function PetDetail({ id }: PetDetailProps) {
         className="mt-1 w-full border-destructive/40 text-destructive hover:bg-destructive/5 hover:text-destructive"
       >
         <Trash2 size={13} />
-        삭제하기
+        {t('deleteButton')}
       </Button>
       {!pet.isActive && (
         <Button
@@ -51,7 +52,7 @@ function PetDetail({ id }: PetDetailProps) {
           className="mt-2 w-full"
           size="lg"
         >
-          {isPending ? '처리 중...' : '대표 펫으로 설정'}
+          {isPending ? tc('processing') : t('setRepresentative')}
         </Button>
       )}
     </section>

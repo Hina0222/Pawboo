@@ -1,11 +1,12 @@
 'use client';
 
 import { useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from '@/app/i18n/navigation';
 import { useInView } from 'react-intersection-observer';
 import { Skeleton } from '@/shared/ui';
 import { useGetPetSubmissionsSuspenseInfiniteQuery } from '@/features/pet/detail/api/useGetPetSubmissionsQuery';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
+import { useTranslations } from 'next-intl';
 
 interface PublicPetMissionsProps {
   userId: number;
@@ -13,6 +14,8 @@ interface PublicPetMissionsProps {
 }
 
 function PublicPetMissions({ userId, petId }: PublicPetMissionsProps) {
+  const t = useTranslations('pet');
+  const tc = useTranslations('common');
   const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
     useGetPetSubmissionsSuspenseInfiniteQuery(userId, petId);
   const { ref, inView } = useInView();
@@ -28,7 +31,7 @@ function PublicPetMissions({ userId, petId }: PublicPetMissionsProps) {
   if (submissions.length === 0) {
     return (
       <div className="flex flex-col items-center gap-3 py-16 text-center text-muted-foreground">
-        <p className="text-sm">아직 미션 이력이 없습니다.</p>
+        <p className="text-sm">{t('noMissionHistory')}</p>
       </div>
     );
   }
@@ -49,7 +52,7 @@ function PublicPetMissions({ userId, petId }: PublicPetMissionsProps) {
         ))}
       </div>
       <div ref={ref} className="flex justify-center py-4">
-        {isFetchingNextPage && <p className="text-xs text-muted-foreground">불러오는 중...</p>}
+        {isFetchingNextPage && <p className="text-xs text-muted-foreground">{tc('loading')}</p>}
       </div>
     </div>
   );
@@ -66,9 +69,10 @@ function PublicPetMissionsSkeleton() {
 }
 
 function PublicPetMissionsError() {
+  const t = useTranslations('pet');
   return (
     <div className="py-8 text-center text-sm text-muted-foreground">
-      미션 이력을 불러오는 데 실패했습니다.
+      {t('missionHistoryLoadError')}
     </div>
   );
 }

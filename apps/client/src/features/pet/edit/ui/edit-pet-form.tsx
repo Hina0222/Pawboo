@@ -7,8 +7,7 @@ import { useUpdatePetForm } from '@/features/pet/edit/hooks/useUpdatePetForm';
 import { useGetPetQuery } from '@/features/pet/detail/api/useGetPetQuery';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib/utils';
-
-const GENDER_LABEL = { male: '수컷', female: '암컷' } as const;
+import { useTranslations } from 'next-intl';
 
 const inputCls =
   'w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary';
@@ -20,6 +19,8 @@ interface EditPetFormProps {
 }
 
 function EditPetForm({ id, onSuccess, onCancel }: EditPetFormProps) {
+  const t = useTranslations('pet');
+  const tc = useTranslations('common');
   const { data: pet } = useGetPetQuery(id);
   const { methods, onSubmit, isPending } = useUpdatePetForm(pet!, onSuccess);
   const {
@@ -49,15 +50,15 @@ function EditPetForm({ id, onSuccess, onCancel }: EditPetFormProps) {
           className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-primary/50 bg-card transition-colors hover:border-primary"
         >
           {previewUrl ? (
-            <img src={previewUrl} alt="펫 사진" className="h-full w-full object-cover" />
+            <img src={previewUrl} alt={t('petPhoto')} className="h-full w-full object-cover" />
           ) : (
             <div className="flex flex-col items-center gap-1 text-muted-foreground">
               <Camera size={24} />
-              <span className="text-xs">사진 추가</span>
+              <span className="text-xs">{tc('addPhoto')}</span>
             </div>
           )}
         </button>
-        <span className="text-xs text-muted-foreground">탭하여 사진 변경</span>
+        <span className="text-xs text-muted-foreground">{t('tapToChange')}</span>
         <input
           ref={fileInputRef}
           type="file"
@@ -67,23 +68,23 @@ function EditPetForm({ id, onSuccess, onCancel }: EditPetFormProps) {
         />
       </div>
 
-      <FormField label="이름" error={errors.name?.message}>
+      <FormField label={t('name')} error={errors.name?.message}>
         <input
           {...register('name')}
-          placeholder="이름을 입력하세요"
+          placeholder={t('enterName')}
           className={cn(inputCls, errors.name && 'border-destructive')}
         />
       </FormField>
 
-      <FormField label="품종" error={errors.breed?.message}>
-        <input {...register('breed')} placeholder="품종을 입력하세요" className={inputCls} />
+      <FormField label={t('breed')} error={errors.breed?.message}>
+        <input {...register('breed')} placeholder={t('enterBreed')} className={inputCls} />
       </FormField>
 
-      <FormField label="생년월일" error={errors.birthDate?.message}>
+      <FormField label={t('birthDate')} error={errors.birthDate?.message}>
         <input type="date" {...register('birthDate')} className={inputCls} />
       </FormField>
 
-      <FormField label="성별">
+      <FormField label={t('gender')}>
         <Controller
           control={control}
           name="gender"
@@ -101,7 +102,7 @@ function EditPetForm({ id, onSuccess, onCancel }: EditPetFormProps) {
                       : 'border-border bg-card text-muted-foreground hover:bg-accent'
                   )}
                 >
-                  {GENDER_LABEL[g]}
+                  {tc(g)}
                 </button>
               ))}
             </div>
@@ -109,10 +110,10 @@ function EditPetForm({ id, onSuccess, onCancel }: EditPetFormProps) {
         />
       </FormField>
 
-      <FormField label="소개" error={errors.bio?.message}>
+      <FormField label={t('introduction')} error={errors.bio?.message}>
         <textarea
           {...register('bio')}
-          placeholder="반려동물을 소개해주세요 (최대 60자)"
+          placeholder={t('introPlaceholder')}
           maxLength={60}
           rows={3}
           className={cn(inputCls, 'resize-none')}
@@ -121,10 +122,10 @@ function EditPetForm({ id, onSuccess, onCancel }: EditPetFormProps) {
 
       <div className="mt-4 flex gap-3">
         <Button type="button" variant="outline" onClick={onCancel} className="flex-1" size="lg">
-          취소
+          {tc('cancel')}
         </Button>
         <Button type="submit" disabled={isPending} className="flex-1" size="lg">
-          {isPending ? '저장 중...' : '저장하기'}
+          {isPending ? tc('saving') : tc('save')}
         </Button>
       </div>
     </form>

@@ -1,8 +1,9 @@
 'use client';
 
 import { memo } from 'react';
-import Link from 'next/link';
+import { Link } from '@/app/i18n/navigation';
 import { MessageCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { LikeButton } from '@/features/like/ui';
 import { ShareButton } from '@/features/feed/share/ui';
 import { FeedAuthor } from '@/features/feed/ui';
@@ -22,6 +23,7 @@ interface FeedItemProps {
 }
 
 export const FeedItem = memo(function FeedItem({ item }: FeedItemProps) {
+  const t = useTranslations('feed');
   return (
     <article className="overflow-hidden rounded-2xl bg-card shadow-sm">
       {/* 작성자 정보 */}
@@ -35,7 +37,7 @@ export const FeedItem = memo(function FeedItem({ item }: FeedItemProps) {
               <div className="relative aspect-square w-full bg-muted">
                 <img
                   src={url}
-                  alt={`${item.pet.name}의 미션 사진 ${i + 1}`}
+                  alt={t('missionPhotoAlt', { petName: item.pet.name, index: i + 1 })}
                   className="h-full w-full object-cover"
                 />
               </div>

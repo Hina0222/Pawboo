@@ -1,17 +1,19 @@
 'use client';
 
 import { Tabs, TabsList, TabsTrigger } from '@/shared/ui';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
-const TABS = [
-  { label: '전체', href: '/ranking' },
-  { label: '주간', href: '/ranking/weekly' },
-  { label: '월간', href: '/ranking/monthly' },
-];
+import { Link } from '@/app/i18n/navigation';
+import { usePathname } from '@/app/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 export function RankingTabNav() {
   const pathname = usePathname();
+  const t = useTranslations('ranking');
+
+  const TABS = [
+    { label: t('all'), href: '/ranking' },
+    { label: t('weekly'), href: '/ranking/weekly' },
+    { label: t('monthly'), href: '/ranking/monthly' },
+  ] as const;
 
   return (
     <Tabs className="px-5 pb-2">

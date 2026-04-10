@@ -1,12 +1,13 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/app/i18n/navigation';
 import { useInView } from 'react-intersection-observer';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { useSearchUsersSuspenseInfiniteQuery } from '../api/useSearchUsersInfiniteQuery';
 import { UserSearchListSkeleton } from './user-search-list-skeleton';
 import { UserSearchListError } from './user-search-list-error';
+import { useTranslations } from 'next-intl';
 import type { SearchType, UserSearchResponse, PetSearchResponse } from '@bragram/schemas/user';
 
 interface UserSearchListProps {
@@ -15,6 +16,8 @@ interface UserSearchListProps {
 }
 
 function UserSearchList({ query, type }: UserSearchListProps) {
+  const t = useTranslations('community');
+  const tc = useTranslations('common');
   const router = useRouter();
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useSearchUsersSuspenseInfiniteQuery(query, type);
@@ -29,13 +32,13 @@ function UserSearchList({ query, type }: UserSearchListProps) {
 
   const emptyResult = (
     <div className="flex flex-col items-center justify-center py-10 text-muted-foreground">
-      <p className="text-sm">검색 결과가 없습니다.</p>
+      <p className="text-sm">{t('noResults')}</p>
     </div>
   );
 
   const loadMore = (
     <div ref={ref} className="flex justify-center py-2">
-      {isFetchingNextPage && <p className="text-xs text-muted-foreground">불러오는 중...</p>}
+      {isFetchingNextPage && <p className="text-xs text-muted-foreground">{tc('loading')}</p>}
     </div>
   );
 

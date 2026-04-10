@@ -5,12 +5,14 @@ import { Controller } from 'react-hook-form';
 import { ImagePlus, X } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
 import { useSubmitMissionForm } from '@/features/mission/submit/hooks/useSubmitMissionForm';
+import { useTranslations } from 'next-intl';
 
 interface SubmitMissionFormProps {
   missionId: number;
 }
 
 export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
+  const t = useTranslations('submit');
   const { methods, onSubmit, isPending } = useSubmitMissionForm();
   const {
     register,
@@ -72,11 +74,15 @@ export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
 
   return (
     <form onSubmit={onSubmit(missionId)} className="mt-4 flex flex-1 flex-col gap-5 px-5">
-      <FormField label="인증 사진" required error={errors.images?.message as string | undefined}>
+      <FormField label={t('photo')} required error={errors.images?.message as string | undefined}>
         <div className="grid grid-cols-3 gap-2">
           {previewUrls.map((url, i) => (
             <div key={i} className="relative aspect-square overflow-hidden rounded-xl bg-card">
-              <img src={url} alt={`인증 사진 ${i + 1}`} className="h-full w-full object-cover" />
+              <img
+                src={url}
+                alt={t('photoAlt', { index: i + 1 })}
+                className="h-full w-full object-cover"
+              />
               <button
                 type="button"
                 onClick={() => removeImage(i)}
@@ -109,17 +115,17 @@ export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
         />
       </FormField>
 
-      <FormField label="한마디" error={errors.comment?.message}>
+      <FormField label={t('comment')} error={errors.comment?.message}>
         <textarea
           {...register('comment')}
-          placeholder="오늘의 미션을 짧게 기록해보세요..."
+          placeholder={t('commentPlaceholder')}
           maxLength={150}
           rows={3}
           className="w-full resize-none rounded-xl border border-border bg-card px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
         />
       </FormField>
 
-      <FormField label="해시태그">
+      <FormField label={t('hashtag')}>
         <Controller
           control={control}
           name="hashtags"
@@ -142,7 +148,7 @@ export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
                   onChange={e => setHashtagInput(e.target.value)}
                   onKeyDown={handleHashtagKeyDown}
                   onBlur={() => addHashtag(hashtagInput)}
-                  placeholder={hashtags.length === 0 ? '#해시태그 입력 후 Space' : ''}
+                  placeholder={hashtags.length === 0 ? t('hashtagPlaceholder') : ''}
                   className="min-w-[140px] flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
                 />
               )}
@@ -158,7 +164,7 @@ export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
           disabled={isPending}
           className="h-13 w-full rounded-2xl bg-primary text-base font-semibold text-primary-foreground hover:bg-primary/80 disabled:opacity-40"
         >
-          {isPending ? '제출 중...' : '인증 완료'}
+          {isPending ? t('submitting') : t('complete')}
         </Button>
       </div>
     </form>

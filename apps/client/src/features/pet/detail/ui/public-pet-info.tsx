@@ -5,9 +5,7 @@ import { Skeleton } from '@/shared/ui';
 import { useGetPublicPetSuspenseQuery } from '@/features/pet/detail/api/useGetPublicPetQuery';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import PetDetailError from './pet-detail-error';
-
-const PET_TYPE_LABEL = { dog: '강아지', cat: '고양이' } as const;
-const GENDER_LABEL = { male: '수컷', female: '암컷' } as const;
+import { useTranslations } from 'next-intl';
 
 interface PublicPetInfoProps {
   userId: number;
@@ -15,6 +13,8 @@ interface PublicPetInfoProps {
 }
 
 function PublicPetInfo({ userId, petId }: PublicPetInfoProps) {
+  const t = useTranslations('pet');
+  const tc = useTranslations('common');
   const { data: pet } = useGetPublicPetSuspenseQuery(userId, petId);
 
   return (
@@ -35,24 +35,24 @@ function PublicPetInfo({ userId, petId }: PublicPetInfoProps) {
             {pet.isActive && (
               <span className="flex items-center gap-0.5 rounded-full bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary">
                 <Star size={10} className="fill-current" />
-                대표
+                {t('representative')}
               </span>
             )}
           </div>
           <span className="mt-0.5 inline-block rounded-md bg-secondary px-2 py-0.5 text-xs text-muted-foreground">
-            {PET_TYPE_LABEL[pet.type]}
+            {tc(pet.type)}
           </span>
         </div>
       </section>
 
       <section className="flex flex-col gap-px px-5">
-        <InfoRow label="품종" value={pet.breed} />
-        <InfoRow label="생년월일" value={pet.birthDate} />
-        <InfoRow label="성별" value={pet.gender ? GENDER_LABEL[pet.gender] : null} />
-        <InfoRow label="소개" value={pet.bio} />
-        <InfoRow label="총 점수" value={String(pet.score)} />
-        <InfoRow label="주간 점수" value={String(pet.weeklyScore)} />
-        <InfoRow label="월간 점수" value={String(pet.monthlyScore)} />
+        <InfoRow label={t('breed')} value={pet.breed} />
+        <InfoRow label={t('birthDate')} value={pet.birthDate} />
+        <InfoRow label={t('gender')} value={pet.gender ? tc(pet.gender) : null} />
+        <InfoRow label={t('introduction')} value={pet.bio} />
+        <InfoRow label={t('totalScore')} value={String(pet.score)} />
+        <InfoRow label={t('weeklyScore')} value={String(pet.weeklyScore)} />
+        <InfoRow label={t('monthlyScore')} value={String(pet.monthlyScore)} />
       </section>
     </>
   );

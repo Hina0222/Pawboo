@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronLeft, ChevronRight, LogOut, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/app/i18n/navigation';
 import { useMeQuery } from '@/features/user/me/api/useMeQuery';
 import { useLogoutMutation } from '@/features/user/me/api/useLogoutMutation';
 import { useDeleteAccountMutation } from '@/features/user/me/api/useDeleteAccountMutation';
@@ -16,30 +16,23 @@ import {
   DialogTrigger,
   Button,
 } from '@/shared/ui';
-
-const SECTIONS = [
-  {
-    title: '계정',
-    items: [{ icon: User, label: '프로필 편집', action: 'profile', href: '/my/settings/profile' }],
-  },
-  // {
-  //   title: '알림',
-  //   items: [{ icon: Bell, label: '알림 설정', action: 'notifications', href: '' }],
-  // },
-  // {
-  //   title: '기타',
-  //   items: [
-  //     { icon: Shield, label: '개인정보처리방침', action: 'privacy', href: '' },
-  //     { icon: HelpCircle, label: '고객센터', action: 'help', href: '' },
-  //   ],
-  // },
-];
+import { useTranslations } from 'next-intl';
 
 export default function MySettingsPage() {
   const router = useRouter();
   const { data: user } = useMeQuery();
   const { mutate: logout, isPending } = useLogoutMutation();
   const { mutate: deleteAccount, isPending: isDeleting } = useDeleteAccountMutation();
+  const t = useTranslations('settings');
+
+  const SECTIONS = [
+    {
+      title: t('account'),
+      items: [
+        { icon: User, label: t('editProfile'), action: 'profile', href: '/my/settings/profile' },
+      ],
+    },
+  ];
 
   return (
     <>
@@ -51,7 +44,7 @@ export default function MySettingsPage() {
         >
           <ChevronLeft size={24} />
         </button>
-        <h1 className="text-base font-semibold text-foreground">설정</h1>
+        <h1 className="text-base font-semibold text-foreground">{t('title')}</h1>
       </header>
 
       {/* 프로필 요약 */}
@@ -60,7 +53,9 @@ export default function MySettingsPage() {
           🐾
         </div>
         <div>
-          <p className="text-sm font-semibold text-foreground">{user?.nickname ?? '집사님'}</p>
+          <p className="text-sm font-semibold text-foreground">
+            {user?.nickname ?? t('defaultNickname')}
+          </p>
           <p className="mt-0.5 text-xs text-muted-foreground">
             {user?.nickname ? `@${user.nickname}` : ''}
           </p>
@@ -102,7 +97,7 @@ export default function MySettingsPage() {
             >
               <LogOut size={18} className="flex-shrink-0 text-destructive" />
               <span className="flex-1 text-sm text-destructive">
-                {isPending ? '로그아웃 중...' : '로그아웃'}
+                {isPending ? t('loggingOut') : t('logout')}
               </span>
             </button>
           </div>
@@ -117,24 +112,22 @@ export default function MySettingsPage() {
               disabled={isDeleting}
               className="ml-auto w-fit text-xs text-muted-foreground hover:bg-transparent hover:text-muted-foreground"
             >
-              {isDeleting ? '탈퇴 중...' : '계정 탈퇴'}
+              {isDeleting ? t('deleting') : t('deleteAccount')}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>계정 탈퇴</DialogTitle>
-              <DialogDescription>
-                탈퇴하시겠습니까? 모든 데이터가 영구적으로 삭제됩니다.
-              </DialogDescription>
+              <DialogTitle>{t('deleteAccount')}</DialogTitle>
+              <DialogDescription>{t('deleteConfirmMessage')}</DialogDescription>
             </DialogHeader>
             <DialogFooter className="gap-2">
               <DialogClose asChild>
                 <Button variant="outline" disabled={isDeleting}>
-                  취소
+                  {t('cancel')}
                 </Button>
               </DialogClose>
               <Button variant="destructive" onClick={() => deleteAccount()} disabled={isDeleting}>
-                {isDeleting ? '탈퇴 중...' : '탈퇴'}
+                {isDeleting ? t('deleting') : t('deleteButton')}
               </Button>
             </DialogFooter>
           </DialogContent>

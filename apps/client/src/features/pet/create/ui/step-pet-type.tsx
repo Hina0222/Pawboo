@@ -4,20 +4,23 @@ import type { PetType } from '@bragram/schemas/pet';
 import { cn } from '@/shared/lib/utils';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { CreatePetFormValues } from '@/features/pet/create/model/schema';
-
-const petTypes: { type: PetType; emoji: string; label: string }[] = [
-  { type: 'dog', emoji: '🐶', label: '강아지' },
-  { type: 'cat', emoji: '🐱', label: '고양이' },
-];
+import { useTranslations } from 'next-intl';
 
 export function StepPetType() {
+  const t = useTranslations('pet');
+  const tc = useTranslations('common');
   const { control } = useFormContext<CreatePetFormValues>();
+
+  const petTypes: { type: PetType; emoji: string; label: string }[] = [
+    { type: 'dog', emoji: '🐶', label: tc('dog') },
+    { type: 'cat', emoji: '🐱', label: tc('cat') },
+  ];
 
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h2 className="mb-2 text-2xl font-bold text-foreground">어떤 반려동물인가요?</h2>
-        <p className="text-sm text-muted-foreground">반려동물 종류를 선택해주세요</p>
+        <h2 className="mb-2 text-2xl font-bold text-foreground">{t('whatKind')}</h2>
+        <p className="text-sm text-muted-foreground">{t('selectType')}</p>
       </div>
       <div className="mt-4 flex gap-4">
         <Controller

@@ -3,12 +3,14 @@
 import { Send } from 'lucide-react';
 import { Button } from '@/shared/ui';
 import { useCreateCommentForm } from '../hooks/useCreateCommentForm';
+import { useTranslations } from 'next-intl';
 
 interface CreateCommentFormProps {
   submissionId: number;
 }
 
 export function CreateCommentForm({ submissionId }: CreateCommentFormProps) {
+  const t = useTranslations('comment');
   const { methods, onSubmit, isPending } = useCreateCommentForm(submissionId);
   const {
     register,
@@ -23,7 +25,7 @@ export function CreateCommentForm({ submissionId }: CreateCommentFormProps) {
       <div className="flex items-center gap-2">
         <input
           {...register('content')}
-          placeholder="댓글을 입력하세요..."
+          placeholder={t('placeholder')}
           maxLength={300}
           disabled={isPending}
           className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none disabled:opacity-50"

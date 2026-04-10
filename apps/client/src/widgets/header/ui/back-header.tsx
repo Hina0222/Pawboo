@@ -1,7 +1,7 @@
 'use client';
 
 import { ChevronLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/app/i18n/navigation';
 
 interface BackHeaderProps {
   title?: string;

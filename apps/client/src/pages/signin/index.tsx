@@ -1,6 +1,9 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 export default function SigninPage() {
+  const t = useTranslations('signin');
   const handleKakaoLogin = () => {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/kakao`;
   };
@@ -17,9 +20,9 @@ export default function SigninPage() {
           <div className="text-center">
             <h1 className="text-3xl font-bold tracking-tight text-primary">BRAGram</h1>
             <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
-              반려동물과 함께하는
+              {t('tagline1')}
               <br />
-              특별한 순간을 기록해요
+              {t('tagline2')}
             </p>
           </div>
         </div>
@@ -27,9 +30,9 @@ export default function SigninPage() {
         {/* 피처 하이라이트 */}
         <div className="flex w-full flex-col gap-3">
           {[
-            { emoji: '🎯', text: '매일 미션으로 포인트 적립' },
-            { emoji: '📸', text: '반려동물 일상을 피드로 공유' },
-            { emoji: '🏆', text: '랭킹으로 집사들과 경쟁' },
+            { emoji: '🎯', text: t('feature1') },
+            { emoji: '📸', text: t('feature2') },
+            { emoji: '🏆', text: t('feature3') },
           ].map(({ emoji, text }) => (
             <div key={text} className="flex items-center gap-3 rounded-xl bg-secondary px-4 py-3">
               <span className="text-xl">{emoji}</span>
@@ -47,11 +50,12 @@ export default function SigninPage() {
           style={{ backgroundColor: '#FEE500', color: '#191919' }}
         >
           <KakaoIcon />
-          카카오로 시작하기
+          {t('kakaoLogin')}
         </button>
         <p className="text-center text-xs text-muted-foreground">
-          로그인 시 <span className="underline underline-offset-2">서비스 이용약관</span> 및{' '}
-          <span className="underline underline-offset-2">개인정보처리방침</span>에 동의합니다
+          {t('termsPrefix')} <span className="underline underline-offset-2">{t('terms')}</span>{' '}
+          <span className="underline underline-offset-2">{t('privacy')}</span>
+          {t('termsSuffix')}
         </p>
       </div>
     </>

@@ -1,7 +1,12 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
+
 function MissionHistoryError() {
+  const t = useTranslations('mission');
   return (
     <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-      <p className="text-sm">미션 히스토리를 불러오는 데 실패했습니다.</p>
+      <p className="text-sm">{t('historyLoadError')}</p>
     </div>
   );
 }

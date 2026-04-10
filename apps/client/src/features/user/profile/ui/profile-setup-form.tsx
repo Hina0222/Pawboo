@@ -4,8 +4,11 @@ import { useRef, useState } from 'react';
 import { Camera } from 'lucide-react';
 import { Button } from '@/shared/ui';
 import { useProfileSetupForm } from '@/features/user/profile/hooks/useProfileSetupForm';
+import { useTranslations } from 'next-intl';
 
 export function ProfileSetupForm() {
+  const t = useTranslations('profile');
+  const tc = useTranslations('common');
   const { methods, canSubmit, isPending, onSubmit } = useProfileSetupForm();
   const { setValue, register, formState } = methods;
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -31,8 +34,8 @@ export function ProfileSetupForm() {
       <form onSubmit={onSubmit} className="flex flex-1 flex-col">
         <div className="flex flex-1 flex-col items-center gap-6 px-5">
           <div className="text-center">
-            <h2 className="mb-2 text-2xl font-bold text-foreground">프로필 설정</h2>
-            <p className="text-sm text-muted-foreground">닉네임과 프로필 사진을 설정해주세요</p>
+            <h2 className="mb-2 text-2xl font-bold text-foreground">{t('setup')}</h2>
+            <p className="text-sm text-muted-foreground">{t('setupDescription')}</p>
           </div>
 
           <button
@@ -41,11 +44,11 @@ export function ProfileSetupForm() {
             className="relative mt-4 flex h-36 w-36 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-primary/50 bg-card transition-colors hover:border-primary"
           >
             {previewUrl ? (
-              <img src={previewUrl} alt="프로필 사진" className="h-full w-full object-cover" />
+              <img src={previewUrl} alt={t('photo')} className="h-full w-full object-cover" />
             ) : (
               <div className="flex flex-col items-center gap-2 text-muted-foreground">
                 <Camera size={28} />
-                <span className="text-xs">사진 추가</span>
+                <span className="text-xs">{tc('addPhoto')}</span>
               </div>
             )}
           </button>
@@ -59,13 +62,13 @@ export function ProfileSetupForm() {
           />
 
           <p className="text-center text-xs text-muted-foreground">
-            프로필 사진 <span className="text-xs">(선택)</span>
+            {t('photo')} <span className="text-xs">{t('optional')}</span>
           </p>
 
           <div className="w-full max-w-sm">
             <input
               {...register('nickname')}
-              placeholder="닉네임을 입력해주세요"
+              placeholder={t('nicknamePlaceholder')}
               maxLength={20}
               className="h-12 w-full rounded-xl border border-border bg-card px-4 text-base text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
             />
@@ -83,7 +86,7 @@ export function ProfileSetupForm() {
           onClick={onSubmit}
           disabled={!canSubmit}
         >
-          {isPending ? '설정 중...' : '시작하기'}
+          {isPending ? t('settingUp') : t('start')}
         </Button>
       </div>
     </>
