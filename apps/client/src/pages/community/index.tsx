@@ -8,8 +8,10 @@ import { UserSearchList } from '@/features/user/search/ui';
 import { TitleHeader } from '@/widgets/header';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs';
 import type { SearchType } from '@bragram/schemas/user';
+import { useTranslations } from 'next-intl';
 
 export default function CommunityPage() {
+  const t = useTranslations('community');
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [searchType, setSearchType] = useState<SearchType>('user');
@@ -26,15 +28,15 @@ export default function CommunityPage() {
 
   return (
     <div className="pb-20">
-      <TitleHeader title={'커뮤니티'} />
+      <TitleHeader title={t('title')} />
       <Tabs
         value={searchType}
         onValueChange={value => setSearchType(value as SearchType)}
         className="mt-4"
       >
         <TabsList className="mx-5 w-auto">
-          <TabsTrigger value="user">유저</TabsTrigger>
-          <TabsTrigger value="pet">펫</TabsTrigger>
+          <TabsTrigger value="user">{t('user')}</TabsTrigger>
+          <TabsTrigger value="pet">{t('pet')}</TabsTrigger>
         </TabsList>
 
         <div className="mx-5 mt-4 flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5">
@@ -43,7 +45,9 @@ export default function CommunityPage() {
             type="text"
             value={query}
             onChange={handleChange}
-            placeholder={searchType === 'user' ? '닉네임으로 유저 검색...' : '펫 이름으로 검색...'}
+            placeholder={
+              searchType === 'user' ? t('searchUserPlaceholder') : t('searchPetPlaceholder')
+            }
             className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
         </div>

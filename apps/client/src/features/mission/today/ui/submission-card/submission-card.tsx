@@ -3,6 +3,7 @@
 import { Trash2 } from 'lucide-react';
 import { useGetTodayMissionSuspenseQuery } from '@/features/mission/today/api/useGetTodayMissionQuery';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
+import { useTranslations } from 'next-intl';
 import {
   SubmissionCardError,
   SubmissionCardSkeleton,
@@ -26,6 +27,9 @@ import {
 } from '@/shared/ui';
 
 function SubmissionCard() {
+  const t = useTranslations('submit');
+  const tm = useTranslations('mission');
+  const tc = useTranslations('common');
   const { data } = useGetTodayMissionSuspenseQuery();
   const { mutate, isPending } = useDeleteSubmissionMutation();
   const { submission } = data;
@@ -33,7 +37,7 @@ function SubmissionCard() {
   if (!submission) {
     return (
       <div className="flex flex-col items-center gap-3 px-5 py-16 text-center text-muted-foreground">
-        <p className="text-sm">오늘의 미션을 아직 진행하지 않았습니다.</p>
+        <p className="text-sm">{tm('notStarted')}</p>
       </div>
     );
   }
@@ -45,7 +49,11 @@ function SubmissionCard() {
           {submission.imageUrls.map((url, i) => (
             <CarouselItem key={i}>
               <div className="relative aspect-square w-full bg-muted">
-                <img src={url} alt={`제출 사진 ${i + 1}`} className="h-full w-full object-cover" />
+                <img
+                  src={url}
+                  alt={t('submissionPhotoAlt', { index: i + 1 })}
+                  className="h-full w-full object-cover"
+                />
               </div>
             </CarouselItem>
           ))}
@@ -80,20 +88,18 @@ function SubmissionCard() {
               className="mt-1 w-full border-destructive/40 text-destructive hover:bg-destructive/5 hover:text-destructive"
             >
               <Trash2 size={13} />
-              제출 삭제
+              {t('deleteSubmission')}
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>제출 삭제</DialogTitle>
-              <DialogDescription>
-                제출을 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.
-              </DialogDescription>
+              <DialogTitle>{t('deleteSubmission')}</DialogTitle>
+              <DialogDescription>{t('deleteConfirm')}</DialogDescription>
             </DialogHeader>
             <DialogFooter className="gap-2">
               <DialogClose asChild>
                 <Button variant="outline" disabled={isPending}>
-                  취소
+                  {tc('cancel')}
                 </Button>
               </DialogClose>
               <Button
@@ -103,7 +109,7 @@ function SubmissionCard() {
                 }
                 disabled={isPending}
               >
-                {isPending ? '삭제 중...' : '삭제'}
+                {isPending ? tc('deleting') : tc('delete')}
               </Button>
             </DialogFooter>
           </DialogContent>

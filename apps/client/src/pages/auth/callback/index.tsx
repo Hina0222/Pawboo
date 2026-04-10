@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/app/i18n/navigation';
 import { useMeQuery } from '@/features/user/me/api/useMeQuery';
 
 export default function AuthCallbackPage() {

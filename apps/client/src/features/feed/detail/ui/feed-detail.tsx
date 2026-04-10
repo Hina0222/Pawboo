@@ -1,6 +1,7 @@
 'use client';
 
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
+import { useTranslations } from 'next-intl';
 import { LikeButton } from '@/features/like/ui';
 import { ShareButton } from '@/features/feed/share/ui';
 import { FeedAuthor } from '@/features/feed/ui';
@@ -21,6 +22,7 @@ interface FeedDetailProps {
 }
 
 function FeedDetail({ id }: FeedDetailProps) {
+  const t = useTranslations('feed');
   const { data: item } = useGetFeedSuspenseQuery(id);
 
   return (
@@ -36,7 +38,7 @@ function FeedDetail({ id }: FeedDetailProps) {
               <div className="relative aspect-square max-h-[60svh] w-full bg-muted">
                 <img
                   src={url}
-                  alt={`${item.pet.name}의 미션 사진 ${i + 1}`}
+                  alt={t('missionPhotoAlt', { petName: item.pet.name, index: i + 1 })}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
               </div>

@@ -3,16 +3,19 @@
 import { useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
+import { useTranslations } from 'next-intl';
 import { useGetUserFeedsSuspenseInfiniteQuery } from '../api/useGetUserFeedsInfiniteQuery';
 import { UserFeedGridSkeleton } from './user-feed-grid-skeleton';
 import { UserFeedGridError } from '@/features/feed/user-feed/ui';
-import Link from 'next/link';
+import { Link } from '@/app/i18n/navigation';
 
 interface UserFeedGridProps {
   userId: number;
 }
 
 function UserFeedGrid({ userId }: UserFeedGridProps) {
+  const t = useTranslations('feed');
+  const tc = useTranslations('common');
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useGetUserFeedsSuspenseInfiniteQuery(userId);
 
@@ -29,7 +32,7 @@ function UserFeedGrid({ userId }: UserFeedGridProps) {
   if (feeds.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
-        <p className="text-sm">아직 피드가 없습니다.</p>
+        <p className="text-sm">{t('noFeeds')}</p>
       </div>
     );
   }
@@ -50,7 +53,7 @@ function UserFeedGrid({ userId }: UserFeedGridProps) {
         ))}
       </div>
       <div ref={ref} className="flex justify-center py-4">
-        {isFetchingNextPage && <p className="text-xs text-muted-foreground">불러오는 중...</p>}
+        {isFetchingNextPage && <p className="text-xs text-muted-foreground">{tc('loading')}</p>}
       </div>
     </div>
   );

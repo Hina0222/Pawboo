@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/app/i18n/navigation';
 import { useCreatePetMutation } from '@/features/pet/create/api/useCreatePetMutation';
 import { CreatePetFormSchema, CreatePetFormValues } from '@/features/pet/create/model/schema';
 

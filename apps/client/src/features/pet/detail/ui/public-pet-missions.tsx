@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import Link from 'next/link';
+import { Link } from '@/app/i18n/navigation';
 import { useInView } from 'react-intersection-observer';
 import { Skeleton } from '@/shared/ui';
 import { useGetPetSubmissionsSuspenseInfiniteQuery } from '@/features/pet/detail/api/useGetPetSubmissionsQuery';

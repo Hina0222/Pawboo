@@ -1,20 +1,22 @@
 'use client';
 
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname, useRouter } from '@/app/i18n/navigation';
 import { Home, Target, Trophy, Users, User } from 'lucide-react';
 import { cn } from '@/shared/lib/utils';
-
-const tabs = [
-  { href: '/', icon: Home, label: '홈' },
-  { href: '/mission', icon: Target, label: '미션' },
-  { href: '/ranking', icon: Trophy, label: '랭킹' },
-  { href: '/community', icon: Users, label: '커뮤니티' },
-  { href: '/my', icon: User, label: '마이' },
-];
+import { useTranslations } from 'next-intl';
 
 export function BottomNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const t = useTranslations('nav');
+
+  const tabs = [
+    { href: '/', icon: Home, label: t('home') },
+    { href: '/mission', icon: Target, label: t('mission') },
+    { href: '/ranking', icon: Trophy, label: t('ranking') },
+    { href: '/community', icon: Users, label: t('community') },
+    { href: '/my', icon: User, label: t('my') },
+  ] as const;
 
   return (
     <nav className="fixed bottom-0 left-1/2 z-50 flex h-20 w-full max-w-[390px] -translate-x-1/2 items-center justify-around rounded-t-3xl border-t border-primary/10 bg-card/95 px-4 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] backdrop-blur-md">

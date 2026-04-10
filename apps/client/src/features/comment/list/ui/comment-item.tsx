@@ -14,7 +14,7 @@ import {
 } from '@/shared/ui';
 import { useDeleteCommentMutation } from '@/features/comment/delete/api/useDeleteCommentMutation';
 import type { CommentItem as CommentItemType } from '@bragram/schemas/comment';
-import Link from 'next/link';
+import { Link } from '@/app/i18n/navigation';
 import { timeAgo } from '@/shared/lib/utils';
 
 interface CommentItemProps {

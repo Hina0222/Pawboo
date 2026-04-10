@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react';
 import { Camera, ChevronLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/app/i18n/navigation';
 import { Button } from '@/shared/ui';
 import { useProfileUpdateForm } from '@/features/user/profile/hooks/useProfileUpdateForm';
 

@@ -7,7 +7,7 @@ import {
   type SubmitMissionFormValues,
 } from '@/features/mission/submit/model/schema';
 import { useSubmitMissionMutation } from '@/features/mission/submit/api/useSubmitMissionMutation';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/app/i18n/navigation';
 
 export const useSubmitMissionForm = () => {
   const router = useRouter();

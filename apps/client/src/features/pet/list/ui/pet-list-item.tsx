@@ -2,7 +2,7 @@
 
 import React from 'react';
 import type { PetResponse } from '@bragram/schemas/pet';
-import Link from 'next/link';
+import { Link } from '@/app/i18n/navigation';
 
 const PET_EMOJI: Record<string, string> = {
   dog: '🐶',
