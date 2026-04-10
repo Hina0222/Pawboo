@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
+import createIntlMiddleware from 'next-intl/middleware';
+import { routing } from '@/app/i18n/routing';
 
 const PUBLIC_ROUTES = ['/signin', '/auth/callback'];
 const ONBOARDING_ROUTES = ['/onboarding'];
+
+const intlMiddleware = createIntlMiddleware(routing);
 
 function decodeJwtPayload(token: string): { hasNickname?: boolean } | null {
   try {
@@ -10,6 +14,18 @@ function decodeJwtPayload(token: string): { hasNickname?: boolean } | null {
   } catch {
     return null;
   }
+}
+
+function stripLocalePrefix(pathname: string): string {
+  for (const locale of routing.locales) {
+    if (pathname.startsWith(`/${locale}/`)) {
+      return pathname.slice(locale.length + 1);
+    }
+    if (pathname === `/${locale}`) {
+      return '/';
+    }
+  }
+  return pathname;
 }
 
 export function proxy(request: NextRequest) {
@@ -25,12 +41,20 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // API 라우트 제외
+  if (pathname.startsWith('/api')) {
+    return NextResponse.next();
+  }
+
+  // locale prefix를 제거한 경로로 인증 로직 판단
+  const strippedPathname = stripLocalePrefix(pathname);
+
   const refreshToken = request.cookies.get('refreshToken')?.value;
-  const isPublicRoute = PUBLIC_ROUTES.some(route => pathname.startsWith(route));
-  const isOnboardingRoute = ONBOARDING_ROUTES.some(route => pathname.startsWith(route));
+  const isPublicRoute = PUBLIC_ROUTES.some(route => strippedPathname.startsWith(route));
+  const isOnboardingRoute = ONBOARDING_ROUTES.some(route => strippedPathname.startsWith(route));
 
   // 로그인 상태에서 /signin 접근 → / 리다이렉트
-  if (refreshToken && pathname === '/signin') {
+  if (refreshToken && strippedPathname === '/signin') {
     return NextResponse.redirect(new URL('/', request.url));
   }
 
@@ -50,7 +74,8 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  // i18n locale 처리
+  return intlMiddleware(request);
 }
 
 export const config = {
