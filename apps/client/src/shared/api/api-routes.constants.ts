@@ -74,6 +74,10 @@ export const API_ROUTES = {
         `/feeds/${submissionId}/comments/${commentId}`,
       METHOD: 'DELETE',
     },
+    DELETE_FEED: {
+      URL: (id: number) => `/feeds/${id}`,
+      METHOD: 'DELETE',
+    },
   },
   RANKINGS: {
     GET_RANKINGS: {

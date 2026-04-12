@@ -115,7 +115,11 @@
     "missionPhotoAlt": "{petName}'s mission photo {index}",
     "feedLoadError": "Failed to load feed.",
     "linkCopied": "Link copied",
-    "linkCopyFailed": "Failed to copy link"
+    "linkCopyFailed": "Failed to copy link",
+    "delete": "Delete Feed",
+    "confirmDelete": "Delete this feed?",
+    "deleteCannotUndo": "This action cannot be undone.",
+    "cancel": "Cancel"
   },
   "pet": {
     "whatKind": "What kind of pet do you have?",

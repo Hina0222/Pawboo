@@ -115,7 +115,11 @@
     "missionPhotoAlt": "{petName}의 미션 사진 {index}",
     "feedLoadError": "피드를 불러오지 못했습니다.",
     "linkCopied": "링크가 복사되었습니다",
-    "linkCopyFailed": "링크 복사에 실패했습니다"
+    "linkCopyFailed": "링크 복사에 실패했습니다",
+    "delete": "피드 삭제",
+    "confirmDelete": "피드를 삭제하시겠습니까?",
+    "deleteCannotUndo": "이 작업은 되돌릴 수 없습니다.",
+    "cancel": "취소"
   },
   "pet": {
     "whatKind": "어떤 반려동물인가요?",
