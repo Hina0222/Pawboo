@@ -9,10 +9,13 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter());
+
   app.enableCors({
-    origin: 'http://localhost:3001',
+    origin: process.env.CLIENT_URL || 'https://dragram.site',
     credentials: true,
   });
+
   await app.listen(process.env.PORT ?? 3000);
 }
+
 bootstrap();

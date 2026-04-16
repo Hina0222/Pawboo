@@ -2,14 +2,17 @@
   "name": "@bragram/schemas",
   "version": "0.0.1",
   "private": true,
+  "scripts": {
+    "build": "tsc"
+  },
   "exports": {
     ".": {
       "types": "./index.ts",
-      "default": "./index.ts"
+      "default": "./dist/index.js"
     },
     "./*": {
       "types": "./*/index.ts",
-      "default": "./*/index.ts"
+      "default": "./dist/*/index.js"
     }
   },
   "dependencies": {
