@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
 import { toast } from 'sonner';
-import type { LikeResponse } from '@bragram/schemas/like';
+import type { LikeResponse } from '@pawboo/schemas/like';
 
 export const addLike = async (submissionId: number): Promise<LikeResponse> => {
   return apiClient.post<LikeResponse>(API_ROUTES.FEEDS.ADD_LIKE.URL(submissionId));

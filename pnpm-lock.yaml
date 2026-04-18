@@ -17,12 +17,12 @@ importers:
 
   apps/client:
     dependencies:
-      '@bragram/schemas':
-        specifier: workspace:*
-        version: link:../../packages/schemas
       '@hookform/resolvers':
         specifier: ^5.2.2
         version: 5.2.2(react-hook-form@7.71.2(react@19.2.3))
+      '@pawboo/schemas':
+        specifier: workspace:*
+        version: link:../../packages/schemas
       '@tanstack/react-query':
         specifier: ^5.90.21
         version: 5.90.21(react@19.2.3)
@@ -132,9 +132,6 @@ importers:
       '@aws-sdk/client-s3':
         specifier: ^3.1004.0
         version: 3.1004.0
-      '@bragram/schemas':
-        specifier: workspace:*
-        version: link:../../packages/schemas
       '@nestjs/common':
         specifier: ^11.0.1
         version: 11.1.16(reflect-metadata@0.2.2)(rxjs@7.8.2)
@@ -153,6 +150,9 @@ importers:
       '@nestjs/platform-express':
         specifier: ^11.0.1
         version: 11.1.16(@nestjs/common@11.1.16(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.18)
+      '@pawboo/schemas':
+        specifier: workspace:*
+        version: link:../../packages/schemas
       bcryptjs:
         specifier: ^3.0.3
         version: 3.0.3

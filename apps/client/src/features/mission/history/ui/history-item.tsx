@@ -1,7 +1,7 @@
 'use client';
 
 import { Check } from 'lucide-react';
-import type { SubmissionResponse } from '@bragram/schemas/mission';
+import type { SubmissionResponse } from '@pawboo/schemas/mission';
 import { timeAgo } from '@/shared/lib/utils';
 import { useTranslations } from 'next-intl';
 

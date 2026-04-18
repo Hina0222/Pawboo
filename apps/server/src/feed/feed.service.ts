@@ -13,7 +13,7 @@ import type {
   FeedQuery,
   FeedItem,
   FeedListResponse,
-} from '@bragram/schemas/feed';
+} from '@pawboo/schemas/feed';
 
 const FEED_LIMIT = 20;
 

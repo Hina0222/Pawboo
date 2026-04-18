@@ -5,7 +5,7 @@ import { useInView } from 'react-intersection-observer';
 import { useWindowVirtualizer } from '@tanstack/react-virtual';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { useTranslations } from 'next-intl';
-import type { FeedQuery } from '@bragram/schemas/feed';
+import type { FeedQuery } from '@pawboo/schemas/feed';
 import { useGetFeedsSuspenseInfiniteQuery } from '@/features/feed/list/api/useGetFeedsInfiniteQuery';
 import { FeedItem, FeedListSkeleton, FeedListError } from '@/features/feed/list/ui';
 

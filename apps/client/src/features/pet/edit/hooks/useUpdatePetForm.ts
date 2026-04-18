@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useUpdatePetMutation } from '@/features/pet/edit/api/useUpdatePetMutation';
 import { UpdatePetFormSchema, UpdatePetFormValues } from '@/features/pet/edit/model/schema';
-import type { PetResponse } from '@bragram/schemas/pet';
+import type { PetResponse } from '@pawboo/schemas/pet';
 
 export function useUpdatePetForm(pet: PetResponse, onSuccess: () => void) {
   const { mutate, isPending } = useUpdatePetMutation();

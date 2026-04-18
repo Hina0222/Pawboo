@@ -22,7 +22,7 @@ import {
   CreatePetSchema,
   UpdatePetSchema,
   PetResponse,
-} from '@bragram/schemas/pet';
+} from '@pawboo/schemas/pet';
 
 @UseGuards(JwtAuthGuard)
 @Controller('pets')

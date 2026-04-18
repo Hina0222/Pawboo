@@ -2,7 +2,7 @@ import { useQuery, useSuspenseQuery } from '@tanstack/react-query';
 import { missionQueryKeys } from '@/entities/mission/model/mission.query-key';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
-import type { TodayMissionResponse } from '@bragram/schemas/mission';
+import type { TodayMissionResponse } from '@pawboo/schemas/mission';
 
 export const getTodayMission = async (): Promise<TodayMissionResponse> => {
   return apiClient.get<TodayMissionResponse>(API_ROUTES.MISSIONS.GET_TODAY.URL);

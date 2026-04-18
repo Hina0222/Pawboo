@@ -2,7 +2,7 @@ import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
 import { petQueryKeys } from '@/entities/pet/model/pet.query-key';
-import type { PetSubmissionHistoryResponse } from '@bragram/schemas/mission';
+import type { PetSubmissionHistoryResponse } from '@pawboo/schemas/mission';
 
 export const getPetSubmissions = async (
   userId: number,

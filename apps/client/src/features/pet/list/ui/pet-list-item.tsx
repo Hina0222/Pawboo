@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import type { PetResponse } from '@bragram/schemas/pet';
+import type { PetResponse } from '@pawboo/schemas/pet';
 import { Link } from '@/app/i18n/navigation';
 
 const PET_EMOJI: Record<string, string> = {

@@ -5,7 +5,7 @@ import { apiClient, getQueryClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
 import { missionQueryKeys } from '@/entities/mission/model/mission.query-key';
 import { toast } from 'sonner';
-import type { SubmissionResponse } from '@bragram/schemas/mission';
+import type { SubmissionResponse } from '@pawboo/schemas/mission';
 import type { SubmitMissionFormValues } from '../model/schema';
 
 export const submitMission = async ({

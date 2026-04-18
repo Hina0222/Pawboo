@@ -1,6 +1,6 @@
 'use client';
 
-import type { PetResponse } from '@bragram/schemas/pet';
+import type { PetResponse } from '@pawboo/schemas/pet';
 import { PetListItem } from '@/features/pet/list/ui';
 
 interface PetListProps {

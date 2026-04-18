@@ -12,7 +12,7 @@ import type {
   CreateCommentRequest,
   CommentItem,
   CommentListResponse,
-} from '@bragram/schemas/comment';
+} from '@pawboo/schemas/comment';
 
 @Injectable()
 export class CommentService {

@@ -1,4 +1,4 @@
-import type { FeedQuery } from '@bragram/schemas/feed';
+import type { FeedQuery } from '@pawboo/schemas/feed';
 
 export const feedQueryKeys = {
   all: ['feeds'] as const,

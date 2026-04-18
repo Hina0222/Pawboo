@@ -5,7 +5,7 @@ import { apiClient } from '@/shared/api';
 import { getQueryClient } from '@/shared/api/get-query-client';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
 import { userQueryKeys } from '@/entities/user/model/user.query-key';
-import type { ProfileUpdateRequest, MeResponse } from '@bragram/schemas/user';
+import type { ProfileUpdateRequest, MeResponse } from '@pawboo/schemas/user';
 import { toast } from 'sonner';
 
 type UpdateProfileParams = ProfileUpdateRequest & { image?: File };

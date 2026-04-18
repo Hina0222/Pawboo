@@ -18,7 +18,7 @@ export default function SigninPage() {
             🐾
           </div>
           <div className="text-center">
-            <h1 className="text-3xl font-bold tracking-tight text-primary">BRAGram</h1>
+            <h1 className="text-3xl font-bold tracking-tight text-primary">Pawboo</h1>
             <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">
               {t('tagline1')}
               <br />

@@ -2,7 +2,7 @@ import { useInfiniteQuery, useSuspenseInfiniteQuery } from '@tanstack/react-quer
 import { userQueryKeys } from '@/entities/user/model/user.query-key';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
-import type { SearchResponse, SearchType } from '@bragram/schemas/user';
+import type { SearchResponse, SearchType } from '@pawboo/schemas/user';
 
 export const searchUsers = async (
   q: string,

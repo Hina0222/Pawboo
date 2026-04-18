@@ -2,7 +2,7 @@ import { useInfiniteQuery, useSuspenseInfiniteQuery } from '@tanstack/react-quer
 import { commentQueryKeys } from '@/entities/comment/model/comment.query-key';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
-import type { CommentListResponse } from '@bragram/schemas/comment';
+import type { CommentListResponse } from '@pawboo/schemas/comment';
 
 export const getComments = async (
   submissionId: number,

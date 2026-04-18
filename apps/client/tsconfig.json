@@ -26,10 +26,10 @@
       "@/*": [
         "./src/*"
       ],
-      "@bragram/schemas": [
+      "@pawboo/schemas": [
         "../../packages/schemas/index.ts"
       ],
-      "@bragram/schemas/*": [
+      "@pawboo/schemas/*": [
         "../../packages/schemas/*/index.ts"
       ]
     }

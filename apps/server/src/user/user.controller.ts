@@ -15,15 +15,15 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserService } from './user.service';
 import { ImageUpload } from '../common/decorators/image-upload.decorator';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.type';
-import { ProfileUpdateSchema } from '@bragram/schemas/user';
+import { ProfileUpdateSchema } from '@pawboo/schemas/user';
 import {
   UserSearchQuerySchema,
   type SearchResponse,
   type UserProfileResponse,
-} from '@bragram/schemas/user';
-import type { FeedListResponse } from '@bragram/schemas/feed';
-import type { PetResponse } from '@bragram/schemas/pet';
-import type { PetSubmissionHistoryResponse } from '@bragram/schemas/mission';
+} from '@pawboo/schemas/user';
+import type { FeedListResponse } from '@pawboo/schemas/feed';
+import type { PetResponse } from '@pawboo/schemas/pet';
+import type { PetSubmissionHistoryResponse } from '@pawboo/schemas/mission';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')

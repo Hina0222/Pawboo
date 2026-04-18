@@ -4,7 +4,7 @@ import { useMutation } from '@tanstack/react-query';
 import { apiClient, getQueryClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
 import { petQueryKeys } from '@/entities/pet/model/pet.query-key';
-import type { PetResponse } from '@bragram/schemas/pet';
+import type { PetResponse } from '@pawboo/schemas/pet';
 import type { UpdatePetFormValues } from '@/features/pet/edit/model/schema';
 import { toast } from 'sonner';
 

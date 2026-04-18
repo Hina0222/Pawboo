@@ -15,8 +15,8 @@ const pretendard = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'BRAGram',
-  description: 'BRAGram description',
+  title: 'Pawboo',
+  description: 'Pawboo',
 };
 
 export function generateStaticParams() {

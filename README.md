@@ -1,4 +1,4 @@
-# BRAGram
+# Pawboo
 
 반려묘와 반려견을 키우는 보호자(집사)들이 자신의 반려동물을 자랑하고, 일일 미션을 통해 특별한 순간을 기록하며, 커뮤니티 내에서 소통하는 **반려동물 특화 SNS 플랫폼**입니다.
 
@@ -177,7 +177,7 @@
 |----------|--------------------------------------------------------------------|
 | Frontend | Next.js 16 (App Router), React 19, TanStack Query, Tailwind CSS v4 |
 | Backend  | NestJS 11, Drizzle ORM, PostgreSQL                                 |
-| 공유 스키마   | Zod v4 (`@bragram/schemas`)                                        |
+| 공유 스키마   | Zod v4 (`@pawboo/schemas`)                                        |
 | 스토리지     | AWS S3 + CloudFront (이미지 CDN)                                      |
 | 인프라      | Docker (PostgreSQL)                                                |
 | 모노레포     | pnpm workspace                                                     |

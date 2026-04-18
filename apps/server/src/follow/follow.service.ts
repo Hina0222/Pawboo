@@ -13,7 +13,7 @@ import type {
   FollowListQuery,
   FollowListResponse,
   FollowItem,
-} from '@bragram/schemas/follow';
+} from '@pawboo/schemas/follow';
 
 @Injectable()
 export class FollowService {

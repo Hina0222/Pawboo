@@ -134,7 +134,7 @@ export default function MySettingsPage() {
         </Dialog>
 
         {/* 버전 정보 */}
-        <p className="pb-8 text-center text-xs text-muted-foreground">BRAGram v0.1.0</p>
+        <p className="pb-8 text-center text-xs text-muted-foreground">Pawboo v0.1.0</p>
       </div>
     </>
   );

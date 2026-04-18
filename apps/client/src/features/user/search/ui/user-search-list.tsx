@@ -8,7 +8,7 @@ import { useSearchUsersSuspenseInfiniteQuery } from '../api/useSearchUsersInfini
 import { UserSearchListSkeleton } from './user-search-list-skeleton';
 import { UserSearchListError } from './user-search-list-error';
 import { useTranslations } from 'next-intl';
-import type { SearchType, UserSearchResponse, PetSearchResponse } from '@bragram/schemas/user';
+import type { SearchType, UserSearchResponse, PetSearchResponse } from '@pawboo/schemas/user';
 
 interface UserSearchListProps {
   query: string;

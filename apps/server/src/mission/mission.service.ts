@@ -18,7 +18,7 @@ import type {
   SubmissionResponse,
   SubmissionHistoryResponse,
   TodayMissionResponse,
-} from '@bragram/schemas/mission';
+} from '@pawboo/schemas/mission';
 
 @Injectable()
 export class MissionService {

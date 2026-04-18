@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { type CreateCommentFormValues } from '@/features/comment/create/model/schema';
 import { useCreateCommentMutation } from '@/features/comment/create/api/useCreateCommentMutation';
-import { CreateCommentSchema } from '@bragram/schemas/comment';
+import { CreateCommentSchema } from '@pawboo/schemas/comment';
 
 export const useCreateCommentForm = (submissionId: number) => {
   const { mutate, isPending } = useCreateCommentMutation(submissionId);

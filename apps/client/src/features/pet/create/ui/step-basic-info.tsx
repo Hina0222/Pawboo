@@ -1,7 +1,7 @@
 'use client';
 
 import { Controller, useFormContext } from 'react-hook-form';
-import type { PetGender } from '@bragram/schemas/pet';
+import type { PetGender } from '@pawboo/schemas/pet';
 import type { CreatePetFormValues } from '@/features/pet/create/model/schema';
 import { cn } from '@/shared/lib/utils';
 import { useTranslations } from 'next-intl';

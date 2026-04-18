@@ -3,7 +3,7 @@ import { RankingService } from './ranking.service';
 import {
   RankingQuerySchema,
   type RankingListResponse,
-} from '@bragram/schemas/ranking';
+} from '@pawboo/schemas/ranking';
 
 @Controller('rankings')
 export class RankingController {

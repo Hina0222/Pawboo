@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 import { LikeButton } from '@/features/like/ui';
 import { ShareButton } from '@/features/feed/share/ui';
 import { FeedAuthor } from '@/features/feed/ui';
-import type { FeedItem as FeedItemType } from '@bragram/schemas/feed';
+import type { FeedItem as FeedItemType } from '@pawboo/schemas/feed';
 import {
   Badge,
   Carousel,

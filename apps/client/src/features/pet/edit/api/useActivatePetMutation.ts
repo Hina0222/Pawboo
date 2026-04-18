@@ -5,7 +5,7 @@ import { apiClient, getQueryClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
 import { petQueryKeys } from '@/entities/pet/model/pet.query-key';
 import { toast } from 'sonner';
-import type { PetResponse } from '@bragram/schemas/pet';
+import type { PetResponse } from '@pawboo/schemas/pet';
 import { missionQueryKeys } from '@/entities/mission/model/mission.query-key';
 
 export const activatePet = async (id: number): Promise<PetResponse> => {

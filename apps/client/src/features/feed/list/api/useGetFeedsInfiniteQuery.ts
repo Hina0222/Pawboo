@@ -2,7 +2,7 @@ import { useInfiniteQuery, useSuspenseInfiniteQuery } from '@tanstack/react-quer
 import { feedQueryKeys } from '@/entities/feed/model/feed.query-key';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
-import type { FeedListResponse, FeedQuery } from '@bragram/schemas/feed';
+import type { FeedListResponse, FeedQuery } from '@pawboo/schemas/feed';
 
 export const getFeeds = async (params?: FeedQuery): Promise<FeedListResponse> => {
   return apiClient.get<FeedListResponse>(API_ROUTES.FEEDS.GET_FEEDS.URL, { params });

@@ -1,4 +1,4 @@
-import type { RankingQuery } from '@bragram/schemas/ranking';
+import type { RankingQuery } from '@pawboo/schemas/ranking';
 
 export const rankingQueryKeys = {
   all: ['rankings'] as const,

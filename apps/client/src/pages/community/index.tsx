@@ -7,7 +7,7 @@ import { BottomNav } from '@/widgets/bottom-nav';
 import { UserSearchList } from '@/features/user/search/ui';
 import { TitleHeader } from '@/widgets/header';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/shared/ui/tabs';
-import type { SearchType } from '@bragram/schemas/user';
+import type { SearchType } from '@pawboo/schemas/user';
 import { useTranslations } from 'next-intl';
 
 export default function CommunityPage() {

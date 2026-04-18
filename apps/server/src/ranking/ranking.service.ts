@@ -7,7 +7,7 @@ import type {
   RankingQuery,
   RankingItem,
   RankingListResponse,
-} from '@bragram/schemas/ranking';
+} from '@pawboo/schemas/ranking';
 
 const RANKING_LIMIT = 20;
 

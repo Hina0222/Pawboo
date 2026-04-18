@@ -2,7 +2,7 @@ import { useInfiniteQuery, useSuspenseInfiniteQuery } from '@tanstack/react-quer
 import { missionQueryKeys } from '@/entities/mission/model/mission.query-key';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
-import type { SubmissionHistoryResponse } from '@bragram/schemas/mission';
+import type { SubmissionHistoryResponse } from '@pawboo/schemas/mission';
 
 export const getMissionHistory = async (params?: {
   cursor?: number;

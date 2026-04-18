@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { CreateSubmissionSchema } from '@bragram/schemas/mission';
+import { CreateSubmissionSchema } from '@pawboo/schemas/mission';
 
 export const SubmitMissionFormSchema = CreateSubmissionSchema.extend({
   images: z

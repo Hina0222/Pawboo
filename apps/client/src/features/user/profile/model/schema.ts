@@ -1,4 +1,4 @@
-import { ProfileUpdateSchema } from '@bragram/schemas/user';
+import { ProfileUpdateSchema } from '@pawboo/schemas/user';
 import { z } from 'zod';
 
 export const ProfileSetupFormSchema = ProfileUpdateSchema.extend({

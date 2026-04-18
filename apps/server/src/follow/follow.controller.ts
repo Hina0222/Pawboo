@@ -18,7 +18,7 @@ import type { AuthenticatedRequest } from '../common/types/authenticated-request
 import {
   FollowListQuerySchema,
   type FollowListResponse,
-} from '@bragram/schemas/follow';
+} from '@pawboo/schemas/follow';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')

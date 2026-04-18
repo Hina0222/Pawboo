@@ -8,7 +8,7 @@ import { eq, and, sql } from 'drizzle-orm';
 import { DRIZZLE_ORM } from '../database/database.provider';
 import type { DrizzleDB } from '../database/database.provider';
 import { likes, missionSubmissions, pets } from '../database/schema';
-import type { LikeResponse } from '@bragram/schemas/like';
+import type { LikeResponse } from '@pawboo/schemas/like';
 
 @Injectable()
 export class LikeService {

@@ -4,11 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## 프로젝트 개요
 
-BRAGram — pnpm monorepo 기반의 풀스택 웹 애플리케이션.
+Pawboo — pnpm monorepo 기반의 풀스택 웹 애플리케이션.
 
 - `apps/client` — Next.js 16 (App Router, 포트 3001)
 - `apps/server` — NestJS 11 (포트 3000)
-- `packages/schemas` — 공유 Zod 스키마 (`@bragram/schemas`)
+- `packages/schemas` — 공유 Zod 스키마 (`@pawboo/schemas`)
 
 ## 주요 명령어
 
@@ -56,7 +56,7 @@ docker compose down     # 컨테이너 중지
 
 ### 공유 스키마 패키지 (`packages/schemas`)
 - **No-Build 방식**: `.ts` 소스를 빌드 없이 직접 참조
-- client와 server 모두 `@bragram/schemas`를 `workspace:*`로 참조
+- client와 server 모두 `@pawboo/schemas`를 `workspace:*`로 참조
 - `index.ts`에서 re-export 시 `.js` 확장자 사용 (ESM 호환)
 - 패키지 루트에 파일 위치 (`src/` 없음): `index.ts`, `user/index.ts` 등
 
@@ -82,8 +82,8 @@ POSTGRES_HOST=localhost
 POSTGRES_PORT=5432
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
-POSTGRES_DB=bragram_dev
-DATABASE_URL=postgresql://postgres:postgres@localhost:5432/bragram_dev
+POSTGRES_DB=pawboo_dev
+DATABASE_URL=postgresql://postgres:postgres@localhost:5432/pawboo_dev
 ```
 
 **Client** (`.env.local` 파일 필요):

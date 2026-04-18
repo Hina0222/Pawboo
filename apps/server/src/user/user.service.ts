@@ -17,17 +17,17 @@ import {
   likes,
 } from '../database/schema';
 import { AwsService, IMAGE_PRESET } from '../aws/aws.service';
-import type { ProfileUpdateRequest } from '@bragram/schemas/user';
+import type { ProfileUpdateRequest } from '@pawboo/schemas/user';
 import type {
   UserSearchQuery,
   SearchResponse,
   UserSearchResponse,
   PetSearchResponse,
   UserProfileResponse,
-} from '@bragram/schemas/user';
-import type { FeedItem, FeedListResponse } from '@bragram/schemas/feed';
-import type { PetResponse } from '@bragram/schemas/pet';
-import type { PetSubmissionHistoryResponse } from '@bragram/schemas/mission';
+} from '@pawboo/schemas/user';
+import type { FeedItem, FeedListResponse } from '@pawboo/schemas/feed';
+import type { PetResponse } from '@pawboo/schemas/pet';
+import type { PetSubmissionHistoryResponse } from '@pawboo/schemas/mission';
 
 interface KakaoProfile {
   kakaoId: string;

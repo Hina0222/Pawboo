@@ -1,6 +1,6 @@
 'use client';
 
-import type { PetType } from '@bragram/schemas/pet';
+import type { PetType } from '@pawboo/schemas/pet';
 import { cn } from '@/shared/lib/utils';
 import { Controller, useFormContext } from 'react-hook-form';
 import type { CreatePetFormValues } from '@/features/pet/create/model/schema';

@@ -1,4 +1,4 @@
-import { CreatePetSchema } from '@bragram/schemas/pet';
+import { CreatePetSchema } from '@pawboo/schemas/pet';
 import { z } from 'zod';
 
 export const CreatePetFormSchema = CreatePetSchema.extend({

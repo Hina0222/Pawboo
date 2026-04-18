@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { LikeService } from './like.service';
-import type { LikeResponse } from '@bragram/schemas/like';
+import type { LikeResponse } from '@pawboo/schemas/like';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.type';
 
 @UseGuards(JwtAuthGuard)

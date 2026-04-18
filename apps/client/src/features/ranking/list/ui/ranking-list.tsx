@@ -6,7 +6,7 @@ import { useInView } from 'react-intersection-observer';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { useTranslations } from 'next-intl';
 import { cn } from '@/shared/lib/utils';
-import type { RankingItem, RankingQuery } from '@bragram/schemas/ranking';
+import type { RankingItem, RankingQuery } from '@pawboo/schemas/ranking';
 import { useGetRankingsInfiniteQuery } from '../api/useGetRankingsInfiniteQuery';
 import { RankingListItem } from './ranking-item';
 import { RankingListSkeleton } from './ranking-list-skeleton';

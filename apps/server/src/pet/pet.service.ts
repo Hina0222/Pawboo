@@ -13,7 +13,7 @@ import {
   CreatePetRequest,
   UpdatePetRequest,
   PetResponse,
-} from '@bragram/schemas/pet';
+} from '@pawboo/schemas/pet';
 
 @Injectable()
 export class PetService {

@@ -1,6 +1,6 @@
 'use client';
 
-import type { RankingItem } from '@bragram/schemas/ranking';
+import type { RankingItem } from '@pawboo/schemas/ranking';
 import { useTranslations } from 'next-intl';
 
 const PET_EMOJI: Record<string, string> = {

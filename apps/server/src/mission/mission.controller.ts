@@ -24,7 +24,7 @@ import {
   type SubmissionHistoryResponse,
   type SubmissionResponse,
   type TodayMissionResponse,
-} from '@bragram/schemas/mission';
+} from '@pawboo/schemas/mission';
 
 @UseGuards(JwtAuthGuard)
 @Controller('missions')

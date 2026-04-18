@@ -13,7 +13,7 @@ import {
   DialogTrigger,
 } from '@/shared/ui';
 import { useDeleteCommentMutation } from '@/features/comment/delete/api/useDeleteCommentMutation';
-import type { CommentItem as CommentItemType } from '@bragram/schemas/comment';
+import type { CommentItem as CommentItemType } from '@pawboo/schemas/comment';
 import { Link } from '@/app/i18n/navigation';
 import { timeAgo } from '@/shared/lib/utils';
 import { useTranslations } from 'next-intl';

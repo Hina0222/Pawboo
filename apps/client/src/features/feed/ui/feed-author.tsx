@@ -1,5 +1,5 @@
 import { ImageOff } from 'lucide-react';
-import type { FeedItem } from '@bragram/schemas/feed';
+import type { FeedItem } from '@pawboo/schemas/feed';
 import { Link } from '@/app/i18n/navigation';
 
 type FeedAuthorProps = Pick<FeedItem, 'pet' | 'owner'>;

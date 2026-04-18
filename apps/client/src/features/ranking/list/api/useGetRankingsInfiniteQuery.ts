@@ -2,7 +2,7 @@ import { useInfiniteQuery, useSuspenseInfiniteQuery } from '@tanstack/react-quer
 import { rankingQueryKeys } from '@/entities/ranking/model/ranking.query-key';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
-import type { RankingListResponse, RankingQuery } from '@bragram/schemas/ranking';
+import type { RankingListResponse, RankingQuery } from '@pawboo/schemas/ranking';
 
 export const getRankings = async (params: {
   type: RankingQuery['type'];

@@ -19,7 +19,7 @@ import {
   CreateCommentSchema,
   type CommentItem,
   type CommentListResponse,
-} from '@bragram/schemas/comment';
+} from '@pawboo/schemas/comment';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.type';
 
 @Controller('feeds')

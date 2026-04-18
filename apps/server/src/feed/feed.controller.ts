@@ -17,7 +17,7 @@ import {
   FeedQuerySchema,
   type FeedItem,
   type FeedListResponse,
-} from '@bragram/schemas/feed';
+} from '@pawboo/schemas/feed';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.type';
 
 @UseGuards(JwtAuthGuard)
