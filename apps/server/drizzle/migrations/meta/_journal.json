@@ -5,57 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1772891415690,
-      "tag": "0000_woozy_johnny_blaze",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1773393519224,
-      "tag": "0001_milky_living_lightning",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1773487645333,
-      "tag": "0002_gifted_rachel_grey",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1773648769645,
-      "tag": "0003_noisy_living_lightning",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1773651073271,
-      "tag": "0004_flawless_masked_marvel",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1742256000000,
-      "tag": "0005_image_urls_migration",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1773913710590,
-      "tag": "0006_fast_reavers",
-      "breakpoints": true
-    },
-    {
-      "idx": 7,
-      "version": "7",
-      "when": 1773920034921,
-      "tag": "0007_married_swarm",
+      "when": 1776687207365,
+      "tag": "0000_melodic_the_santerians",
       "breakpoints": true
     }
   ]
