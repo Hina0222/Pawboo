@@ -21,7 +21,6 @@ describe('UserService', () => {
       create: jest.fn(),
       updateRefreshToken: jest.fn(),
       deleteById: jest.fn(),
-      searchPetsByName: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -93,79 +92,6 @@ describe('UserService', () => {
 
       expect(result).not.toHaveProperty('refreshToken');
       expect(Object.keys(result)).toEqual(['id', 'kakaoId', 'createdAt']);
-    });
-  });
-
-  describe('searchPets', () => {
-    it('검색 결과를 반환', async () => {
-      const mockResult = {
-        data: [
-          { id: 1, name: '포비', imageUrl: 'url1' },
-          { id: 2, name: '뽀삐', imageUrl: null },
-        ],
-        hasNext: false,
-        cursor: null,
-      };
-      repository.searchPetsByName.mockResolvedValue(mockResult);
-
-      const result = await service.searchPets({
-        q: '포',
-        cursor: undefined,
-        limit: 20,
-      });
-
-      expect(result).toEqual(mockResult);
-      expect(repository.searchPetsByName).toHaveBeenCalledWith(
-        '포',
-        undefined,
-        20,
-      );
-    });
-
-    it('검색 결과가 비어있을 때', async () => {
-      const emptyResult = { data: [], hasNext: false, cursor: null };
-      repository.searchPetsByName.mockResolvedValue(emptyResult);
-
-      const result = await service.searchPets({
-        q: '존재하지않음',
-        cursor: undefined,
-        limit: 20,
-      });
-
-      expect(result).toEqual(emptyResult);
-    });
-
-    it('다음 페이지가 있을 때 hasNext=true와 cursor 반환', async () => {
-      const pagedResult = {
-        data: [
-          { id: 1, name: '포비1', imageUrl: null },
-          { id: 2, name: '포비2', imageUrl: null },
-        ],
-        hasNext: true,
-        cursor: 2,
-      };
-      repository.searchPetsByName.mockResolvedValue(pagedResult);
-
-      const result = await service.searchPets({
-        q: '포',
-        cursor: undefined,
-        limit: 2,
-      });
-
-      expect(result.hasNext).toBe(true);
-      expect(result.cursor).toBe(2);
-    });
-
-    it('cursor 값이 repository로 전달됨', async () => {
-      repository.searchPetsByName.mockResolvedValue({
-        data: [],
-        hasNext: false,
-        cursor: null,
-      });
-
-      await service.searchPets({ q: '포', cursor: 10, limit: 20 });
-
-      expect(repository.searchPetsByName).toHaveBeenCalledWith('포', 10, 20);
     });
   });
 

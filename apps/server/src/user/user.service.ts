@@ -1,10 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from './user.repository';
-import type {
-  MeResponse,
-  PetSearchResponse,
-  SearchQuery,
-} from '@pawboo/schemas/user';
+import type { MeResponse } from '@pawboo/schemas/user';
 
 @Injectable()
 export class UserService {
@@ -28,14 +24,6 @@ export class UserService {
     const user = await this.userRepository.findById(userId);
     if (!user) throw new NotFoundException('사용자를 찾을 수 없습니다.');
     return { id: user.id, kakaoId: user.kakaoId, createdAt: user.createdAt };
-  }
-
-  async searchPets(query: SearchQuery): Promise<PetSearchResponse> {
-    return this.userRepository.searchPetsByName(
-      query.q,
-      query.cursor,
-      query.limit,
-    );
   }
 
   async deleteMe(userId: number) {

@@ -5,6 +5,7 @@ import {
   Patch,
   Delete,
   Param,
+  Query,
   Body,
   ParseIntPipe,
   UseGuards,
@@ -21,7 +22,9 @@ import type { AuthenticatedRequest } from '../common/types/authenticated-request
 import {
   CreatePetSchema,
   UpdatePetSchema,
+  PetSearchQuerySchema,
   type PetResponse,
+  type PetSearchResponse,
 } from '@pawboo/schemas/pet';
 
 @UseGuards(JwtAuthGuard)
@@ -54,6 +57,17 @@ export class PetController {
     @Param('id', ParseIntPipe) id: number,
   ): Promise<PetResponse> {
     return this.petService.findOne(req.user.id, id);
+  }
+
+  @Get('search')
+  searchPets(
+    @Query() query: Record<string, string>,
+  ): Promise<PetSearchResponse> {
+    const parsed = PetSearchQuerySchema.safeParse(query);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+    return this.petService.search(parsed.data);
   }
 
   @Patch(':id')

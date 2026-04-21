@@ -9,6 +9,8 @@ import type {
   CreatePetRequest,
   UpdatePetRequest,
   PetResponse,
+  PetSearchResponse,
+  PetSearchQuery,
 } from '@pawboo/schemas/pet';
 
 @Injectable()
@@ -102,5 +104,9 @@ export class PetService {
 
   async findRepresentative(userId: number) {
     return this.petRepository.findRepresentativeByUserId(userId);
+  }
+
+  async search(query: PetSearchQuery): Promise<PetSearchResponse> {
+    return this.petRepository.searchByName(query.q, query.cursor, query.limit);
   }
 }

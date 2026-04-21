@@ -1,9 +1,9 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { eq, and, asc, desc, count } from 'drizzle-orm';
+import { eq, and, asc, desc, count, ilike, gt } from 'drizzle-orm';
 import { DRIZZLE_ORM } from '../database/database.provider';
 import type { DrizzleDB } from '../database/database.provider';
 import { pets } from '../database/schema';
-import type { PetResponse } from '@pawboo/schemas/pet';
+import type { PetResponse, PetSearchResponse } from '@pawboo/schemas/pet';
 
 @Injectable()
 export class PetRepository {
@@ -86,6 +86,41 @@ export class PetRepository {
     });
 
     return updated;
+  }
+
+  async searchByName(
+    q: string,
+    cursor?: number,
+    limit: number = 20,
+  ): Promise<PetSearchResponse> {
+    const rows = await this.db
+      .select({
+        id: pets.id,
+        name: pets.name,
+        imageUrl: pets.imageUrl,
+      })
+      .from(pets)
+      .where(
+        cursor
+          ? and(ilike(pets.name, `%${q}%`), gt(pets.id, cursor))
+          : ilike(pets.name, `%${q}%`),
+      )
+      .orderBy(pets.id)
+      .limit(limit + 1);
+
+    const hasNext = rows.length > limit;
+    const data = hasNext ? rows.slice(0, limit) : rows;
+    const lastItem = data[data.length - 1];
+
+    return {
+      data: data.map((r) => ({
+        id: r.id,
+        name: r.name,
+        imageUrl: r.imageUrl ?? null,
+      })),
+      hasNext,
+      cursor: hasNext && lastItem ? lastItem.id : null,
+    };
   }
 
   async countByUserId(userId: number): Promise<number> {
