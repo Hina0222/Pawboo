@@ -6,23 +6,15 @@ import type {
   SearchQuery,
 } from '@pawboo/schemas/user';
 
-interface KakaoProfile {
-  kakaoId: string;
-}
-
 @Injectable()
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
-
-  async findByKakaoId(kakaoId: string) {
-    return this.userRepository.findByKakaoId(kakaoId);
-  }
 
   async findById(id: number) {
     return this.userRepository.findById(id);
   }
 
-  async findOrCreate(profile: KakaoProfile) {
+  async findOrCreate(profile: { kakaoId: string }) {
     const existing = await this.userRepository.findByKakaoId(profile.kakaoId);
     if (existing) return existing;
     return this.userRepository.create(profile.kakaoId);

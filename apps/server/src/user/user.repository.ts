@@ -3,12 +3,13 @@ import { eq, ilike, and, gt } from 'drizzle-orm';
 import { DRIZZLE_ORM } from '../database/database.provider';
 import type { DrizzleDB } from '../database/database.provider';
 import { users, pets } from '../database/schema';
+import type { UserRecord } from '../database/schema';
 
 @Injectable()
 export class UserRepository {
   constructor(@Inject(DRIZZLE_ORM) private readonly db: DrizzleDB) {}
 
-  async findByKakaoId(kakaoId: string) {
+  async findByKakaoId(kakaoId: string): Promise<UserRecord | null> {
     const [user] = await this.db
       .select()
       .from(users)
@@ -16,12 +17,12 @@ export class UserRepository {
     return user ?? null;
   }
 
-  async findById(id: number) {
+  async findById(id: number): Promise<UserRecord | null> {
     const [user] = await this.db.select().from(users).where(eq(users.id, id));
     return user ?? null;
   }
 
-  async create(kakaoId: string) {
+  async create(kakaoId: string): Promise<UserRecord> {
     const [user] = await this.db.insert(users).values({ kakaoId }).returning();
     return user;
   }

@@ -1,4 +1,5 @@
 import { pgTable, serial, varchar, timestamp } from 'drizzle-orm/pg-core';
+import type { InferSelectModel } from 'drizzle-orm';
 
 export const users = pgTable('users', {
   id: serial('id').primaryKey(),
@@ -6,3 +7,5 @@ export const users = pgTable('users', {
   refreshToken: varchar('refresh_token', { length: 512 }),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+export type UserRecord = InferSelectModel<typeof users>;
