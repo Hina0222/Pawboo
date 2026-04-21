@@ -22,16 +22,8 @@ export const IMAGE_PRESET = {
     withoutEnlargement: false,
     quality: 80,
   },
-  USER_PROFILE: {
-    folder: 'profiles',
-    width: 400,
-    height: 400,
-    fit: 'cover' as const,
-    withoutEnlargement: false,
-    quality: 80,
-  },
-  MISSION: {
-    folder: 'missions',
+  POST: {
+    folder: 'posts',
     width: 400,
     height: 400,
     fit: 'inside' as const,

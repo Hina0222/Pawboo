@@ -21,7 +21,7 @@ import type { AuthenticatedRequest } from '../common/types/authenticated-request
 import {
   CreatePetSchema,
   UpdatePetSchema,
-  PetResponse,
+  type PetResponse,
 } from '@pawboo/schemas/pet';
 
 @UseGuards(JwtAuthGuard)
@@ -40,7 +40,6 @@ export class PetController {
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
     }
-
     return this.petService.create(req.user.id, parsed.data, file?.buffer);
   }
 
@@ -69,7 +68,6 @@ export class PetController {
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
     }
-
     return this.petService.update(req.user.id, id, parsed.data, file?.buffer);
   }
 
@@ -82,11 +80,11 @@ export class PetController {
     return this.petService.remove(req.user.id, id);
   }
 
-  @Patch(':id/activate')
-  activate(
+  @Patch(':id/representative')
+  setRepresentative(
     @Req() req: AuthenticatedRequest,
     @Param('id', ParseIntPipe) id: number,
   ): Promise<PetResponse> {
-    return this.petService.activate(req.user.id, id);
+    return this.petService.setRepresentative(req.user.id, id);
   }
 }

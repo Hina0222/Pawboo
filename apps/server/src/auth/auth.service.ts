@@ -7,7 +7,6 @@ import { UserService } from '../user/user.service';
 interface User {
   id: number;
   kakaoId: string;
-  nickname: string;
 }
 
 @Injectable()
@@ -19,11 +18,7 @@ export class AuthService {
   ) {}
 
   async login(user: User) {
-    const tokens = await this.generateTokens(
-      user.id,
-      user.kakaoId,
-      user.nickname !== null,
-    );
+    const tokens = await this.generateTokens(user.id, user.kakaoId);
     const hashed = await bcrypt.hash(tokens.refreshToken, 10);
     await this.userService.updateRefreshToken(user.id, hashed);
     return tokens;
@@ -45,11 +40,7 @@ export class AuthService {
     const matches = await bcrypt.compare(refreshToken, user.refreshToken);
     if (!matches) throw new UnauthorizedException();
 
-    const tokens = await this.generateTokens(
-      user.id,
-      user.kakaoId,
-      user.nickname !== null,
-    );
+    const tokens = await this.generateTokens(user.id, user.kakaoId);
     const hashed = await bcrypt.hash(tokens.refreshToken, 10);
     await this.userService.updateRefreshToken(user.id, hashed);
     return tokens;
@@ -98,12 +89,8 @@ export class AuthService {
     await this.userService.deleteMe(userId);
   }
 
-  private async generateTokens(
-    userId: number,
-    kakaoId: string,
-    hasNickname: boolean,
-  ) {
-    const accessPayload = { sub: userId, kakaoId, hasNickname };
+  private async generateTokens(userId: number, kakaoId: string) {
+    const accessPayload = { sub: userId, kakaoId };
     const refreshPayload = { sub: userId, kakaoId };
 
     const [accessToken, refreshToken] = await Promise.all([

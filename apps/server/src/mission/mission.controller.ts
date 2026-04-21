@@ -4,7 +4,6 @@ import {
   Post,
   Delete,
   Param,
-  Body,
   Query,
   ParseIntPipe,
   UseGuards,
@@ -19,10 +18,9 @@ import { MissionService } from './mission.service';
 import { ImagesUpload } from '../common/decorators/image-upload.decorator';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.type';
 import {
-  CreateSubmissionSchema,
   SubmissionHistoryQuerySchema,
   type SubmissionHistoryResponse,
-  type SubmissionResponse,
+  type PostResponse,
   type TodayMissionResponse,
 } from '@pawboo/schemas/mission';
 
@@ -53,40 +51,28 @@ export class MissionController {
   async submit(
     @Req() req: AuthenticatedRequest,
     @Param('missionId', ParseIntPipe) missionId: number,
-    @Body() body: Record<string, unknown>,
     @UploadedFiles() files?: Express.Multer.File[],
-  ): Promise<SubmissionResponse> {
+  ): Promise<PostResponse> {
     if (!files || files.length === 0) {
       throw new BadRequestException('이미지를 1장 이상 업로드해주세요.');
     }
     if (files.length > 5) {
       throw new BadRequestException('이미지는 최대 5장까지 업로드 가능합니다.');
     }
-
-    const parsed = CreateSubmissionSchema.safeParse(body);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.issues);
-    }
-
     return this.missionService.submitMission(
       req.user.id,
       missionId,
       files.map((f) => f.buffer),
-      parsed.data,
     );
   }
 
-  @Delete(':missionId/submissions/:submissionId')
+  @Delete(':missionId/submissions/:postId')
   @HttpCode(HttpStatus.NO_CONTENT)
   deleteSubmission(
     @Req() req: AuthenticatedRequest,
     @Param('missionId', ParseIntPipe) missionId: number,
-    @Param('submissionId', ParseIntPipe) submissionId: number,
+    @Param('postId', ParseIntPipe) postId: number,
   ): Promise<void> {
-    return this.missionService.deleteSubmission(
-      req.user.id,
-      missionId,
-      submissionId,
-    );
+    return this.missionService.deleteSubmission(req.user.id, missionId, postId);
   }
 }

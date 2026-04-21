@@ -1,24 +1,5 @@
 import {z} from 'zod';
 
-export const CreateSubmissionSchema = z.object({
-  comment: z.string().trim().max(150, '댓글은 150자 이하로 입력해주세요').optional(),
-  hashtags: z
-    .preprocess(
-      (val) => {
-        if (typeof val === 'string') {
-          try {
-            return JSON.parse(val);
-          } catch {
-            return val;
-          }
-        }
-        return val;
-      },
-      z.array(z.string()).max(5, '해시태그는 최대 5개까지 입력할 수 있습니다'),
-    )
-    .optional(),
-});
-
 export const SubmissionHistoryQuerySchema = z.object({
   limit: z.coerce.number().int().min(1).max(50).default(20),
   cursor: z.coerce.number().int().positive().optional(),
@@ -29,59 +10,32 @@ export const MissionResponseSchema = z.object({
   title: z.string(),
   description: z.string(),
   exampleImageUrl: z.string().nullable(),
-  baseScore: z.number(),
   scheduledAt: z.string(),
   createdAt: z.date(),
-  updatedAt: z.date(),
 });
 
-export const SubmissionResponseSchema = z.object({
+export const PostResponseSchema = z.object({
   id: z.number(),
-  missionId: z.number(),
   petId: z.number(),
+  type: z.enum(['general', 'mission']),
+  missionId: z.number().nullable(),
   imageUrls: z.array(z.string()),
-  comment: z.string().nullable(),
-  hashtags: z.array(z.string()).nullable(),
   createdAt: z.date(),
-  updatedAt: z.date(),
 });
 
 export const TodayMissionResponseSchema = z.object({
   mission: MissionResponseSchema.nullable(),
-  submission: SubmissionResponseSchema.nullable(),
+  post: PostResponseSchema.nullable(),
 });
 
 export const SubmissionHistoryResponseSchema = z.object({
-  data: z.array(SubmissionResponseSchema),
+  data: z.array(PostResponseSchema),
   hasNext: z.boolean(),
   cursor: z.number().nullable(),
 });
 
-export const PublicSubmissionItemSchema = z.object({
-  id: z.number(),
-  missionId: z.number(),
-  mission: z.object({
-    title: z.string(),
-    scheduledAt: z.string(),
-  }),
-  imageUrls: z.array(z.string()),
-  comment: z.string().nullable(),
-  hashtags: z.array(z.string()).nullable(),
-  likeCount: z.number(),
-  createdAt: z.date(),
-});
-
-export const PetSubmissionHistoryResponseSchema = z.object({
-  data: z.array(PublicSubmissionItemSchema),
-  hasNext: z.boolean(),
-  cursor: z.number().nullable(),
-});
-
-export type CreateSubmissionRequest = z.infer<typeof CreateSubmissionSchema>;
 export type SubmissionHistoryQuery = z.infer<typeof SubmissionHistoryQuerySchema>;
 export type MissionResponse = z.infer<typeof MissionResponseSchema>;
-export type SubmissionResponse = z.infer<typeof SubmissionResponseSchema>;
+export type PostResponse = z.infer<typeof PostResponseSchema>;
 export type TodayMissionResponse = z.infer<typeof TodayMissionResponseSchema>;
 export type SubmissionHistoryResponse = z.infer<typeof SubmissionHistoryResponseSchema>;
-export type PublicSubmissionItem = z.infer<typeof PublicSubmissionItemSchema>;
-export type PetSubmissionHistoryResponse = z.infer<typeof PetSubmissionHistoryResponseSchema>;

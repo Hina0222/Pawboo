@@ -19,21 +19,21 @@ import type { AuthenticatedRequest } from '../common/types/authenticated-request
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
-  @Post(':submissionId/likes')
+  @Post(':postId/likes')
   @HttpCode(HttpStatus.OK)
   addLike(
     @Req() req: AuthenticatedRequest,
-    @Param('submissionId', ParseIntPipe) submissionId: number,
+    @Param('postId', ParseIntPipe) postId: number,
   ): Promise<LikeResponse> {
-    return this.likeService.addLike(req.user.id, submissionId);
+    return this.likeService.addLike(req.user.id, postId);
   }
 
-  @Delete(':submissionId/likes')
+  @Delete(':postId/likes')
   @HttpCode(HttpStatus.OK)
   removeLike(
     @Req() req: AuthenticatedRequest,
-    @Param('submissionId', ParseIntPipe) submissionId: number,
+    @Param('postId', ParseIntPipe) postId: number,
   ): Promise<LikeResponse> {
-    return this.likeService.removeLike(req.user.id, submissionId);
+    return this.likeService.removeLike(req.user.id, postId);
   }
 }

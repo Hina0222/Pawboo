@@ -1,57 +1,23 @@
 import {
   Injectable,
-  Inject,
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
-import { eq, and, sql } from 'drizzle-orm';
-import { DRIZZLE_ORM } from '../database/database.provider';
-import type { DrizzleDB } from '../database/database.provider';
-import { likes, missionSubmissions, pets } from '../database/schema';
+import { LikeRepository } from './like.repository';
 import type { LikeResponse } from '@pawboo/schemas/like';
 
 @Injectable()
 export class LikeService {
-  constructor(@Inject(DRIZZLE_ORM) private readonly db: DrizzleDB) {}
+  constructor(private readonly likeRepository: LikeRepository) {}
 
-  async addLike(userId: number, submissionId: number): Promise<LikeResponse> {
-    const [submission] = await this.db
-      .select({
-        id: missionSubmissions.id,
-        likeCount: missionSubmissions.likeCount,
-        petId: missionSubmissions.petId,
-      })
-      .from(missionSubmissions)
-      .where(eq(missionSubmissions.id, submissionId));
-
-    if (!submission) {
-      throw new NotFoundException('제출 내역을 찾을 수 없습니다.');
+  async addLike(userId: number, postId: number): Promise<LikeResponse> {
+    const exists = await this.likeRepository.existsPost(postId);
+    if (!exists) {
+      throw new NotFoundException('게시물을 찾을 수 없습니다.');
     }
 
     try {
-      const updatedSubmission = await this.db.transaction(async (tx) => {
-        await tx.insert(likes).values({ submissionId, userId });
-
-        const [updated] = await tx
-          .update(missionSubmissions)
-          .set({ likeCount: sql`${missionSubmissions.likeCount} + 1` })
-          .where(eq(missionSubmissions.id, submissionId))
-          .returning({ likeCount: missionSubmissions.likeCount });
-
-        await tx
-          .update(pets)
-          .set({
-            score: sql`${pets.score} + 1`,
-            weeklyScore: sql`${pets.weeklyScore} + 1`,
-            monthlyScore: sql`${pets.monthlyScore} + 1`,
-            updatedAt: new Date(),
-          })
-          .where(eq(pets.id, submission.petId));
-
-        return updated;
-      });
-
-      return { likeCount: updatedSubmission.likeCount, isLiked: true };
+      await this.likeRepository.addLike(postId, userId);
     } catch (err: unknown) {
       const pgErr = err as { cause?: { code?: string } };
       if (pgErr?.cause?.code === '23505') {
@@ -59,58 +25,18 @@ export class LikeService {
       }
       throw err;
     }
+
+    const likeCount = await this.likeRepository.countByPostId(postId);
+    return { likeCount, isLiked: true };
   }
 
-  async removeLike(
-    userId: number,
-    submissionId: number,
-  ): Promise<LikeResponse> {
-    const [submission] = await this.db
-      .select({ petId: missionSubmissions.petId })
-      .from(missionSubmissions)
-      .where(eq(missionSubmissions.id, submissionId));
-
-    if (!submission) {
-      throw new NotFoundException('제출 내역을 찾을 수 없습니다.');
+  async removeLike(userId: number, postId: number): Promise<LikeResponse> {
+    const deleted = await this.likeRepository.removeLike(postId, userId);
+    if (deleted === 0) {
+      throw new NotFoundException('좋아요를 찾을 수 없습니다.');
     }
 
-    const updatedSubmission = await this.db.transaction(async (tx) => {
-      const deleted = await tx
-        .delete(likes)
-        .where(
-          and(eq(likes.submissionId, submissionId), eq(likes.userId, userId)),
-        )
-        .returning({ id: likes.id });
-
-      if (deleted.length === 0) {
-        throw new NotFoundException('좋아요를 찾을 수 없습니다.');
-      }
-
-      const [updated] = await tx
-        .update(missionSubmissions)
-        .set({
-          likeCount: sql`GREATEST
-              (${missionSubmissions.likeCount} - 1, 0)`,
-        })
-        .where(eq(missionSubmissions.id, submissionId))
-        .returning({ likeCount: missionSubmissions.likeCount });
-
-      await tx
-        .update(pets)
-        .set({
-          score: sql`GREATEST
-              (${pets.score} - 1, 0)`,
-          weeklyScore: sql`GREATEST
-              (${pets.weeklyScore} - 1, 0)`,
-          monthlyScore: sql`GREATEST
-              (${pets.monthlyScore} - 1, 0)`,
-          updatedAt: new Date(),
-        })
-        .where(eq(pets.id, submission.petId));
-
-      return updated;
-    });
-
-    return { likeCount: updatedSubmission.likeCount, isLiked: false };
+    const likeCount = await this.likeRepository.countByPostId(postId);
+    return { likeCount, isLiked: false };
   }
 }

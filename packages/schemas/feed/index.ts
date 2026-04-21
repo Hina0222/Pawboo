@@ -1,22 +1,19 @@
 import {z} from 'zod';
 
 export const FeedQuerySchema = z.object({
-  sort: z.enum(['latest', 'popular']).default('latest'),
   cursor: z.coerce.number().int().positive().optional(),
+  missionId: z.coerce.number().int().positive().optional(),
 });
 
 export const FeedItemSchema = z.object({
   id: z.number(),
+  type: z.enum(['general', 'mission']),
+  missionId: z.number().nullable(),
   imageUrls: z.array(z.string()),
-  hashtags: z.array(z.string()).nullable(),
   createdAt: z.string(),
   pet: z.object({id: z.number(), name: z.string(), imageUrl: z.string().nullable()}),
-  owner: z.object({id: z.number(), nickname: z.string()}),
-  missionTitle: z.string(),
   likeCount: z.number(),
-  commentCount: z.number(),
   isLiked: z.boolean(),
-  comment: z.string().nullable(),
 });
 
 export const FeedListResponseSchema = z.object({
