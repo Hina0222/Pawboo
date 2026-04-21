@@ -2,14 +2,12 @@ import { Module } from '@nestjs/common';
 import { MissionController } from './mission.controller';
 import { MissionService } from './mission.service';
 import { MissionRepository } from './mission.repository';
-import { PostRepository } from '../post/post.repository';
-import { PetModule } from '../pet/pet.module';
-import { AwsModule } from '../aws/aws.module';
+import { PostModule } from '../post/post.module';
 import { DatabaseModule } from '../database/database.module';
 
 @Module({
-  imports: [DatabaseModule, AwsModule, PetModule],
+  imports: [DatabaseModule, PostModule],
   controllers: [MissionController],
-  providers: [MissionService, MissionRepository, PostRepository],
+  providers: [MissionService, MissionRepository],
 })
 export class MissionModule {}

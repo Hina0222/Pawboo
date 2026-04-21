@@ -1,6 +1,8 @@
 import {
   applyDecorators,
   BadRequestException,
+  Injectable,
+  PipeTransform,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
@@ -43,3 +45,27 @@ export const ImagesUpload = (fieldName = 'images', maxCount = 5) =>
       }),
     ),
   );
+
+@Injectable()
+export class ImagesValidationPipe implements PipeTransform<
+  Express.Multer.File[] | undefined,
+  Express.Multer.File[]
+> {
+  constructor(private readonly options: { min?: number; max?: number } = {}) {}
+
+  transform(files: Express.Multer.File[] | undefined): Express.Multer.File[] {
+    const min = this.options.min ?? 1;
+    const max = this.options.max ?? 5;
+    const count = files?.length ?? 0;
+
+    if (count < min) {
+      throw new BadRequestException(`이미지를 ${min}장 이상 업로드해주세요.`);
+    }
+    if (count > max) {
+      throw new BadRequestException(
+        `이미지는 최대 ${max}장까지 업로드 가능합니다.`,
+      );
+    }
+    return files as Express.Multer.File[];
+  }
+}

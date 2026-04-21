@@ -7,7 +7,6 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { PetModule } from './pet/pet.module';
 import { MissionModule } from './mission/mission.module';
-import { FeedModule } from './feed/feed.module';
 import { LikeModule } from './like/like.module';
 import { PostModule } from './post/post.module';
 import { ReportModule } from './report/report.module';
@@ -20,7 +19,6 @@ import { ReportModule } from './report/report.module';
     AuthModule,
     PetModule,
     MissionModule,
-    FeedModule,
     LikeModule,
     PostModule,
     ReportModule,

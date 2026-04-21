@@ -51,14 +51,6 @@ export class PetController {
     return this.petService.findAllByUser(req.user.id);
   }
 
-  @Get(':id')
-  findOne(
-    @Req() req: AuthenticatedRequest,
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<PetResponse> {
-    return this.petService.findOne(req.user.id, id);
-  }
-
   @Get('search')
   searchPets(
     @Query() query: Record<string, string>,
@@ -68,6 +60,14 @@ export class PetController {
       throw new BadRequestException(parsed.error.issues);
     }
     return this.petService.search(parsed.data);
+  }
+
+  @Get(':id')
+  findOne(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<PetResponse> {
+    return this.petService.findOne(req.user.id, id);
   }
 
   @Patch(':id')

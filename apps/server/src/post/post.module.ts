@@ -4,10 +4,12 @@ import { PostService } from './post.service';
 import { PostRepository } from './post.repository';
 import { PetModule } from '../pet/pet.module';
 import { AwsModule } from '../aws/aws.module';
+import { DatabaseModule } from '../database/database.module';
 
 @Module({
-  imports: [AwsModule, PetModule],
+  imports: [DatabaseModule, AwsModule, PetModule],
   controllers: [PostController],
   providers: [PostService, PostRepository],
+  exports: [PostService],
 })
 export class PostModule {}

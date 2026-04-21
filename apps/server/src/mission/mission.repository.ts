@@ -15,4 +15,12 @@ export class MissionRepository {
       .where(eq(missions.scheduledAt, date));
     return mission ?? null;
   }
+
+  async findById(missionId: number) {
+    const [mission] = await this.db
+      .select()
+      .from(missions)
+      .where(eq(missions.id, missionId));
+    return mission ?? null;
+  }
 }

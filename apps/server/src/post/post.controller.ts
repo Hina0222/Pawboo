@@ -1,16 +1,31 @@
 import {
   Controller,
+  Get,
   Post,
+  Delete,
+  Param,
+  Query,
   UseGuards,
   Req,
   UploadedFiles,
   BadRequestException,
+  ParseIntPipe,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { PostService } from './post.service';
-import { ImagesUpload } from '../common/decorators/image-upload.decorator';
+import {
+  ImagesUpload,
+  ImagesValidationPipe,
+} from '../common/decorators/image-upload.decorator';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.type';
-import type { PostResponse } from '@pawboo/schemas/mission';
+import {
+  PostQuerySchema,
+  type PostResponse,
+  type PostItem,
+  type PostListResponse,
+} from '@pawboo/schemas/post';
 
 @UseGuards(JwtAuthGuard)
 @Controller('posts')
@@ -21,17 +36,40 @@ export class PostController {
   @ImagesUpload()
   async createPost(
     @Req() req: AuthenticatedRequest,
-    @UploadedFiles() files?: Express.Multer.File[],
+    @UploadedFiles(new ImagesValidationPipe()) files: Express.Multer.File[],
   ): Promise<PostResponse> {
-    if (!files || files.length === 0) {
-      throw new BadRequestException('이미지를 1장 이상 업로드해주세요.');
-    }
-    if (files.length > 5) {
-      throw new BadRequestException('이미지는 최대 5장까지 업로드 가능합니다.');
-    }
     return this.postService.createPost(
       req.user.id,
       files.map((f) => f.buffer),
     );
+  }
+
+  @Get()
+  findPosts(
+    @Req() req: AuthenticatedRequest,
+    @Query() query: Record<string, string>,
+  ): Promise<PostListResponse> {
+    const parsed = PostQuerySchema.safeParse(query);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+    return this.postService.findPosts(req.user.id, parsed.data);
+  }
+
+  @Get(':id')
+  findOnePost(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<PostItem> {
+    return this.postService.findOnePost(req.user.id, id);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  deletePost(
+    @Req() req: AuthenticatedRequest,
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<void> {
+    return this.postService.deletePost(req.user.id, id);
   }
 }

@@ -15,7 +15,7 @@ import type { LikeResponse } from '@pawboo/schemas/like';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.type';
 
 @UseGuards(JwtAuthGuard)
-@Controller('feeds')
+@Controller('posts')
 export class LikeController {
   constructor(private readonly likeService: LikeService) {}
 
