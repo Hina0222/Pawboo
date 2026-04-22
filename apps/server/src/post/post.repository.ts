@@ -30,9 +30,8 @@ export class PostRepository {
     return (post as PostResponse) ?? null;
   }
 
-  async findPosts(userId: number, query: PostQuery) {
+  async findPosts(viewerId: number, query: PostQuery, targetUserId?: number) {
     const { cursor, missionId } = query;
-
     const LIMIT = 20;
 
     const rows = await this.db
@@ -50,6 +49,9 @@ export class PostRepository {
       .innerJoin(pets, eq(posts.petId, pets.id))
       .where(
         and(
+          targetUserId !== undefined
+            ? eq(pets.userId, targetUserId)
+            : undefined,
           cursor ? lt(posts.id, cursor) : undefined,
           missionId ? eq(posts.missionId, missionId) : undefined,
         ),
@@ -67,7 +69,10 @@ export class PostRepository {
         .select({ postId: postLikes.postId })
         .from(postLikes)
         .where(
-          and(eq(postLikes.userId, userId), inArray(postLikes.postId, postIds)),
+          and(
+            eq(postLikes.userId, viewerId),
+            inArray(postLikes.postId, postIds),
+          ),
         );
       likedSet = new Set(likedRows.map((r) => r.postId));
     }

@@ -56,6 +56,35 @@ export class PostController {
     return this.postService.findPosts(req.user.id, parsed.data);
   }
 
+  @Get('me')
+  findMyPosts(
+    @Req() req: AuthenticatedRequest,
+    @Query() query: Record<string, string>,
+  ): Promise<PostListResponse> {
+    const parsed = PostQuerySchema.safeParse(query);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+    return this.postService.findUserPosts(
+      req.user.id,
+      req.user.id,
+      parsed.data,
+    );
+  }
+
+  @Get('users/:userId')
+  findUserPosts(
+    @Req() req: AuthenticatedRequest,
+    @Param('userId', ParseIntPipe) userId: number,
+    @Query() query: Record<string, string>,
+  ): Promise<PostListResponse> {
+    const parsed = PostQuerySchema.safeParse(query);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+    return this.postService.findUserPosts(req.user.id, userId, parsed.data);
+  }
+
   @Get(':id')
   findOnePost(
     @Req() req: AuthenticatedRequest,

@@ -69,19 +69,52 @@ export class PostService {
   }
 
   async findPosts(userId: number, query: PostQuery): Promise<PostListResponse> {
-    const result = await this.postRepository.findPosts(userId, query);
+    return this.toPostListResponse(
+      await this.postRepository.findPosts(userId, query),
+    );
+  }
 
-    const items: PostItem[] = result.rows.map((r) => ({
-      id: r.id,
-      type: r.type,
-      missionId: r.missionId ?? null,
-      imageUrls: r.imageUrls,
-      createdAt: r.createdAt.toISOString(),
-      pet: { id: r.petId, name: r.petName, imageUrl: r.petImageUrl ?? null },
-      likeCount: result.likeCountMap.get(r.id) ?? 0,
-      isLiked: result.likedSet.has(r.id),
-    }));
+  async findUserPosts(
+    viewerId: number,
+    targetUserId: number,
+    query: PostQuery,
+  ): Promise<PostListResponse> {
+    return this.toPostListResponse(
+      await this.postRepository.findPosts(viewerId, query, targetUserId),
+    );
+  }
 
+  private toPostItem(
+    row: NonNullable<Awaited<ReturnType<PostRepository['findOnePost']>>>,
+    likeCount: number,
+    isLiked: boolean,
+  ): PostItem {
+    return {
+      id: row.id,
+      type: row.type,
+      missionId: row.missionId ?? null,
+      imageUrls: row.imageUrls,
+      createdAt: row.createdAt.toISOString(),
+      pet: {
+        id: row.petId,
+        name: row.petName,
+        imageUrl: row.petImageUrl ?? null,
+      },
+      likeCount,
+      isLiked,
+    };
+  }
+
+  private toPostListResponse(
+    result: Awaited<ReturnType<PostRepository['findPosts']>>,
+  ): PostListResponse {
+    const items = result.rows.map((r) =>
+      this.toPostItem(
+        r,
+        result.likeCountMap.get(r.id) ?? 0,
+        result.likedSet.has(r.id),
+      ),
+    );
     return { data: items, hasNext: result.hasNext, cursor: result.cursor };
   }
 
@@ -96,20 +129,11 @@ export class PostService {
       this.postRepository.getLikeCounts([postId]),
     ]);
 
-    return {
-      id: row.id,
-      type: row.type,
-      missionId: row.missionId ?? null,
-      imageUrls: row.imageUrls,
-      createdAt: row.createdAt.toISOString(),
-      pet: {
-        id: row.petId,
-        name: row.petName,
-        imageUrl: row.petImageUrl ?? null,
-      },
-      likeCount: likeCountMap.get(postId) ?? 0,
-      isLiked: likedPosts.has(postId),
-    };
+    return this.toPostItem(
+      row,
+      likeCountMap.get(postId) ?? 0,
+      likedPosts.has(postId),
+    );
   }
 
   async deletePost(userId: number, postId: number): Promise<void> {
