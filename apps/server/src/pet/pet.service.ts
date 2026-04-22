@@ -38,12 +38,17 @@ export class PetService {
       : null;
     const isFirst = existing.length === 0;
 
-    return this.petRepository.create({
-      userId,
-      name: input.name,
-      imageUrl,
-      isRepresentative: isFirst,
-    });
+    try {
+      return await this.petRepository.create({
+        userId,
+        name: input.name,
+        imageUrl,
+        isRepresentative: isFirst,
+      });
+    } catch (err) {
+      if (imageUrl) await this.awsService.deleteImage(imageUrl);
+      throw err;
+    }
   }
 
   async findAllByUser(userId: number): Promise<PetResponse[]> {
@@ -64,21 +69,30 @@ export class PetService {
   ): Promise<PetResponse> {
     const pet = await this.findOne(userId, petId);
 
-    let imageUrl = pet.imageUrl;
-    if (imageBuffer) {
-      imageUrl = await this.awsService.uploadImage(
-        imageBuffer,
-        IMAGE_PRESET.PET_THUMBNAIL,
-      );
-      if (pet.imageUrl) await this.awsService.deleteImage(pet.imageUrl);
-    }
+    const newImageUrl = imageBuffer
+      ? await this.awsService.uploadImage(
+          imageBuffer,
+          IMAGE_PRESET.PET_THUMBNAIL,
+        )
+      : null;
 
     const updateData: Partial<{ name: string; imageUrl: string | null }> = {
-      imageUrl,
+      imageUrl: newImageUrl ?? pet.imageUrl,
     };
     if (input.name !== undefined) updateData.name = input.name;
 
-    return this.petRepository.update(petId, updateData);
+    let updated: PetResponse;
+    try {
+      updated = await this.petRepository.update(petId, updateData);
+    } catch (err) {
+      if (newImageUrl) await this.awsService.deleteImage(newImageUrl);
+      throw err;
+    }
+
+    if (newImageUrl && pet.imageUrl) {
+      await this.awsService.deleteImage(pet.imageUrl);
+    }
+    return updated;
   }
 
   async remove(userId: number, petId: number): Promise<void> {
