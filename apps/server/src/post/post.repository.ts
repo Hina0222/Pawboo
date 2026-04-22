@@ -30,7 +30,7 @@ export class PostRepository {
     return (post as PostResponse) ?? null;
   }
 
-  async findPosts(viewerId: number, query: PostQuery, targetUserId?: number) {
+  async findPosts(viewerId: number, query: PostQuery, targetPetId?: number) {
     const { cursor, missionId } = query;
     const LIMIT = 20;
 
@@ -49,9 +49,7 @@ export class PostRepository {
       .innerJoin(pets, eq(posts.petId, pets.id))
       .where(
         and(
-          targetUserId !== undefined
-            ? eq(pets.userId, targetUserId)
-            : undefined,
+          targetPetId !== undefined ? eq(posts.petId, targetPetId) : undefined,
           cursor ? lt(posts.id, cursor) : undefined,
           missionId ? eq(posts.missionId, missionId) : undefined,
         ),

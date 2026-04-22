@@ -65,24 +65,20 @@ export class PostController {
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
     }
-    return this.postService.findUserPosts(
-      req.user.id,
-      req.user.id,
-      parsed.data,
-    );
+    return this.postService.findMyPosts(req.user.id, parsed.data);
   }
 
-  @Get('users/:userId')
-  findUserPosts(
+  @Get('pets/:petId')
+  findPetPosts(
     @Req() req: AuthenticatedRequest,
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param('petId', ParseIntPipe) petId: number,
     @Query() query: Record<string, string>,
   ): Promise<PostListResponse> {
     const parsed = PostQuerySchema.safeParse(query);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
     }
-    return this.postService.findUserPosts(req.user.id, userId, parsed.data);
+    return this.postService.findPetPosts(req.user.id, petId, parsed.data);
   }
 
   @Get(':id')

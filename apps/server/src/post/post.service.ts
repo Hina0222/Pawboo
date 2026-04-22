@@ -74,13 +74,27 @@ export class PostService {
     );
   }
 
-  async findUserPosts(
+  async findMyPosts(
+    userId: number,
+    query: PostQuery,
+  ): Promise<PostListResponse> {
+    const representativePet =
+      await this.petRepository.findRepresentativeByUserId(userId);
+    if (!representativePet) {
+      return { data: [], hasNext: false, cursor: null };
+    }
+    return this.toPostListResponse(
+      await this.postRepository.findPosts(userId, query, representativePet.id),
+    );
+  }
+
+  async findPetPosts(
     viewerId: number,
-    targetUserId: number,
+    petId: number,
     query: PostQuery,
   ): Promise<PostListResponse> {
     return this.toPostListResponse(
-      await this.postRepository.findPosts(viewerId, query, targetUserId),
+      await this.postRepository.findPosts(viewerId, query, petId),
     );
   }
 
