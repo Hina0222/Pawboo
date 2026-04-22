@@ -3,6 +3,7 @@ import { eq, and, lt, desc, inArray, count } from 'drizzle-orm';
 import { DRIZZLE_ORM } from '../database/database.provider';
 import type { DrizzleDB } from '../database/database.provider';
 import { posts, pets, postLikes } from '../database/schema';
+import type { PostRow, PostOwnerRow } from '../database/schema';
 import type { PostResponse, PostQuery } from '@pawboo/schemas/post';
 
 @Injectable()
@@ -87,7 +88,7 @@ export class PostRepository {
     };
   }
 
-  async findOnePost(postId: number) {
+  async findOnePost(postId: number): Promise<PostRow | null> {
     const [row] = await this.db
       .select({
         id: posts.id,
@@ -106,7 +107,10 @@ export class PostRepository {
     return row ?? null;
   }
 
-  async findPostWithOwner(postId: number, userId: number) {
+  async findPostWithOwner(
+    postId: number,
+    userId: number,
+  ): Promise<PostOwnerRow | null> {
     const [post] = await this.db
       .select({ id: posts.id, imageUrls: posts.imageUrls })
       .from(posts)

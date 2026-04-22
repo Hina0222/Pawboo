@@ -95,6 +95,10 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    "moduleNameMapper": {
+      "^@pawboo/schemas$": "<rootDir>/../../../packages/schemas/index.ts",
+      "^@pawboo/schemas/(.*)$": "<rootDir>/../../../packages/schemas/$1/index.ts"
+    },
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],

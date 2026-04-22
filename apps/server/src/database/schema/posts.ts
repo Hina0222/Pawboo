@@ -8,6 +8,7 @@ import {
   unique,
   index,
 } from 'drizzle-orm/pg-core';
+import { type InferSelectModel } from 'drizzle-orm';
 import { pets } from './pets';
 import { missions } from './missions';
 
@@ -34,3 +35,21 @@ export const posts = pgTable(
     unique('posts_pet_mission_unique').on(table.petId, table.missionId),
   ],
 );
+
+export type PostRecord = InferSelectModel<typeof posts>;
+
+export type PostRow = {
+  id: number;
+  type: 'general' | 'mission';
+  missionId: number | null;
+  imageUrls: string[];
+  createdAt: Date;
+  petId: number;
+  petName: string;
+  petImageUrl: string | null;
+};
+
+export type PostOwnerRow = {
+  id: number;
+  imageUrls: string[];
+};
