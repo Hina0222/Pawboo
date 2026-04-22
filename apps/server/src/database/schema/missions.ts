@@ -7,6 +7,7 @@ import {
   timestamp,
   unique,
 } from 'drizzle-orm/pg-core';
+import { type InferSelectModel } from 'drizzle-orm';
 
 export const missions = pgTable(
   'missions',
@@ -20,3 +21,5 @@ export const missions = pgTable(
   },
   (table) => [unique('missions_scheduled_at_unique').on(table.scheduledAt)],
 );
+
+export type MissionRecord = InferSelectModel<typeof missions>;
