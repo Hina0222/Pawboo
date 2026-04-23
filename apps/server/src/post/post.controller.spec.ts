@@ -51,6 +51,7 @@ describe('PostController', () => {
     createPost: jest.fn(),
     findPosts: jest.fn(),
     findMyPosts: jest.fn(),
+    findLikedPosts: jest.fn(),
     findPetPosts: jest.fn(),
     findOnePost: jest.fn(),
     deletePost: jest.fn(),
@@ -138,6 +139,32 @@ describe('PostController', () => {
         BadRequestException,
       );
       expect(service.findMyPosts).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('findLikedPosts', () => {
+    it('좋아요한 포스트 조회 요청을 서비스에 전달', async () => {
+      service.findLikedPosts.mockResolvedValue(mockPostListResponse);
+
+      const result = await controller.findLikedPosts(req, {});
+
+      expect(service.findLikedPosts).toHaveBeenCalledWith(1, {});
+      expect(result).toEqual(mockPostListResponse);
+    });
+
+    it('cursor 쿼리 파라미터 파싱', async () => {
+      service.findLikedPosts.mockResolvedValue(mockPostListResponse);
+
+      await controller.findLikedPosts(req, { cursor: '10' });
+
+      expect(service.findLikedPosts).toHaveBeenCalledWith(1, { cursor: 10 });
+    });
+
+    it('잘못된 쿼리 파라미터 - BadRequestException', () => {
+      expect(() =>
+        controller.findLikedPosts(req, { cursor: 'invalid' }),
+      ).toThrow(BadRequestException);
+      expect(service.findLikedPosts).not.toHaveBeenCalled();
     });
   });
 

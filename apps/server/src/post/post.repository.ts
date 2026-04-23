@@ -147,4 +147,46 @@ export class PostRepository {
       );
     return new Map(rows.map((r) => [r.postId, true]));
   }
+
+  async findLikedPosts(userId: number, cursor?: number) {
+    const LIMIT = 20;
+
+    const rows = await this.db
+      .select({
+        id: posts.id,
+        type: posts.type,
+        missionId: posts.missionId,
+        imageUrls: posts.imageUrls,
+        createdAt: posts.createdAt,
+        petId: pets.id,
+        petName: pets.name,
+        petImageUrl: pets.imageUrl,
+        likeCursorId: postLikes.id,
+      })
+      .from(postLikes)
+      .innerJoin(posts, eq(posts.id, postLikes.postId))
+      .innerJoin(pets, eq(pets.id, posts.petId))
+      .where(
+        and(
+          eq(postLikes.userId, userId),
+          cursor ? lt(postLikes.id, cursor) : undefined,
+        ),
+      )
+      .orderBy(desc(postLikes.id))
+      .limit(LIMIT + 1);
+
+    const hasNext = rows.length > LIMIT;
+    const data = hasNext ? rows.slice(0, LIMIT) : rows;
+    const likeCountMap = await this.getLikeCounts(data.map((r) => r.id));
+    const likedSet = new Set(data.map((r) => r.id));
+    const lastItem = data[data.length - 1];
+
+    return {
+      rows: data,
+      likedSet,
+      likeCountMap,
+      hasNext,
+      cursor: hasNext && lastItem ? lastItem.likeCursorId : null,
+    };
+  }
 }

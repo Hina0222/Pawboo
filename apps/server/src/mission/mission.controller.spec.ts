@@ -58,10 +58,10 @@ describe('MissionController', () => {
   });
 
   describe('findToday', () => {
-    it('미션과 포스트가 있을 때 정상 반환', async () => {
+    it('미션 제출한 경우 submitted: true 반환', async () => {
       const mockResponse: TodayMissionResponse = {
         mission: mockMission,
-        post: mockPostResponse,
+        submitted: true,
       };
       service.findToday.mockResolvedValue(mockResponse);
 
@@ -71,14 +71,17 @@ describe('MissionController', () => {
       expect(result).toEqual(mockResponse);
     });
 
-    it('미션이 없을 때 null 반환', async () => {
-      const mockResponse: TodayMissionResponse = { mission: null, post: null };
+    it('미션이 없을 때 submitted: false 반환', async () => {
+      const mockResponse: TodayMissionResponse = {
+        mission: null,
+        submitted: false,
+      };
       service.findToday.mockResolvedValue(mockResponse);
 
       const result = await controller.findToday(req);
 
       expect(service.findToday).toHaveBeenCalledWith(1);
-      expect(result).toEqual({ mission: null, post: null });
+      expect(result).toEqual({ mission: null, submitted: false });
     });
 
     it('서비스 에러 전파', async () => {

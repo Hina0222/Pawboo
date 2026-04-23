@@ -1,5 +1,4 @@
 import {z} from 'zod';
-import {PostResponseSchema} from "../post";
 
 export const MissionResponseSchema = z.object({
   id: z.number(),
@@ -12,7 +11,7 @@ export const MissionResponseSchema = z.object({
 
 export const TodayMissionResponseSchema = z.object({
   mission: MissionResponseSchema.nullable(),
-  post: PostResponseSchema.nullable(),
+  submitted: z.boolean(),
 });
 
 export type MissionResponse = z.infer<typeof MissionResponseSchema>;

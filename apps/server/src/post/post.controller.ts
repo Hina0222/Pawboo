@@ -81,6 +81,18 @@ export class PostController {
     return this.postService.findPetPosts(req.user.id, petId, parsed.data);
   }
 
+  @Get('liked')
+  findLikedPosts(
+    @Req() req: AuthenticatedRequest,
+    @Query() query: Record<string, string>,
+  ): Promise<PostListResponse> {
+    const parsed = PostQuerySchema.safeParse(query);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+    return this.postService.findLikedPosts(req.user.id, parsed.data);
+  }
+
   @Get(':id')
   findOnePost(
     @Req() req: AuthenticatedRequest,

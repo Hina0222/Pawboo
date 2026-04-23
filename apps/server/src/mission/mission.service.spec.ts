@@ -3,6 +3,8 @@ import { ConflictException, NotFoundException } from '@nestjs/common';
 import { MissionService } from './mission.service';
 import { MissionRepository } from './mission.repository';
 import { PostService } from '../post/post.service';
+import { PostRepository } from '../post/post.repository';
+import { PetRepository } from '../pet/pet.repository';
 import type { PostResponse } from '@pawboo/schemas/post';
 import type { MissionRecord } from '../database/schema';
 
@@ -20,6 +22,15 @@ const mockMission: MissionRecord = {
   createdAt: new Date('2026-04-22T00:00:00.000Z'),
 };
 
+const mockPet = {
+  id: 5,
+  userId: 1,
+  name: '뽀삐',
+  imageUrl: null,
+  isRepresentative: true,
+  createdAt: new Date('2026-01-01'),
+};
+
 const mockPostResponse: PostResponse = {
   id: 10,
   petId: 5,
@@ -33,6 +44,8 @@ describe('MissionService', () => {
   let service: MissionService;
   let missionRepository: jest.Mocked<MissionRepository>;
   let postService: jest.Mocked<PostService>;
+  let postRepository: jest.Mocked<PostRepository>;
+  let petRepository: jest.Mocked<PetRepository>;
 
   const mockMissionRepository = {
     findByDate: jest.fn(),
@@ -40,8 +53,15 @@ describe('MissionService', () => {
   };
 
   const mockPostService = {
-    findMissionSubmission: jest.fn(),
     createPost: jest.fn(),
+  };
+
+  const mockPostRepository = {
+    findByMissionIdAndPetId: jest.fn(),
+  };
+
+  const mockPetRepository = {
+    findRepresentativeByUserId: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -50,6 +70,8 @@ describe('MissionService', () => {
         MissionService,
         { provide: MissionRepository, useValue: mockMissionRepository },
         { provide: PostService, useValue: mockPostService },
+        { provide: PostRepository, useValue: mockPostRepository },
+        { provide: PetRepository, useValue: mockPetRepository },
       ],
     }).compile();
 
@@ -57,40 +79,56 @@ describe('MissionService', () => {
     missionRepository =
       module.get<jest.Mocked<MissionRepository>>(MissionRepository);
     postService = module.get<jest.Mocked<PostService>>(PostService);
+    postRepository = module.get<jest.Mocked<PostRepository>>(PostRepository);
+    petRepository = module.get<jest.Mocked<PetRepository>>(PetRepository);
 
     jest.clearAllMocks();
   });
 
   describe('findToday', () => {
-    it('미션 없으면 { mission: null, post: null } 반환', async () => {
+    it('미션 없으면 { mission: null, submitted: false } 반환', async () => {
       missionRepository.findByDate.mockResolvedValue(null);
 
       const result = await service.findToday(1);
 
-      expect(result).toEqual({ mission: null, post: null });
-      expect(postService.findMissionSubmission).not.toHaveBeenCalled();
+      expect(result).toEqual({ mission: null, submitted: false });
+      expect(petRepository.findRepresentativeByUserId).not.toHaveBeenCalled();
     });
 
-    it('미션과 포스트 모두 있을 때 정상 반환', async () => {
+    it('대표 펫 없으면 { mission, submitted: false } 반환', async () => {
       missionRepository.findByDate.mockResolvedValue(mockMission);
-      postService.findMissionSubmission.mockResolvedValue(mockPostResponse);
+      petRepository.findRepresentativeByUserId.mockResolvedValue(null);
 
       const result = await service.findToday(1);
 
-      expect(result).toEqual({ mission: mockMission, post: mockPostResponse });
-      expect(postService.findMissionSubmission).toHaveBeenCalledWith(
-        1,
+      expect(result).toEqual({ mission: mockMission, submitted: false });
+      expect(postRepository.findByMissionIdAndPetId).not.toHaveBeenCalled();
+    });
+
+    it('미션 제출한 경우 submitted: true 반환', async () => {
+      missionRepository.findByDate.mockResolvedValue(mockMission);
+      petRepository.findRepresentativeByUserId.mockResolvedValue(mockPet);
+      postRepository.findByMissionIdAndPetId.mockResolvedValue(
+        mockPostResponse,
+      );
+
+      const result = await service.findToday(1);
+
+      expect(result).toEqual({ mission: mockMission, submitted: true });
+      expect(postRepository.findByMissionIdAndPetId).toHaveBeenCalledWith(
         mockMission.id,
+        mockPet.id,
       );
     });
 
-    it('미션은 있고 포스트 없을 때 post: null 반환', async () => {
+    it('미션 제출하지 않은 경우 submitted: false 반환', async () => {
       missionRepository.findByDate.mockResolvedValue(mockMission);
-      postService.findMissionSubmission.mockResolvedValue(null);
+      petRepository.findRepresentativeByUserId.mockResolvedValue(mockPet);
+      postRepository.findByMissionIdAndPetId.mockResolvedValue(null);
 
       const result = await service.findToday(1);
 
-      expect(result).toEqual({ mission: mockMission, post: null });
+      expect(result).toEqual({ mission: mockMission, submitted: false });
     });
 
     it('findByDate 호출 시 YYYY-MM-DD 형식의 날짜 전달', async () => {

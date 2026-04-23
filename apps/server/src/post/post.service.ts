@@ -53,21 +53,6 @@ export class PostService {
     }
   }
 
-  async findMissionSubmission(
-    userId: number,
-    missionId: number,
-  ): Promise<PostResponse | null> {
-    const representativePet =
-      await this.petRepository.findRepresentativeByUserId(userId);
-    if (!representativePet) {
-      return null;
-    }
-    return this.postRepository.findByMissionIdAndPetId(
-      missionId,
-      representativePet.id,
-    );
-  }
-
   async findPosts(userId: number, query: PostQuery): Promise<PostListResponse> {
     return this.toPostListResponse(
       await this.postRepository.findPosts(userId, query),
@@ -147,6 +132,15 @@ export class PostService {
       row,
       likeCountMap.get(postId) ?? 0,
       likedPosts.has(postId),
+    );
+  }
+
+  async findLikedPosts(
+    userId: number,
+    query: PostQuery,
+  ): Promise<PostListResponse> {
+    return this.toPostListResponse(
+      await this.postRepository.findLikedPosts(userId, query.cursor),
     );
   }
 

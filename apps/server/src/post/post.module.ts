@@ -10,6 +10,6 @@ import { DatabaseModule } from '../database/database.module';
   imports: [DatabaseModule, AwsModule, PetModule],
   controllers: [PostController],
   providers: [PostService, PostRepository],
-  exports: [PostService],
+  exports: [PostService, PostRepository],
 })
 export class PostModule {}

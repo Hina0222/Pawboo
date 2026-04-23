@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { MissionRepository } from './mission.repository';
 import { PostService } from '../post/post.service';
+import { PostRepository } from '../post/post.repository';
+import { PetRepository } from '../pet/pet.repository';
 import type { PostResponse } from '@pawboo/schemas/post';
 import type { TodayMissionResponse } from '@pawboo/schemas/mission';
 
@@ -13,6 +15,8 @@ export class MissionService {
   constructor(
     private readonly missionRepository: MissionRepository,
     private readonly postService: PostService,
+    private readonly postRepository: PostRepository,
+    private readonly petRepository: PetRepository,
   ) {}
 
   private getKstToday(): string {
@@ -26,15 +30,21 @@ export class MissionService {
     const mission = await this.missionRepository.findByDate(today);
 
     if (!mission) {
-      return { mission: null, post: null };
+      return { mission: null, submitted: false };
     }
 
-    const post = await this.postService.findMissionSubmission(
-      userId,
+    const representativePet =
+      await this.petRepository.findRepresentativeByUserId(userId);
+    if (!representativePet) {
+      return { mission, submitted: false };
+    }
+
+    const post = await this.postRepository.findByMissionIdAndPetId(
       mission.id,
+      representativePet.id,
     );
 
-    return { mission, post };
+    return { mission, submitted: !!post };
   }
 
   async submitMission(
