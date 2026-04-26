@@ -11,14 +11,15 @@
     "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx}\""
   },
   "dependencies": {
-    "@pawboo/schemas": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
+    "@pawboo/schemas": "workspace:*",
     "@tanstack/react-query": "^5.90.21",
     "@tanstack/react-virtual": "^3.13.23",
     "axios": "^1.15.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.38.0",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.577.0",
     "next": "16.2.3",
@@ -35,6 +36,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@tailwindcss/postcss": "^4",
     "@tanstack/react-query-devtools": "^5.91.3",
     "@types/lodash.debounce": "^4.0.9",
