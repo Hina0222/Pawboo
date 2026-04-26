@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
-import { BackHeader } from '@/widgets/header';
 import EditPetForm from '@/features/pet/edit/ui/edit-pet-form';
 import { PetDetail, PetProfileCard } from '@/features/pet/detail/ui';
 
@@ -14,8 +13,6 @@ export default function MyPetPage() {
 
   return (
     <div className="flex flex-col pb-8">
-      <BackHeader title={isEditing ? '펫 프로필 편집' : '펫 프로필'} />
-
       <PetProfileCard id={id} isEditing={isEditing} onToggle={() => setIsEditing(v => !v)} />
 
       {isEditing ? (

@@ -1,12 +1,10 @@
-import { MissionCard } from '@/features/mission/today/ui/mission-card';
-import { SubmissionCard } from '@/features/mission/today/ui/submission-card';
-import { ServerFetchBoundary } from '@/shared/boundary/server-fetch-boundary';
-import { getTodayMissionQueryOptions } from '@/features/mission/today/api/useGetTodayMissionQuery';
+'use client';
+
 import { Header } from '@/widgets/header';
 import testImg from '@/shared/assets/images/testImg.png';
 import SearchIcon from '@/shared/assets/icons/SearchIcon.svg';
 
-export default async function MissionPage() {
+export default function CalendarPage() {
   return (
     <div>
       <Header>
@@ -20,10 +18,6 @@ export default async function MissionPage() {
           <Header.NavLink href="/search" icon={<SearchIcon />} />
         </Header.Right>
       </Header>
-      <ServerFetchBoundary queryOptions={getTodayMissionQueryOptions()}>
-        <MissionCard />
-        <SubmissionCard />
-      </ServerFetchBoundary>
     </div>
   );
 }

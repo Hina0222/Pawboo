@@ -2,11 +2,10 @@
 
 import { LogOut } from 'lucide-react';
 import { Link } from '@/app/i18n/navigation';
-import { BottomNav } from '@/widgets/bottom-nav';
 import { useLogoutMutation } from '@/features/user/me/api/useLogoutMutation';
 import { useDeleteAccountMutation } from '@/features/user/me/api/useDeleteAccountMutation';
 import { MyPetList } from '@/widgets/pet';
-import { TitleHeader } from '@/widgets/header';
+import { Header } from '@/widgets/header';
 import {
   Dialog,
   DialogClose,
@@ -27,8 +26,16 @@ export default function MyPage() {
   const ts = useTranslations('settings');
 
   return (
-    <div className="pb-20">
-      <TitleHeader title={t('title')} />
+    <div>
+      <Header>
+        <Header.Left>
+          <Header.Back />
+        </Header.Left>
+        <Header.Center>
+          <Header.Title>내 정보</Header.Title>
+        </Header.Center>
+        <Header.Right />
+      </Header>
 
       {/* 내 펫 가로 스크롤 */}
       <section className="px-5 py-6">
@@ -91,8 +98,6 @@ export default function MyPage() {
           </DialogContent>
         </Dialog>
       </div>
-
-      <BottomNav />
     </div>
   );
 }

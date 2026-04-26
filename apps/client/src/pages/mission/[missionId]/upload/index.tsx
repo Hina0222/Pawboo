@@ -1,4 +1,3 @@
-import { BackHeader } from '@/widgets/header';
 import { SubmitMissionForm } from '@/features/mission/submit/ui';
 
 interface MissionUploadPageProps {
@@ -10,8 +9,6 @@ export default async function MissionUploadPage({ params }: MissionUploadPagePro
 
   return (
     <>
-      <BackHeader title="미션 인증" />
-
       <SubmitMissionForm missionId={Number(missionId)} />
     </>
   );
