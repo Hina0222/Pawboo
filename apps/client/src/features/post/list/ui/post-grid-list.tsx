@@ -32,7 +32,7 @@ export function PostGridList({ data, fetchNextPage, hasNextPage }: PostGridListP
   }
 
   return (
-    <div>
+    <div className="px-4">
       <div className="grid grid-cols-3 gap-2">
         {posts.map(post => (
           <Link
@@ -43,7 +43,7 @@ export function PostGridList({ data, fetchNextPage, hasNextPage }: PostGridListP
             <img
               src={post.imageUrls[0]}
               alt={post.pet.name}
-              className="h-full w-full object-cover"
+              className="h-full w-full rounded-[10px] object-cover"
             />
           </Link>
         ))}
