@@ -3,7 +3,7 @@
 import type { FallbackProps } from 'react-error-boundary';
 import { useTranslations } from 'next-intl';
 
-function PetListError({ resetErrorBoundary }: FallbackProps) {
+function MyPetListError({ resetErrorBoundary }: FallbackProps) {
   const t = useTranslations('pet');
   const tc = useTranslations('common');
   return (
@@ -14,4 +14,4 @@ function PetListError({ resetErrorBoundary }: FallbackProps) {
   );
 }
 
-export default PetListError;
+export default MyPetListError;

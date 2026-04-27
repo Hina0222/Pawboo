@@ -1,32 +1,32 @@
 'use client';
 
-import { useRef, useState } from 'react';
-import { Camera } from 'lucide-react';
+import React, { useRef, useState } from 'react';
 import { useUpdatePetForm } from '@/features/pet/edit/hooks/useUpdatePetForm';
-import { useGetPetQuery } from '@/features/pet/detail/api/useGetPetQuery';
+import { useGetPetSuspenseQuery } from '@/features/pet/detail/api/useGetPetQuery';
+import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib/utils';
 import { useTranslations } from 'next-intl';
-
-const inputCls =
-  'w-full rounded-lg border border-border bg-card px-3 py-2 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-primary';
+import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
+import CameraIcon from '@/shared/assets/icons/CameraIcon.svg';
+import { EditPetFormSkeleton, EditPetFormError } from './index';
 
 interface EditPetFormProps {
   id: number;
-  onSuccess: () => void;
-  onCancel: () => void;
 }
 
-function EditPetForm({ id, onSuccess, onCancel }: EditPetFormProps) {
+function EditPetForm({ id }: EditPetFormProps) {
   const t = useTranslations('pet');
   const tc = useTranslations('common');
-  const { data: pet } = useGetPetQuery(id);
-  const { methods, onSubmit, isPending } = useUpdatePetForm(pet!, onSuccess);
+  const { data: pet } = useGetPetSuspenseQuery(id);
+  const { methods, onSubmit, isPending } = useUpdatePetForm(pet);
   const {
     register,
     setValue,
+    watch,
     formState: { errors },
   } = methods;
+  const name = watch('name');
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(pet?.imageUrl ?? null);
@@ -40,23 +40,36 @@ function EditPetForm({ id, onSuccess, onCancel }: EditPetFormProps) {
   };
 
   return (
-    <form onSubmit={onSubmit} className="flex flex-col gap-4 px-5">
-      <div className="flex flex-col items-center gap-2">
+    <form onSubmit={onSubmit} className="mt-5 mb-4 flex flex-1 flex-col justify-between px-4">
+      <div className="space-y-10">
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
-          className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-primary/50 bg-card transition-colors hover:border-primary"
+          className="relative mx-auto flex items-center justify-center rounded-full border-[2.5px] border-[#E1E1E3]"
         >
-          {previewUrl ? (
-            <img src={previewUrl} alt={t('petPhoto')} className="h-full w-full object-cover" />
-          ) : (
-            <div className="flex flex-col items-center gap-1 text-muted-foreground">
-              <Camera size={24} />
-              <span className="text-xs">{tc('addPhoto')}</span>
-            </div>
-          )}
+          <div className="overflow-hidden">
+            {previewUrl ? (
+              <img
+                src={previewUrl}
+                alt={t('petPhoto')}
+                className="h-16.5 w-20 rounded-full object-cover"
+              />
+            ) : (
+              <div className="flex h-16.5 w-20 items-center justify-center rounded-full border border-[#E1E1E3] bg-[#FADF78]">
+                <LogoIcon className="h-10 w-10 text-[#C59D07]" />
+              </div>
+            )}
+          </div>
+          <div
+            className="absolute right-[-3px] bottom-[-3px] rounded-full border-3 border-[#131313] bg-white px-1 py-0.25"
+            onClick={e => {
+              e.stopPropagation();
+              fileInputRef.current?.click();
+            }}
+          >
+            <CameraIcon className="text-[#131313]" />
+          </div>
         </button>
-        <span className="text-xs text-muted-foreground">{t('tapToChange')}</span>
         <input
           ref={fileInputRef}
           type="file"
@@ -64,28 +77,29 @@ function EditPetForm({ id, onSuccess, onCancel }: EditPetFormProps) {
           className="hidden"
           onChange={handleFileChange}
         />
+
+        <div className="flex flex-col gap-2.5">
+          <label className="font-semibold text-[#666666]">닉네임</label>
+          <input
+            {...register('name')}
+            placeholder={t('enterName')}
+            className={cn(
+              'w-full rounded-[18px] border border-[#4D4D4D] bg-[#333333] px-6 py-4 text-[#E1E1E3] transition-colors outline-none placeholder:text-[#666666] focus:border-[#E1E1E3]',
+              errors.name && 'border-destructive'
+            )}
+          />
+          {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+        </div>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label className="text-sm font-medium text-foreground">{t('name')}</label>
-        <input
-          {...register('name')}
-          placeholder={t('enterName')}
-          className={cn(inputCls, errors.name && 'border-destructive')}
-        />
-        {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
-      </div>
-
-      <div className="mt-4 flex gap-3">
-        <Button type="button" variant="outline" onClick={onCancel} className="flex-1" size="lg">
-          {tc('cancel')}
-        </Button>
-        <Button type="submit" disabled={isPending} className="flex-1" size="lg">
-          {isPending ? tc('saving') : tc('save')}
-        </Button>
-      </div>
+      <Button type="submit" disabled={isPending || !name?.trim()} size="primary" variant="primary">
+        {isPending ? tc('saving') : '저장하기'}
+      </Button>
     </form>
   );
 }
 
-export default EditPetForm;
+export default withErrorBoundary(
+  withSuspense(EditPetForm, <EditPetFormSkeleton />),
+  EditPetFormError
+);

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { cn } from '@/shared/lib/utils';
 import { useAddLikeMutation } from '../add/api/useAddLikeMutation';
 import { useRemoveLikeMutation } from '../remove/api/useRemoveLikeMutation';
-import LikeIcon from '@/shared/assets/icons/LikeIcon.svg';
+import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
 
 interface LikeButtonProps {
   submissionId: number;
@@ -48,7 +48,7 @@ export function LikeButton({ submissionId, initialLikeCount, initialIsLiked }: L
         isLiked && 'text-[#FADF78]'
       )}
     >
-      <LikeIcon />
+      <LogoIcon className="h-5 w-5" />
       <span className="text-xs font-medium">{likeCount}</span>
     </button>
   );

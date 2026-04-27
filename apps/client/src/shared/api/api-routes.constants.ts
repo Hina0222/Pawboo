@@ -20,7 +20,7 @@ export const API_ROUTES = {
       URL: (id: number) => `/pets/${id}`,
       METHOD: 'PATCH',
     },
-    ACTIVATE_PET: {
+    REPRESENTATIVE_PET: {
       URL: (id: number) => `/pets/${id}/representative`,
       METHOD: 'PATCH',
     },
