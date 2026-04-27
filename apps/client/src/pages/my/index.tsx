@@ -51,6 +51,19 @@ export default function MyPage() {
         </div>
       </section>
 
+      {/* 좋아요한 게시물 */}
+      <div className="px-5 pt-4">
+        <div className="overflow-hidden rounded-2xl border border-border bg-card">
+          <Link
+            href="/my/liked"
+            className="flex w-full items-center gap-3 px-4 py-4 transition-colors hover:bg-secondary"
+          >
+            <span className="flex-1 text-sm">좋아요한 게시물</span>
+            <span className="text-muted-foreground">›</span>
+          </Link>
+        </div>
+      </div>
+
       {/* 로그아웃 */}
       <div className="px-5 pt-4">
         <div className="overflow-hidden rounded-2xl border border-border bg-card">

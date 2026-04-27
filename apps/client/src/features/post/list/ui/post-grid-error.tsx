@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 
-export function PostListError() {
+export function PostGridError() {
   const t = useTranslations('post');
   return (
     <div className="flex justify-center py-10 text-sm text-muted-foreground">
