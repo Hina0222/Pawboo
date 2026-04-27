@@ -2,19 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import createIntlMiddleware from 'next-intl/middleware';
 import { routing } from '@/app/i18n/routing';
 
-const PUBLIC_ROUTES = ['/signin', '/auth/callback'];
-const ONBOARDING_ROUTES = ['/onboarding'];
+const PUBLIC_ROUTES = ['/signin', '/auth/callback', '/'];
 
 const intlMiddleware = createIntlMiddleware(routing);
-
-function decodeJwtPayload(token: string): { hasNickname?: boolean } | null {
-  try {
-    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    return JSON.parse(atob(base64));
-  } catch {
-    return null;
-  }
-}
 
 function stripLocalePrefix(pathname: string): string {
   for (const locale of routing.locales) {
@@ -51,7 +41,6 @@ export function proxy(request: NextRequest) {
 
   const refreshToken = request.cookies.get('refreshToken')?.value;
   const isPublicRoute = PUBLIC_ROUTES.some(route => strippedPathname.startsWith(route));
-  const isOnboardingRoute = ONBOARDING_ROUTES.some(route => strippedPathname.startsWith(route));
 
   // 로그인 상태에서 /signin 접근 → / 리다이렉트
   if (refreshToken && strippedPathname === '/signin') {
@@ -61,17 +50,6 @@ export function proxy(request: NextRequest) {
   // 비로그인 상태에서 protected 라우트 접근 → /signin 리다이렉트
   if (!refreshToken && !isPublicRoute) {
     return NextResponse.redirect(new URL('/signin', request.url));
-  }
-
-  // 로그인 상태에서 닉네임 미등록 유저 보호 라우트 접근 → /onboarding/profile 리다이렉트
-  if (refreshToken && !isPublicRoute && !isOnboardingRoute) {
-    const accessToken = request.cookies.get('access_token')?.value;
-    if (accessToken) {
-      const payload = decodeJwtPayload(accessToken);
-      if (payload && payload.hasNickname === false) {
-        return NextResponse.redirect(new URL('/onboarding/profile', request.url));
-      }
-    }
   }
 
   // i18n locale 처리
