@@ -20,7 +20,7 @@ function PostDetailModal({ id }: PostDetailModalProps) {
   return (
     <Dialog open onOpenChange={open => !open && router.back()}>
       <DialogContent
-        showCloseButton={false}
+        showCloseButton={true}
         aria-describedby={undefined}
         onPointerDownOutside={e => {
           if (e.detail.originalEvent.button !== 0) {

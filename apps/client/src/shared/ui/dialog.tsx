@@ -1,10 +1,10 @@
 'use client';
 
 import * as React from 'react';
-import { XIcon } from 'lucide-react';
 import { Dialog as DialogPrimitive } from 'radix-ui';
 
 import { cn } from '@/shared/lib/utils';
+import XIcon from '@/shared/assets/icons/XIcon.svg';
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
@@ -57,13 +57,16 @@ function DialogContent({
         )}
         {...props}
       >
-        {children}
         {showCloseButton && (
-          <DialogPrimitive.Close data-slot="dialog-close" className="absolute top-4 right-4">
-            <XIcon className="size-4" />
+          <DialogPrimitive.Close
+            data-slot="dialog-close"
+            className="mx-auto mb-5 rounded-full bg-[#333333CC] px-3.75 py-2.5 backdrop-blur-md"
+          >
+            <XIcon />
             <span className="sr-only">Close</span>
           </DialogPrimitive.Close>
         )}
+        {children}
       </DialogPrimitive.Content>
     </DialogPortal>
   );

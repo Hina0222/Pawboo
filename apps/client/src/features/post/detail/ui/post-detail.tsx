@@ -5,24 +5,45 @@ import { ImageOff } from 'lucide-react';
 import { LikeButton } from '@/features/like/ui';
 import { PostDetailSkeleton, PostDetailError } from '@/features/post/detail/ui';
 import { useGetPostSuspenseQuery } from '@/features/post/detail/api/useGetPostQuery';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from '@/shared/ui';
+import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui';
+import { useRouter } from '@/app/i18n/navigation';
+import { useDeletePostMutation } from '@/features/post/delete/api/useDeletePostMutation';
+import { CarouselApi } from '@/shared/ui/carousel';
+import { useEffect, useState } from 'react';
 
 interface PostDetailProps {
   id: number;
 }
 
 function PostDetail({ id }: PostDetailProps) {
+  const [api, setApi] = useState<CarouselApi | null>(null);
+  const [current, setCurrent] = useState(0);
   const { data: item } = useGetPostSuspenseQuery(id);
+  const { mutate: deletePost, isPending } = useDeletePostMutation();
+  const router = useRouter();
+
+  const handleDelete = () => {
+    deletePost(id, { onSuccess: () => router.back() });
+  };
+
+  useEffect(() => {
+    if (!api) return;
+
+    const update = () => {
+      setCurrent(api.selectedScrollSnap());
+    };
+
+    update();
+    api.on('select', update);
+
+    return () => {
+      api.off('select', update);
+    };
+  }, [api]);
 
   return (
-    <article className="flex flex-col items-center gap-2">
-      <Carousel className="w-full">
+    <article className="flex flex-col items-center gap-4">
+      <Carousel className="w-full" setApi={setApi}>
         <CarouselContent>
           {item.imageUrls.map((url, i) => (
             <CarouselItem key={i}>
@@ -37,10 +58,9 @@ function PostDetail({ id }: PostDetailProps) {
           ))}
         </CarouselContent>
         {item.imageUrls.length > 1 && (
-          <>
-            <CarouselPrevious className="left-2" />
-            <CarouselNext className="right-2" />
-          </>
+          <span className="absolute right-3 bottom-3 rounded-full bg-[#333333CC] px-4 py-3.5 text-xs font-medium text-[#E1E1E3]">
+            {current + 1} / {item.imageUrls.length}
+          </span>
         )}
       </Carousel>
 
@@ -59,7 +79,7 @@ function PostDetail({ id }: PostDetailProps) {
               </div>
             )}
           </div>
-          <span className="text-base font-medium text-[#E1E1E3]">{item.pet.name}</span>
+          <span className="font-medium text-[#E1E1E3]">{item.pet.name}</span>
         </div>
 
         <LikeButton
@@ -68,6 +88,14 @@ function PostDetail({ id }: PostDetailProps) {
           initialIsLiked={item.isLiked}
         />
       </div>
+
+      <button
+        onClick={handleDelete}
+        disabled={isPending}
+        className="mt-2 font-medium text-[#E1E1E3] underline disabled:opacity-50"
+      >
+        {isPending ? '삭제 중...' : '삭제하기'}
+      </button>
     </article>
   );
 }
