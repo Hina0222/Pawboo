@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
 import { petQueryKeys } from '@/entities/pet/model/pet.query-key';
@@ -10,13 +10,21 @@ const searchPets = async (q: string, cursor?: number): Promise<PetSearchResponse
   });
 };
 
+export const searchPetsInfiniteQueryOptions = (q: string) => ({
+  queryKey: petQueryKeys.search(q),
+  queryFn: ({ pageParam = 0 }: { pageParam: number }) => searchPets(q, pageParam || undefined),
+  initialPageParam: 0,
+  getNextPageParam: (lastPage: PetSearchResponse) =>
+    lastPage.hasNext ? lastPage.cursor : undefined,
+});
+
 export const useSearchPetsInfiniteQuery = (q: string) => {
   return useInfiniteQuery({
-    queryKey: petQueryKeys.search(q),
-    queryFn: ({ pageParam = 0 }: { pageParam: number }) => searchPets(q, pageParam || undefined),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage: PetSearchResponse) =>
-      lastPage.hasNext ? lastPage.cursor : undefined,
+    ...searchPetsInfiniteQueryOptions(q),
     enabled: q.trim().length > 0,
   });
+};
+
+export const useSearchPetsSuspenseInfiniteQuery = (q: string) => {
+  return useSuspenseInfiniteQuery(searchPetsInfiniteQueryOptions(q));
 };
