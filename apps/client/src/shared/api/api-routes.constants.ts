@@ -30,6 +30,10 @@ export const API_ROUTES = {
     },
   },
   POSTS: {
+    CREATE_POST: {
+      URL: '/posts',
+      METHOD: 'POST',
+    },
     GET_POSTS: {
       URL: '/posts',
       METHOD: 'GET',

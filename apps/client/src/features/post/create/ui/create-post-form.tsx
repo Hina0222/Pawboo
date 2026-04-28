@@ -3,16 +3,10 @@
 import { useRef, useState } from 'react';
 import { ImagePlus, X } from 'lucide-react';
 import { Button } from '@/shared/ui/button';
-import { useSubmitMissionForm } from '@/features/mission/submit/hooks/useSubmitMissionForm';
-import { useTranslations } from 'next-intl';
+import { useCreatePostForm } from '../hooks/useCreatePostForm';
 
-interface SubmitMissionFormProps {
-  missionId: number;
-}
-
-export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
-  const t = useTranslations('submit');
-  const { methods, onSubmit, isPending } = useSubmitMissionForm();
+export const CreatePostForm = () => {
+  const { methods, onSubmit, isPending } = useCreatePostForm();
   const {
     setValue,
     watch,
@@ -44,14 +38,18 @@ export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
   };
 
   return (
-    <form onSubmit={onSubmit(missionId)} className="mt-4 flex flex-1 flex-col gap-5 px-5">
-      <FormField label={t('photo')} required error={errors.images?.message as string | undefined}>
+    <form onSubmit={onSubmit} className="mt-4 flex flex-1 flex-col gap-5 px-5">
+      <div className="flex flex-col gap-1.5">
+        <p className="text-sm font-medium text-foreground">
+          사진
+          <span className="ml-1 text-primary">*</span>
+        </p>
         <div className="grid grid-cols-3 gap-2">
           {previewUrls.map((url, i) => (
             <div key={i} className="relative aspect-square overflow-hidden rounded-xl bg-card">
               <img
                 src={url}
-                alt={t('photoAlt', { index: i + 1 })}
+                alt={`업로드 이미지 ${i + 1}`}
                 className="h-full w-full object-cover"
               />
               <button
@@ -84,7 +82,10 @@ export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
           className="hidden"
           onChange={handleFileChange}
         />
-      </FormField>
+        {errors.images && (
+          <p className="text-xs text-destructive">{errors.images.message as string}</p>
+        )}
+      </div>
 
       <div className="mt-auto pt-4 pb-10">
         <Button
@@ -92,32 +93,9 @@ export const SubmitMissionForm = ({ missionId }: SubmitMissionFormProps) => {
           disabled={isPending}
           className="h-13 w-full rounded-2xl bg-primary text-base font-semibold text-primary-foreground hover:bg-primary/80 disabled:opacity-40"
         >
-          {isPending ? t('submitting') : t('complete')}
+          {isPending ? '등록 중...' : '완료'}
         </Button>
       </div>
     </form>
   );
 };
-
-function FormField({
-  label,
-  required,
-  error,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  error?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-1.5">
-      <p className="text-sm font-medium text-foreground">
-        {label}
-        {required && <span className="ml-1 text-primary">*</span>}
-      </p>
-      {children}
-      {error && <p className="text-xs text-destructive">{error}</p>}
-    </div>
-  );
-}
