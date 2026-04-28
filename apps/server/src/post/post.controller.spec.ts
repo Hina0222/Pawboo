@@ -7,6 +7,7 @@ import type { AuthenticatedRequest } from '../common/types/authenticated-request
 import type {
   PostListResponse,
   PostItem,
+  PostDetail,
   PostResponse,
 } from '@pawboo/schemas/post';
 
@@ -32,6 +33,10 @@ const mockPostItem: PostItem = {
   missionId: null,
   imageUrls: ['https://s3.example.com/img.jpg'],
   createdAt: '2024-01-01T00:00:00.000Z',
+};
+
+const mockPostDetail: PostDetail = {
+  ...mockPostItem,
   pet: { id: 1, name: '뽀삐', imageUrl: 'https://example.com/pet.jpg' },
   likeCount: 3,
   isLiked: true,
@@ -88,25 +93,25 @@ describe('PostController', () => {
     it('전체 피드 정상 조회', async () => {
       service.findPosts.mockResolvedValue(mockPostListResponse);
 
-      const result = await controller.findPosts(req, {});
+      const result = await controller.findPosts({});
 
-      expect(service.findPosts).toHaveBeenCalledWith(1, {});
+      expect(service.findPosts).toHaveBeenCalledWith({});
       expect(result).toEqual(mockPostListResponse);
     });
 
     it('유효한 쿼리 파라미터 파싱', async () => {
       service.findPosts.mockResolvedValue(mockPostListResponse);
 
-      await controller.findPosts(req, { cursor: '10', missionId: '5' });
+      await controller.findPosts({ cursor: '10', missionId: '5' });
 
-      expect(service.findPosts).toHaveBeenCalledWith(1, {
+      expect(service.findPosts).toHaveBeenCalledWith({
         cursor: 10,
         missionId: 5,
       });
     });
 
     it('잘못된 쿼리 파라미터 - BadRequestException', () => {
-      expect(() => controller.findPosts(req, { cursor: 'invalid' })).toThrow(
+      expect(() => controller.findPosts({ cursor: 'invalid' })).toThrow(
         BadRequestException,
       );
       expect(service.findPosts).not.toHaveBeenCalled();
@@ -172,39 +177,39 @@ describe('PostController', () => {
     it('특정 펫 포스트 조회 요청을 서비스에 전달', async () => {
       service.findPetPosts.mockResolvedValue(mockPostListResponse);
 
-      const result = await controller.findPetPosts(req, 2, {});
+      const result = await controller.findPetPosts(2, {});
 
-      expect(service.findPetPosts).toHaveBeenCalledWith(1, 2, {});
+      expect(service.findPetPosts).toHaveBeenCalledWith(2, {});
       expect(result).toEqual(mockPostListResponse);
     });
 
     it('유효한 쿼리 파라미터 파싱', async () => {
       service.findPetPosts.mockResolvedValue(mockPostListResponse);
 
-      await controller.findPetPosts(req, 2, { cursor: '10', missionId: '5' });
+      await controller.findPetPosts(2, { cursor: '10', missionId: '5' });
 
-      expect(service.findPetPosts).toHaveBeenCalledWith(1, 2, {
+      expect(service.findPetPosts).toHaveBeenCalledWith(2, {
         cursor: 10,
         missionId: 5,
       });
     });
 
     it('잘못된 쿼리 파라미터 - BadRequestException', () => {
-      expect(() =>
-        controller.findPetPosts(req, 2, { cursor: 'invalid' }),
-      ).toThrow(BadRequestException);
+      expect(() => controller.findPetPosts(2, { cursor: 'invalid' })).toThrow(
+        BadRequestException,
+      );
       expect(service.findPetPosts).not.toHaveBeenCalled();
     });
   });
 
   describe('findOnePost', () => {
     it('단일 포스트 조회 요청을 서비스에 전달', async () => {
-      service.findOnePost.mockResolvedValue(mockPostItem);
+      service.findOnePost.mockResolvedValue(mockPostDetail);
 
       const result = await controller.findOnePost(req, 1);
 
       expect(service.findOnePost).toHaveBeenCalledWith(1, 1);
-      expect(result).toEqual(mockPostItem);
+      expect(result).toEqual(mockPostDetail);
     });
   });
 

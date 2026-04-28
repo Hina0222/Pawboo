@@ -42,7 +42,7 @@ export function PostGridList({ data, fetchNextPage, hasNextPage }: PostGridListP
           >
             <img
               src={post.imageUrls[0]}
-              alt={post.pet.name}
+              alt="포스트 이미지"
               className="h-full w-full rounded-[10px] object-cover"
             />
           </Link>

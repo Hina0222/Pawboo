@@ -9,9 +9,24 @@ import { AwsService, IMAGE_PRESET } from '../aws/aws.service';
 import type {
   PostResponse,
   PostItem,
+  PostDetail,
   PostListResponse,
   PostQuery,
 } from '@pawboo/schemas/post';
+
+type PostListRow = {
+  id: number;
+  type: 'general' | 'mission';
+  missionId: number | null;
+  imageUrls: string[];
+  createdAt: Date;
+};
+
+type PostDetailRow = PostListRow & {
+  petId: number;
+  petName: string;
+  petImageUrl: string | null;
+};
 
 @Injectable()
 export class PostService {
@@ -53,10 +68,8 @@ export class PostService {
     }
   }
 
-  async findPosts(userId: number, query: PostQuery): Promise<PostListResponse> {
-    return this.toPostListResponse(
-      await this.postRepository.findPosts(userId, query),
-    );
+  async findPosts(query: PostQuery): Promise<PostListResponse> {
+    return this.toPostListResponse(await this.postRepository.findPosts(query));
   }
 
   async findMyPosts(
@@ -69,25 +82,46 @@ export class PostService {
       return { data: [], hasNext: false, cursor: null };
     }
     return this.toPostListResponse(
-      await this.postRepository.findPosts(userId, query, representativePet.id),
+      await this.postRepository.findPosts(query, representativePet.id),
     );
   }
 
   async findPetPosts(
-    viewerId: number,
     petId: number,
     query: PostQuery,
   ): Promise<PostListResponse> {
     return this.toPostListResponse(
-      await this.postRepository.findPosts(viewerId, query, petId),
+      await this.postRepository.findPosts(query, petId),
     );
   }
 
-  private toPostItem(
-    row: NonNullable<Awaited<ReturnType<PostRepository['findOnePost']>>>,
+  private toPostItem(row: PostListRow): PostItem {
+    return {
+      id: row.id,
+      type: row.type,
+      missionId: row.missionId ?? null,
+      imageUrls: row.imageUrls,
+      createdAt: row.createdAt.toISOString(),
+    };
+  }
+
+  private toPostListResponse(result: {
+    rows: PostListRow[];
+    hasNext: boolean;
+    cursor: number | null;
+  }): PostListResponse {
+    return {
+      data: result.rows.map((r) => this.toPostItem(r)),
+      hasNext: result.hasNext,
+      cursor: result.cursor,
+    };
+  }
+
+  private toPostDetail(
+    row: PostDetailRow,
     likeCount: number,
     isLiked: boolean,
-  ): PostItem {
+  ): PostDetail {
     return {
       id: row.id,
       type: row.type,
@@ -104,20 +138,7 @@ export class PostService {
     };
   }
 
-  private toPostListResponse(
-    result: Awaited<ReturnType<PostRepository['findPosts']>>,
-  ): PostListResponse {
-    const items = result.rows.map((r) =>
-      this.toPostItem(
-        r,
-        result.likeCountMap.get(r.id) ?? 0,
-        result.likedSet.has(r.id),
-      ),
-    );
-    return { data: items, hasNext: result.hasNext, cursor: result.cursor };
-  }
-
-  async findOnePost(userId: number, postId: number): Promise<PostItem> {
+  async findOnePost(userId: number, postId: number): Promise<PostDetail> {
     const row = await this.postRepository.findOnePost(postId);
     if (!row) {
       throw new NotFoundException('게시물을 찾을 수 없습니다.');
@@ -128,7 +149,7 @@ export class PostService {
       this.postRepository.getLikeCounts([postId]),
     ]);
 
-    return this.toPostItem(
+    return this.toPostDetail(
       row,
       likeCountMap.get(postId) ?? 0,
       likedPosts.has(postId),
