@@ -1,6 +1,6 @@
 import { Header } from '@/widgets/header';
 import SearchIcon from '@/shared/assets/icons/SearchIcon.svg';
-import testImg from '@/shared/assets/images/testImg.png';
+import HomePetAvatar from './ui/home-pet-avatar';
 import HomePostList from './ui/home-post-list';
 
 export default async function HomePage() {
@@ -8,7 +8,7 @@ export default async function HomePage() {
     <>
       <Header>
         <Header.Left>
-          <Header.NavLink href="/my" image={{ src: testImg.src, alt: 'my 페이지' }} />
+          <HomePetAvatar />
         </Header.Left>
         <Header.Center>
           <Header.Nav />
