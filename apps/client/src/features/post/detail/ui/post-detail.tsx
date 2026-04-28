@@ -1,7 +1,6 @@
 'use client';
 
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
-import { ImageOff } from 'lucide-react';
 import { LikeButton } from '@/features/like/ui';
 import { PostDetailSkeleton, PostDetailError } from '@/features/post/detail/ui';
 import { useGetPostSuspenseQuery } from '@/features/post/detail/api/useGetPostQuery';
@@ -9,7 +8,8 @@ import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui';
 import { useRouter } from '@/app/i18n/navigation';
 import { useDeletePostMutation } from '@/features/post/delete/api/useDeletePostMutation';
 import { CarouselApi } from '@/shared/ui/carousel';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
 
 interface PostDetailProps {
   id: number;
@@ -43,7 +43,7 @@ function PostDetail({ id }: PostDetailProps) {
 
   return (
     <article className="flex flex-col items-center gap-4">
-      <Carousel className="w-full" setApi={setApi}>
+      <Carousel className="w-full" setApi={setApi} onClick={e => e.stopPropagation()}>
         <CarouselContent>
           {item.imageUrls.map((url, i) => (
             <CarouselItem key={i}>
@@ -64,7 +64,10 @@ function PostDetail({ id }: PostDetailProps) {
         )}
       </Carousel>
 
-      <div className="flex gap-x-2.5 rounded-full bg-[#333333CC] p-2 backdrop-blur-md">
+      <div
+        className="flex gap-x-2.5 rounded-full bg-[#333333CC] p-2 backdrop-blur-md"
+        onClick={e => e.stopPropagation()}
+      >
         <div className="flex items-center gap-2">
           <div className="h-11 w-14 overflow-hidden rounded-full border border-[#F5F5F5]">
             {item.pet.imageUrl ? (
@@ -74,8 +77,8 @@ function PostDetail({ id }: PostDetailProps) {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex h-full w-full items-center justify-center">
-                <ImageOff size={14} className="text-muted-foreground" />
+              <div className="flex h-full w-full items-center justify-center bg-[#FADF78]">
+                <LogoIcon className="h-5 w-5 text-[#C59D07]" />
               </div>
             )}
           </div>
@@ -90,7 +93,10 @@ function PostDetail({ id }: PostDetailProps) {
       </div>
 
       <button
-        onClick={handleDelete}
+        onClick={e => {
+          e.stopPropagation();
+          handleDelete();
+        }}
         disabled={isPending}
         className="mt-2 font-medium text-[#E1E1E3] underline disabled:opacity-50"
       >

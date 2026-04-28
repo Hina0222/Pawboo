@@ -16,7 +16,7 @@ export function useCreatePetForm() {
   });
 
   const onSubmit = methods.handleSubmit((data: CreatePetFormValues) => {
-    mutate(data, { onSuccess: () => router.push('/my') });
+    mutate(data, { onSuccess: () => router.back() });
   });
 
   return { methods, onSubmit, isPending };

@@ -7,7 +7,10 @@ export function BackButton() {
   const router = useRouter();
 
   return (
-    <button onClick={() => router.back()} className="rounded-full bg-[#333333CC] px-3.5 py-2.5">
+    <button
+      onClick={() => router.back()}
+      className="rounded-full bg-[#333333CC] px-3.5 py-2.5 backdrop-blur-md"
+    >
       <LeftArrowIcon />
     </button>
   );

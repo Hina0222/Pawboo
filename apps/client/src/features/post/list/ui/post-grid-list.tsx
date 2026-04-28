@@ -1,10 +1,10 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useInView } from 'react-intersection-observer';
 import type { InfiniteData } from '@tanstack/react-query';
 import type { PostListResponse } from '@pawboo/schemas/post';
-import { Link } from '@/app/i18n/navigation';
+import PostDetailModal from '@/features/post/detail/ui/post-detail-modal';
 
 interface PostGridListProps {
   data: InfiniteData<PostListResponse>;
@@ -14,6 +14,7 @@ interface PostGridListProps {
 
 export function PostGridList({ data, fetchNextPage, hasNextPage }: PostGridListProps) {
   const { ref, inView } = useInView();
+  const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
   useEffect(() => {
     if (inView && hasNextPage) {
@@ -35,9 +36,9 @@ export function PostGridList({ data, fetchNextPage, hasNextPage }: PostGridListP
     <div className="px-4">
       <div className="grid grid-cols-3 gap-2">
         {posts.map(post => (
-          <Link
+          <button
             key={post.id}
-            href={`/post/${post.id}`}
+            onClick={() => setSelectedPostId(post.id)}
             className="relative aspect-square overflow-hidden rounded-[10px]"
           >
             <img
@@ -45,10 +46,13 @@ export function PostGridList({ data, fetchNextPage, hasNextPage }: PostGridListP
               alt="포스트 이미지"
               className="h-full w-full rounded-[10px] object-cover"
             />
-          </Link>
+          </button>
         ))}
       </div>
       <div ref={ref} className="h-4" />
+      {selectedPostId !== null && (
+        <PostDetailModal id={selectedPostId} open={true} onClose={() => setSelectedPostId(null)} />
+      )}
     </div>
   );
 }

@@ -17,8 +17,6 @@ export const useSubmitMissionForm = () => {
     resolver: zodResolver(SubmitMissionFormSchema),
     defaultValues: {
       images: [],
-      comment: '',
-      hashtags: [],
     },
   });
 

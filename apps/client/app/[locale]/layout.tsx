@@ -25,11 +25,9 @@ export function generateStaticParams() {
 
 export default async function LocaleLayout({
   children,
-  modal,
   params,
 }: Readonly<{
   children: React.ReactNode;
-  modal: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
   const { locale } = await params;
@@ -43,10 +41,7 @@ export default async function LocaleLayout({
       <body className={`${pretendard.className} dark antialiased`}>
         <div className="mx-auto flex h-full min-h-svh max-w-[390px] flex-col">
           <NextIntlClientProvider messages={messages}>
-            <QueryProvider>
-              {children}
-              {modal}
-            </QueryProvider>
+            <QueryProvider>{children}</QueryProvider>
           </NextIntlClientProvider>
         </div>
         <Toaster position="top-center" />

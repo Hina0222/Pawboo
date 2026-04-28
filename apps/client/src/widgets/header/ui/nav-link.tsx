@@ -13,7 +13,7 @@ export function NavLink({ icon, image, className, ...props }: NavLinkProps) {
     <Link
       className={cn(
         'flex items-center justify-center rounded-full',
-        icon && 'bg-[#333333CC] px-3.5 py-2.5',
+        icon && 'bg-[#333333CC] px-3.5 py-2.5 backdrop-blur-md',
         className
       )}
       {...props}

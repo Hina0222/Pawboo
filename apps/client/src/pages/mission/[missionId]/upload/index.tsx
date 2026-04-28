@@ -1,3 +1,4 @@
+import { Header } from '@/widgets/header';
 import { SubmitMissionForm } from '@/features/mission/submit/ui';
 
 interface MissionUploadPageProps {
@@ -5,11 +6,20 @@ interface MissionUploadPageProps {
 }
 
 export default async function MissionUploadPage({ params }: MissionUploadPageProps) {
-  const { missionId } = await params;
+  const { missionId: missionIdParam } = await params;
+  const missionId = Number(missionIdParam);
 
   return (
     <>
-      <SubmitMissionForm missionId={Number(missionId)} />
+      <Header>
+        <Header.Left>
+          <Header.Back />
+        </Header.Left>
+        <Header.Center>
+          <Header.Title>미션 제출</Header.Title>
+        </Header.Center>
+      </Header>
+      <SubmitMissionForm missionId={missionId} />
     </>
   );
 }

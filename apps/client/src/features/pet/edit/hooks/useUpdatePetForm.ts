@@ -19,7 +19,7 @@ export function useUpdatePetForm(pet: PetResponse) {
   });
 
   const onSubmit = methods.handleSubmit((data: UpdatePetFormValues) => {
-    mutate({ id: pet.id, ...data }, { onSuccess: () => router.push('/my') });
+    mutate({ id: pet.id, ...data }, { onSuccess: () => router.back() });
   });
 
   return { methods, onSubmit, isPending };

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import createIntlMiddleware from 'next-intl/middleware';
 import { routing } from '@/app/i18n/routing';
 
-const PUBLIC_ROUTES = ['/signin', '/auth/callback', '/'];
+const PUBLIC_ROUTES = ['/signin', '/auth/callback'];
 
 const intlMiddleware = createIntlMiddleware(routing);
 
