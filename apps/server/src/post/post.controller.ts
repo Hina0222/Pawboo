@@ -23,16 +23,16 @@ import type { AuthenticatedRequest } from '../common/types/authenticated-request
 import {
   PostQuerySchema,
   type PostResponse,
-  type PostItem,
+  type PostDetail,
   type PostListResponse,
 } from '@pawboo/schemas/post';
 
-@UseGuards(JwtAuthGuard)
 @Controller('posts')
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
   @ImagesUpload()
   async createPost(
     @Req() req: AuthenticatedRequest,
@@ -45,18 +45,16 @@ export class PostController {
   }
 
   @Get()
-  findPosts(
-    @Req() req: AuthenticatedRequest,
-    @Query() query: Record<string, string>,
-  ): Promise<PostListResponse> {
+  findPosts(@Query() query: Record<string, string>): Promise<PostListResponse> {
     const parsed = PostQuerySchema.safeParse(query);
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
     }
-    return this.postService.findPosts(req.user.id, parsed.data);
+    return this.postService.findPosts(parsed.data);
   }
 
   @Get('me')
+  @UseGuards(JwtAuthGuard)
   findMyPosts(
     @Req() req: AuthenticatedRequest,
     @Query() query: Record<string, string>,
@@ -69,8 +67,8 @@ export class PostController {
   }
 
   @Get('pets/:petId')
+  @UseGuards(JwtAuthGuard)
   findPetPosts(
-    @Req() req: AuthenticatedRequest,
     @Param('petId', ParseIntPipe) petId: number,
     @Query() query: Record<string, string>,
   ): Promise<PostListResponse> {
@@ -78,10 +76,11 @@ export class PostController {
     if (!parsed.success) {
       throw new BadRequestException(parsed.error.issues);
     }
-    return this.postService.findPetPosts(req.user.id, petId, parsed.data);
+    return this.postService.findPetPosts(petId, parsed.data);
   }
 
   @Get('liked')
+  @UseGuards(JwtAuthGuard)
   findLikedPosts(
     @Req() req: AuthenticatedRequest,
     @Query() query: Record<string, string>,
@@ -94,14 +93,16 @@ export class PostController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
   findOnePost(
     @Req() req: AuthenticatedRequest,
     @Param('id', ParseIntPipe) id: number,
-  ): Promise<PostItem> {
+  ): Promise<PostDetail> {
     return this.postService.findOnePost(req.user.id, id);
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   deletePost(
     @Req() req: AuthenticatedRequest,

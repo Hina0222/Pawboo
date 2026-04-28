@@ -20,6 +20,9 @@ export const PostItemSchema = z.object({
   missionId: z.number().nullable(),
   imageUrls: z.array(z.string()),
   createdAt: z.string(),
+});
+
+export const PostDetailSchema = PostItemSchema.extend({
   pet: z.object({
     id: z.number(),
     name: z.string(),
@@ -38,4 +41,5 @@ export const PostListResponseSchema = z.object({
 export type PostResponse = z.infer<typeof PostResponseSchema>;
 export type PostQuery = z.infer<typeof PostQuerySchema>;
 export type PostItem = z.infer<typeof PostItemSchema>;
+export type PostDetail = z.infer<typeof PostDetailSchema>;
 export type PostListResponse = z.infer<typeof PostListResponseSchema>;

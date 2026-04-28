@@ -19,15 +19,19 @@ const mockPet = {
   createdAt: new Date('2024-01-01'),
 };
 
-const mockPostRow = {
+const mockPostListRow = {
   id: 1,
   type: 'general' as const,
   missionId: null,
   imageUrls: ['https://s3.example.com/img.jpg'],
   createdAt: new Date('2024-01-01'),
+};
+
+const mockPostDetailRow = {
+  ...mockPostListRow,
   petId: 1,
   petName: '뽀삐',
-  petImageUrl: 'https://example.com/pet.jpg',
+  petImageUrl: 'https://example.com/pet.jpg' as string | null,
 };
 
 const mockPostResponse = {
@@ -40,9 +44,7 @@ const mockPostResponse = {
 };
 
 const mockFindPostsResult = {
-  rows: [mockPostRow],
-  likedSet: new Set<number>([1]),
-  likeCountMap: new Map([[1, 3]]),
+  rows: [mockPostListRow],
   hasNext: false,
   cursor: null,
 };
@@ -209,25 +211,28 @@ describe('PostService', () => {
     it('전체 피드 정상 조회', async () => {
       postRepository.findPosts.mockResolvedValue(mockFindPostsResult);
 
-      const result = await service.findPosts(1, {});
+      const result = await service.findPosts({});
 
       expect(result.data).toHaveLength(1);
-      expect(result.data[0].likeCount).toBe(3);
-      expect(result.data[0].isLiked).toBe(true);
+      expect(result.data[0]).toEqual({
+        id: 1,
+        type: 'general',
+        missionId: null,
+        imageUrls: ['https://s3.example.com/img.jpg'],
+        createdAt: '2024-01-01T00:00:00.000Z',
+      });
       expect(result.hasNext).toBe(false);
-      expect(postRepository.findPosts).toHaveBeenCalledWith(1, {});
+      expect(postRepository.findPosts).toHaveBeenCalledWith({});
     });
 
     it('결과 없으면 빈 배열 반환', async () => {
       postRepository.findPosts.mockResolvedValue({
         rows: [],
-        likedSet: new Set(),
-        likeCountMap: new Map(),
         hasNext: false,
         cursor: null,
       });
 
-      const result = await service.findPosts(1, {});
+      const result = await service.findPosts({});
 
       expect(result.data).toHaveLength(0);
     });
@@ -250,27 +255,30 @@ describe('PostService', () => {
       const result = await service.findMyPosts(1, {});
 
       expect(result.data).toHaveLength(1);
-      expect(postRepository.findPosts).toHaveBeenCalledWith(1, {}, mockPet.id);
+      expect(postRepository.findPosts).toHaveBeenCalledWith({}, mockPet.id);
     });
   });
 
   describe('findLikedPosts', () => {
     const mockFindLikedPostsResult = {
-      rows: [{ ...mockPostRow, likeCursorId: 10 }],
-      likedSet: new Set<number>([1]),
-      likeCountMap: new Map([[1, 3]]),
+      rows: [{ ...mockPostListRow, likeCursorId: 10 }],
       hasNext: false,
       cursor: null,
     };
 
-    it('좋아요한 포스트 정상 조회 - isLiked 항상 true', async () => {
+    it('좋아요한 포스트 정상 조회', async () => {
       postRepository.findLikedPosts.mockResolvedValue(mockFindLikedPostsResult);
 
       const result = await service.findLikedPosts(1, {});
 
       expect(result.data).toHaveLength(1);
-      expect(result.data[0].isLiked).toBe(true);
-      expect(result.data[0].likeCount).toBe(3);
+      expect(result.data[0]).toEqual({
+        id: 1,
+        type: 'general',
+        missionId: null,
+        imageUrls: ['https://s3.example.com/img.jpg'],
+        createdAt: '2024-01-01T00:00:00.000Z',
+      });
       expect(result.hasNext).toBe(false);
       expect(postRepository.findLikedPosts).toHaveBeenCalledWith(1, undefined);
     });
@@ -286,8 +294,6 @@ describe('PostService', () => {
     it('결과 없으면 빈 배열 반환', async () => {
       postRepository.findLikedPosts.mockResolvedValue({
         rows: [],
-        likedSet: new Set(),
-        likeCountMap: new Map(),
         hasNext: false,
         cursor: null,
       });
@@ -300,14 +306,11 @@ describe('PostService', () => {
     });
 
     it('hasNext true이면 cursor 반환', async () => {
-      const row2 = { ...mockPostRow, id: 2, likeCursorId: 9 };
       postRepository.findLikedPosts.mockResolvedValue({
-        rows: [{ ...mockPostRow, likeCursorId: 10 }, row2],
-        likedSet: new Set([1, 2]),
-        likeCountMap: new Map([
-          [1, 1],
-          [2, 2],
-        ]),
+        rows: [
+          { ...mockPostListRow, likeCursorId: 10 },
+          { ...mockPostListRow, id: 2, likeCursorId: 9 },
+        ],
         hasNext: true,
         cursor: 9,
       });
@@ -323,10 +326,10 @@ describe('PostService', () => {
     it('특정 펫 포스트 정상 조회', async () => {
       postRepository.findPosts.mockResolvedValue(mockFindPostsResult);
 
-      const result = await service.findPetPosts(1, 2, {});
+      const result = await service.findPetPosts(2, {});
 
       expect(result.data).toHaveLength(1);
-      expect(postRepository.findPosts).toHaveBeenCalledWith(1, {}, 2);
+      expect(postRepository.findPosts).toHaveBeenCalledWith({}, 2);
     });
   });
 
@@ -342,7 +345,7 @@ describe('PostService', () => {
     });
 
     it('단일 게시물 정상 조회', async () => {
-      postRepository.findOnePost.mockResolvedValue(mockPostRow);
+      postRepository.findOnePost.mockResolvedValue(mockPostDetailRow);
       postRepository.getLikedPosts.mockResolvedValue(new Map([[1, true]]));
       postRepository.getLikeCounts.mockResolvedValue(new Map([[1, 5]]));
 
@@ -352,14 +355,14 @@ describe('PostService', () => {
       expect(result.likeCount).toBe(5);
       expect(result.isLiked).toBe(true);
       expect(result.pet).toEqual({
-        id: mockPostRow.petId,
-        name: mockPostRow.petName,
-        imageUrl: mockPostRow.petImageUrl,
+        id: mockPostDetailRow.petId,
+        name: mockPostDetailRow.petName,
+        imageUrl: mockPostDetailRow.petImageUrl,
       });
     });
 
     it('좋아요 누르지 않은 게시물 - isLiked false', async () => {
-      postRepository.findOnePost.mockResolvedValue(mockPostRow);
+      postRepository.findOnePost.mockResolvedValue(mockPostDetailRow);
       postRepository.getLikedPosts.mockResolvedValue(new Map());
       postRepository.getLikeCounts.mockResolvedValue(new Map([[1, 2]]));
 
@@ -371,7 +374,7 @@ describe('PostService', () => {
 
     it('petImageUrl이 null이면 pet.imageUrl도 null', async () => {
       postRepository.findOnePost.mockResolvedValue({
-        ...mockPostRow,
+        ...mockPostDetailRow,
         petImageUrl: null,
       });
       postRepository.getLikedPosts.mockResolvedValue(new Map());
@@ -384,7 +387,7 @@ describe('PostService', () => {
 
     it('missionId가 있는 포스트 매핑', async () => {
       postRepository.findOnePost.mockResolvedValue({
-        ...mockPostRow,
+        ...mockPostDetailRow,
         type: 'mission',
         missionId: 5,
       });
@@ -398,7 +401,7 @@ describe('PostService', () => {
     });
 
     it('likeCount와 getLikedPosts를 병렬 조회', async () => {
-      postRepository.findOnePost.mockResolvedValue(mockPostRow);
+      postRepository.findOnePost.mockResolvedValue(mockPostDetailRow);
       postRepository.getLikedPosts.mockResolvedValue(new Map());
       postRepository.getLikeCounts.mockResolvedValue(new Map());
 

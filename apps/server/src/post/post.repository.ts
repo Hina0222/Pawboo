@@ -31,7 +31,7 @@ export class PostRepository {
     return (post as PostResponse) ?? null;
   }
 
-  async findPosts(viewerId: number, query: PostQuery, targetPetId?: number) {
+  async findPosts(query: PostQuery, targetPetId?: number) {
     const { cursor, missionId } = query;
     const LIMIT = 20;
 
@@ -42,12 +42,8 @@ export class PostRepository {
         missionId: posts.missionId,
         imageUrls: posts.imageUrls,
         createdAt: posts.createdAt,
-        petId: pets.id,
-        petName: pets.name,
-        petImageUrl: pets.imageUrl,
       })
       .from(posts)
-      .innerJoin(pets, eq(posts.petId, pets.id))
       .where(
         and(
           targetPetId !== undefined ? eq(posts.petId, targetPetId) : undefined,
@@ -60,29 +56,10 @@ export class PostRepository {
 
     const hasNext = rows.length > LIMIT;
     const data = hasNext ? rows.slice(0, LIMIT) : rows;
-
-    let likedSet = new Set<number>();
-    if (data.length > 0) {
-      const postIds = data.map((r) => r.id);
-      const likedRows = await this.db
-        .select({ postId: postLikes.postId })
-        .from(postLikes)
-        .where(
-          and(
-            eq(postLikes.userId, viewerId),
-            inArray(postLikes.postId, postIds),
-          ),
-        );
-      likedSet = new Set(likedRows.map((r) => r.postId));
-    }
-
-    const likeCountMap = await this.getLikeCounts(data.map((r) => r.id));
     const lastItem = data[data.length - 1];
 
     return {
       rows: data,
-      likedSet,
-      likeCountMap,
       hasNext,
       cursor: hasNext && lastItem ? lastItem.id : null,
     };
@@ -158,14 +135,10 @@ export class PostRepository {
         missionId: posts.missionId,
         imageUrls: posts.imageUrls,
         createdAt: posts.createdAt,
-        petId: pets.id,
-        petName: pets.name,
-        petImageUrl: pets.imageUrl,
         likeCursorId: postLikes.id,
       })
       .from(postLikes)
       .innerJoin(posts, eq(posts.id, postLikes.postId))
-      .innerJoin(pets, eq(pets.id, posts.petId))
       .where(
         and(
           eq(postLikes.userId, userId),
@@ -177,14 +150,10 @@ export class PostRepository {
 
     const hasNext = rows.length > LIMIT;
     const data = hasNext ? rows.slice(0, LIMIT) : rows;
-    const likeCountMap = await this.getLikeCounts(data.map((r) => r.id));
-    const likedSet = new Set(data.map((r) => r.id));
     const lastItem = data[data.length - 1];
 
     return {
       rows: data,
-      likedSet,
-      likeCountMap,
       hasNext,
       cursor: hasNext && lastItem ? lastItem.likeCursorId : null,
     };
