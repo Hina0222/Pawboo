@@ -29,7 +29,7 @@ function PetSearchList({ q }: PetSearchListProps) {
     <div>
       <ul className="space-y-5">
         {pets.map(pet => (
-          <PetSearchItem key={pet.id} name={pet.name} imageUrl={pet.imageUrl} />
+          <PetSearchItem key={pet.id} petId={pet.id} name={pet.name} imageUrl={pet.imageUrl} />
         ))}
       </ul>
       {isFetchingNextPage && <PetSearchSkeleton />}

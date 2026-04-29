@@ -1,15 +1,16 @@
 'use client';
 
 import { Header } from '@/widgets/header';
-import testImg from '@/shared/assets/images/testImg.png';
 import SearchIcon from '@/shared/assets/icons/SearchIcon.svg';
+import HomePetAvatar from '@/pages/home/ui/home-pet-avatar';
+import { CalendarView } from '@/features/calendar/ui';
 
 export default function CalendarPage() {
   return (
-    <div>
+    <>
       <Header>
         <Header.Left>
-          <Header.NavLink href="/my" image={{ src: testImg.src, alt: 'my 페이지' }} />
+          <HomePetAvatar />
         </Header.Left>
         <Header.Center>
           <Header.Nav />
@@ -18,6 +19,7 @@ export default function CalendarPage() {
           <Header.NavLink href="/search" icon={<SearchIcon />} />
         </Header.Right>
       </Header>
-    </div>
+      <CalendarView />
+    </>
   );
 }

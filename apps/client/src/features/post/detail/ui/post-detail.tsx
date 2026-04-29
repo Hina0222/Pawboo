@@ -4,6 +4,7 @@ import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { LikeButton } from '@/features/like/ui';
 import { PostDetailSkeleton, PostDetailError } from '@/features/post/detail/ui';
 import { useGetPostSuspenseQuery } from '@/features/post/detail/api/useGetPostQuery';
+import { useGetPetsQuery } from '@/features/pet/list/api/useGetPetsQuery';
 import { Carousel, CarouselContent, CarouselItem } from '@/shared/ui';
 import { useRouter } from '@/app/i18n/navigation';
 import { useDeletePostMutation } from '@/features/post/delete/api/useDeletePostMutation';
@@ -19,8 +20,12 @@ function PostDetail({ id }: PostDetailProps) {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(0);
   const { data: item } = useGetPostSuspenseQuery(id);
+  const { data: pets } = useGetPetsQuery();
   const { mutate: deletePost, isPending } = useDeletePostMutation();
   const router = useRouter();
+
+  const representativePetId = pets?.find(p => p.isRepresentative)?.id;
+  const canDelete = representativePetId === item.pet.id;
 
   const handleDelete = () => {
     deletePost(id, { onSuccess: () => router.back() });
@@ -92,16 +97,18 @@ function PostDetail({ id }: PostDetailProps) {
         />
       </div>
 
-      <button
-        onClick={e => {
-          e.stopPropagation();
-          handleDelete();
-        }}
-        disabled={isPending}
-        className="mt-2 font-medium text-[#E1E1E3] underline disabled:opacity-50"
-      >
-        {isPending ? '삭제 중...' : '삭제하기'}
-      </button>
+      {canDelete && (
+        <button
+          onClick={e => {
+            e.stopPropagation();
+            handleDelete();
+          }}
+          disabled={isPending}
+          className="mt-2 font-medium text-[#E1E1E3] underline disabled:opacity-50"
+        >
+          {isPending ? '삭제 중...' : '삭제하기'}
+        </button>
+      )}
     </article>
   );
 }

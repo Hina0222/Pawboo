@@ -7,6 +7,7 @@ import { petQueryKeys } from '@/entities/pet/model/pet.query-key';
 import { toast } from 'sonner';
 import type { PetResponse } from '@pawboo/schemas/pet';
 import { missionQueryKeys } from '@/entities/mission/model/mission.query-key';
+import { postQueryKeys } from '@/entities/post/model/post.query-key';
 
 export const representativePet = async (id: number): Promise<PetResponse> => {
   return apiClient.patch<PetResponse>(API_ROUTES.PETS.REPRESENTATIVE_PET.URL(id));
@@ -22,6 +23,7 @@ export const representativePetMutationOptions = () => {
       queryClient.invalidateQueries({ queryKey: petQueryKeys.details() });
       queryClient.invalidateQueries({ queryKey: missionQueryKeys.today() });
       queryClient.invalidateQueries({ queryKey: missionQueryKeys.history() });
+      queryClient.invalidateQueries({ queryKey: postQueryKeys.myPosts() });
     },
     onError: (error: Error) => {
       toast.error(error.message);
