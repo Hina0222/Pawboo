@@ -16,6 +16,45 @@
     --color-yellow-800: var(--yellow-800);
 }
 
+@layer components{
+    .typography-head {
+        @apply text-3xl font-bold leading-9;
+    }
+
+    .typography-title-l {
+        @apply text-xl font-semibold leading-6;
+    }
+
+    .typography-title-m {
+        @apply text-base font-semibold leading-5;
+    }
+
+    .typography-title-s {
+        @apply text-base font-medium leading-5;
+    }
+
+    .typography-content {
+        @apply text-base font-medium leading-6;
+    }
+
+    .typography-headline {
+        @apply text-sm font-semibold leading-4;
+    }
+
+    .typography-button {
+        @apply text-base font-semibold leading-5;
+    }
+
+    .typography-body {
+        @apply text-xs font-semibold leading-3.5;
+    }
+
+    .typography-caption {
+        @apply text-xs font-medium leading-3.5;
+    }
+
+}
+
 :root {
     --font-baloo: sans-serif;
 
