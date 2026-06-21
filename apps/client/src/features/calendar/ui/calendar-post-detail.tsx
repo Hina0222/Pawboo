@@ -76,8 +76,8 @@ export function CalendarPostDetail({ posts, onDeleted }: CalendarPostDetailProps
         <LikeButton
           key={currentPost.id}
           submissionId={currentPost.id}
-          initialLikeCount={currentPost.likeCount}
-          initialIsLiked={currentPost.isLiked}
+          likeCount={currentPost.likeCount}
+          isLiked={currentPost.isLiked}
         />
       </Carousel>
 

@@ -1,6 +1,5 @@
 'use client';
 
-import { useState } from 'react';
 import { cn } from '@/shared/lib/utils';
 import { useAddLikeMutation } from '../add/api/useAddLikeMutation';
 import { useRemoveLikeMutation } from '../remove/api/useRemoveLikeMutation';
@@ -8,14 +7,11 @@ import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
 
 interface LikeButtonProps {
   submissionId: number;
-  initialLikeCount: number;
-  initialIsLiked: boolean;
+  likeCount: number;
+  isLiked: boolean;
 }
 
-export function LikeButton({ submissionId, initialLikeCount, initialIsLiked }: LikeButtonProps) {
-  const [isLiked, setIsLiked] = useState(initialIsLiked);
-  const [likeCount, setLikeCount] = useState(initialLikeCount);
-
+export function LikeButton({ submissionId, likeCount, isLiked }: LikeButtonProps) {
   const { mutate: addLike, isPending: isAdding } = useAddLikeMutation();
   const { mutate: removeLike, isPending: isRemoving } = useRemoveLikeMutation();
 
@@ -23,19 +19,9 @@ export function LikeButton({ submissionId, initialLikeCount, initialIsLiked }: L
 
   const handleClick = () => {
     if (isLiked) {
-      removeLike(submissionId, {
-        onSuccess: data => {
-          setIsLiked(data.isLiked);
-          setLikeCount(data.likeCount);
-        },
-      });
+      removeLike(submissionId);
     } else {
-      addLike(submissionId, {
-        onSuccess: data => {
-          setIsLiked(data.isLiked);
-          setLikeCount(data.likeCount);
-        },
-      });
+      addLike(submissionId);
     }
   };
 
