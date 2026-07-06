@@ -127,7 +127,7 @@ export const CreatePostForm = () => {
         className="hidden"
         onChange={handleFileChange}
       />
-      {errors.images && <p className="text-xs text-destructive">{errors.images.message}</p>}
+      {errors.images && <p className="text-destructive text-xs">{errors.images.message}</p>}
 
       <button
         type="submit"

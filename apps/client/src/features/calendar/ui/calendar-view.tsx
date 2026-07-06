@@ -59,11 +59,11 @@ function CalendarViewContent({
         <div className="mb-2.5 flex items-center justify-between">
           <h2 className="text-3xl font-bold text-[#E1E1E3]">{formatYear(activeStartDate)}</h2>
           <div className="flex gap-1">
-            <button onClick={prevMonth} className="rounded-md p-1 transition-colors hover:bg-muted">
-              <ChevronLeft className="h-5 w-5 text-foreground" />
+            <button onClick={prevMonth} className="hover:bg-muted rounded-md p-1 transition-colors">
+              <ChevronLeft className="text-foreground h-5 w-5" />
             </button>
-            <button onClick={nextMonth} className="rounded-md p-1 transition-colors hover:bg-muted">
-              <ChevronRight className="h-5 w-5 text-foreground" />
+            <button onClick={nextMonth} className="hover:bg-muted rounded-md p-1 transition-colors">
+              <ChevronRight className="text-foreground h-5 w-5" />
             </button>
           </div>
         </div>

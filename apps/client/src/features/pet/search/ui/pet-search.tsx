@@ -35,7 +35,7 @@ export function PetSearch() {
           value={query}
           onChange={handleChange}
           placeholder="닉네임을 검색하세요"
-          className="min-w-0 flex-1 text-foreground placeholder:text-[#666666] focus:outline-none"
+          className="text-foreground min-w-0 flex-1 placeholder:text-[#666666] focus:outline-none"
         />
         {query.length > 0 && (
           <button type="button" onClick={handleClear}>

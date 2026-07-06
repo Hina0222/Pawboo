@@ -80,7 +80,7 @@ export function CreatePetForm() {
               errors.name && 'border-destructive'
             )}
           />
-          {errors.name && <p className="text-xs text-destructive">{errors.name.message}</p>}
+          {errors.name && <p className="text-destructive text-xs">{errors.name.message}</p>}
         </div>
       </div>
 

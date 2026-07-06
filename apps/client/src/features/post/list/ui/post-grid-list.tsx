@@ -26,7 +26,7 @@ export function PostGridList({ data, fetchNextPage, hasNextPage }: PostGridListP
 
   if (posts.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 text-muted-foreground">
+      <div className="text-muted-foreground flex flex-col items-center justify-center py-20">
         <p className="text-sm">아직 포스트가 없습니다</p>
       </div>
     );

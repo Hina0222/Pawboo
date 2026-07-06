@@ -7,7 +7,7 @@ function MyPetListError({ resetErrorBoundary }: FallbackProps) {
   const t = useTranslations('pet');
   const tc = useTranslations('common');
   return (
-    <div className="px-5 py-4 text-sm text-destructive">
+    <div className="text-destructive px-5 py-4 text-sm">
       <p>{t('listLoadError')}</p>
       <button onClick={resetErrorBoundary}>{tc('retry')}</button>
     </div>
