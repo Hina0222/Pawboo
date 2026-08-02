@@ -7,14 +7,14 @@ import { missionQueryKeys } from '@/entities/mission/model/mission.query-key';
 import { postQueryKeys } from '@/entities/post/model/post.query-key';
 import { toast } from 'sonner';
 import type { PostResponse } from '@pawboo/schemas/post';
-import type { SubmitMissionFormValues } from '../model/schema';
+import type { ImageEditorFormValues } from '@/features/image-canvas';
 
 export const submitMission = async ({
   missionId,
   values,
 }: {
   missionId: number;
-  values: SubmitMissionFormValues;
+  values: ImageEditorFormValues;
 }): Promise<PostResponse> => {
   const formData = new FormData();
   formData.append('images', values.images[0]);
