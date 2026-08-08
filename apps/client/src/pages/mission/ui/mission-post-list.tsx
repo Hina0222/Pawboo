@@ -6,8 +6,17 @@ import { useGetPostsSuspenseInfiniteQuery } from '@/features/post/list/api/useGe
 import { useGetTodayMissionSuspenseQuery } from '@/features/mission/today/api/useGetTodayMissionQuery';
 
 function MissionPostListContent({ missionId }: { missionId: number }) {
-  const { data, fetchNextPage, hasNextPage } = useGetPostsSuspenseInfiniteQuery(missionId);
-  return <PostGridList data={data} fetchNextPage={fetchNextPage} hasNextPage={hasNextPage} />;
+  const { data, fetchNextPage, isFetchingNextPage, isFetchNextPageError, hasNextPage } =
+    useGetPostsSuspenseInfiniteQuery(missionId);
+  return (
+    <PostGridList
+      data={data}
+      fetchNextPage={fetchNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      isFetchNextPageError={isFetchNextPageError}
+      hasNextPage={hasNextPage}
+    />
+  );
 }
 
 function MissionPostList() {

@@ -13,17 +13,17 @@ interface PetSearchListProps {
 }
 
 function PetSearchList({ q }: PetSearchListProps) {
-  const { data, fetchNextPage, isFetchingNextPage, hasNextPage } =
+  const { data, fetchNextPage, isFetchingNextPage, isFetchNextPageError, hasNextPage } =
     useSearchPetsSuspenseInfiniteQuery(q);
   const { ref, inView } = useInView();
 
   const pets = data.pages.flatMap(page => page.data);
 
   useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
+    if (inView && hasNextPage && !isFetchingNextPage && !isFetchNextPageError) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [inView, hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage]);
 
   return (
     <div>
