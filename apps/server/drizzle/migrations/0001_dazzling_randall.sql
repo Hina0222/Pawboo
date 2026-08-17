@@ -1,0 +1,1 @@
+ALTER TABLE "missions" DROP COLUMN "example_image_url";

@@ -10,7 +10,6 @@ export const MissionResponseSchema = z.object({
   id: z.number(),
   title: z.string(),
   description: z.string(),
-  exampleImageUrl: z.string().nullable(),
   scheduledAt: z.string(),
   createdAt: z.date(),
 });
