@@ -1,9 +1,9 @@
 'use client';
 
 import { type ReactNode, type Ref } from 'react';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/cn';
 import { DraggableElement } from './draggable-element';
-import type { CanvasElement } from '../model/canvas-element';
+import type { CanvasElement } from './canvas-element';
 
 interface ImageCanvasProps {
   ref?: Ref<HTMLDivElement>;

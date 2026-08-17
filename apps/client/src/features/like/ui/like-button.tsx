@@ -1,8 +1,8 @@
 'use client';
 
-import { cn } from '@/shared/lib/utils';
-import { useAddLikeMutation } from '../add/api/useAddLikeMutation';
-import { useRemoveLikeMutation } from '../remove/api/useRemoveLikeMutation';
+import { cn } from '@/shared/lib/cn';
+import { useAddLikeMutation } from '../api/useAddLikeMutation';
+import { useRemoveLikeMutation } from '../api/useRemoveLikeMutation';
 import { patchLikeInCaches } from '../lib/patch-like-cache';
 import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
 

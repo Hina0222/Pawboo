@@ -1,6 +1,6 @@
 import { ComponentProps, ReactNode } from 'react';
 import { Link } from '@/app/i18n/navigation';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/cn';
 
 type NavLinkProps = ComponentProps<typeof Link> &
   (

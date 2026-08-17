@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { Dialog as DialogPrimitive } from 'radix-ui';
 
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/cn';
 import XIcon from '@/shared/assets/icons/XIcon.svg';
 
 function Dialog({ ...props }: React.ComponentProps<typeof DialogPrimitive.Root>) {

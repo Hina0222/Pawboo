@@ -2,7 +2,7 @@
 
 import { Header } from '@/widgets/header';
 import SearchIcon from '@/shared/assets/icons/SearchIcon.svg';
-import HomePetAvatar from '@/pages/home/ui/home-pet-avatar';
+import { PetAvatar } from '@/widgets/pet-avatar';
 import { CalendarView } from '@/features/calendar/ui';
 
 export default function CalendarPage() {
@@ -10,7 +10,7 @@ export default function CalendarPage() {
     <>
       <Header>
         <Header.Left>
-          <HomePetAvatar />
+          <PetAvatar />
         </Header.Left>
         <Header.Center>
           <Header.Nav />

@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import type { UseFormRegisterReturn } from 'react-hook-form';
 import { Button } from '@/shared/ui/button';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/cn';
 import { useTranslations } from 'next-intl';
 import CameraIcon from '@/shared/assets/icons/CameraIcon.svg';
 import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
