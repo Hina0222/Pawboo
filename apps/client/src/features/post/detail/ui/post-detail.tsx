@@ -50,7 +50,7 @@ function PostDetail({ id, onDeleted }: PostDetailProps) {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <LikeButton submissionId={item.id} likeCount={item.likeCount} isLiked={item.isLiked} />
+        <LikeButton postId={item.id} likeCount={item.likeCount} isLiked={item.isLiked} />
       </Carousel>
 
       <div

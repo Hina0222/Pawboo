@@ -8,15 +8,15 @@ import { postQueryKeys } from '@/entities/post/model/post.query-key';
 import { toast } from 'sonner';
 import type { LikeResponse } from '@pawboo/schemas/like';
 
-export const addLike = async (submissionId: number): Promise<LikeResponse> => {
-  return apiClient.post<LikeResponse>(API_ROUTES.POSTS.ADD_LIKE.URL(submissionId));
+export const addLike = async (postId: number): Promise<LikeResponse> => {
+  return apiClient.post<LikeResponse>(API_ROUTES.POSTS.ADD_LIKE.URL(postId));
 };
 
 export const useAddLikeMutation = () => {
   return useMutation({
     mutationFn: addLike,
-    onSuccess: (data: LikeResponse, submissionId: number) => {
-      patchLikeInCaches(submissionId, data);
+    onSuccess: (data: LikeResponse, postId: number) => {
+      patchLikeInCaches(postId, data);
       getQueryClient().invalidateQueries({ queryKey: postQueryKeys.liked() });
     },
     onError: (error: Error) => {

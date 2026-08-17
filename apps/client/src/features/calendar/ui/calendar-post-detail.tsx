@@ -75,7 +75,7 @@ export function CalendarPostDetail({ posts, onDeleted }: CalendarPostDetailProps
         )}
         <LikeButton
           key={currentPost.id}
-          submissionId={currentPost.id}
+          postId={currentPost.id}
           likeCount={currentPost.likeCount}
           isLiked={currentPost.isLiked}
         />
