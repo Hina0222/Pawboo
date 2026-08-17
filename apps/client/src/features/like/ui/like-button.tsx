@@ -7,12 +7,12 @@ import { patchLikeInCaches } from '../lib/patch-like-cache';
 import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
 
 interface LikeButtonProps {
-  submissionId: number;
+  postId: number;
   likeCount: number;
   isLiked: boolean;
 }
 
-export function LikeButton({ submissionId, likeCount, isLiked }: LikeButtonProps) {
+export function LikeButton({ postId, likeCount, isLiked }: LikeButtonProps) {
   const { mutate: addLike, isPending: isAdding } = useAddLikeMutation();
   const { mutate: removeLike, isPending: isRemoving } = useRemoveLikeMutation();
 
@@ -21,12 +21,12 @@ export function LikeButton({ submissionId, likeCount, isLiked }: LikeButtonProps
   const handleClick = () => {
     // 낙관 반영 — 서버 응답 전에 숫자·색을 먼저 바꾸고, 실패 시 원복
     const before = { likeCount, isLiked };
-    patchLikeInCaches(submissionId, {
+    patchLikeInCaches(postId, {
       likeCount: likeCount + (isLiked ? -1 : 1),
       isLiked: !isLiked,
     });
-    (isLiked ? removeLike : addLike)(submissionId, {
-      onError: () => patchLikeInCaches(submissionId, before),
+    (isLiked ? removeLike : addLike)(postId, {
+      onError: () => patchLikeInCaches(postId, before),
     });
   };
 
