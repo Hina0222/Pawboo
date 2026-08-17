@@ -7,7 +7,7 @@ import { Carousel, CarouselContent, CarouselItem, ConfirmDialog } from '@/shared
 import { CarouselApi } from '@/shared/ui/carousel';
 import React, { useEffect, useState } from 'react';
 import type { PostDetail } from '@pawboo/schemas/post';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/cn';
 
 interface CalendarPostDetailProps {
   posts: PostDetail[];

@@ -1,7 +1,7 @@
 'use client';
 
 import { usePathname, Link } from '@/app/i18n/navigation';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/cn';
 import { motion } from 'framer-motion';
 import CalendarIcon from '@/shared/assets/icons/CalendarIcon.svg';
 import CalendarFillIcon from '@/shared/assets/icons/CalendarFillIcon.svg';

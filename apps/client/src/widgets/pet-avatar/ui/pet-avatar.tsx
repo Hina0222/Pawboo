@@ -5,10 +5,10 @@ import { withErrorBoundary, withSuspense } from '@/shared/boundary';
 import { Header } from '@/widgets/header';
 import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
 import PlusIcon from '@/shared/assets/icons/PlusIcon.svg';
-import { HomePetAvatarError } from './home-pet-avatar-error';
-import { HomePetAvatarSkeleton } from './home-pet-avatar-skeleton';
+import { PetAvatarError } from './pet-avatar-error';
+import { PetAvatarSkeleton } from './pet-avatar-skeleton';
 
-function HomePetAvatar() {
+function PetAvatar() {
   const { data: pets } = useGetPetsSuspenseQuery();
 
   if (pets.length === 0) {
@@ -31,7 +31,4 @@ function HomePetAvatar() {
   );
 }
 
-export default withErrorBoundary(
-  withSuspense(HomePetAvatar, <HomePetAvatarSkeleton />),
-  HomePetAvatarError
-);
+export default withErrorBoundary(withSuspense(PetAvatar, <PetAvatarSkeleton />), PetAvatarError);

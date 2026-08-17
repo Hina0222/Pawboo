@@ -3,8 +3,8 @@
 import type { ReactNode } from 'react';
 import XIcon from '@/shared/assets/icons/XIcon.svg';
 import { Rnd } from 'react-rnd';
-import { cn } from '@/shared/lib/utils';
-import type { CanvasElement } from '../model/canvas-element';
+import { cn } from '@/shared/lib/cn';
+import type { CanvasElement } from './canvas-element';
 
 interface DraggableElementProps {
   element: CanvasElement;

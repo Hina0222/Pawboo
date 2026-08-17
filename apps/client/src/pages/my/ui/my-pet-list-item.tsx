@@ -5,7 +5,7 @@ import type { PetResponse } from '@pawboo/schemas/pet';
 import { Link } from '@/app/i18n/navigation';
 import PenIcon from '@/shared/assets/icons/PenIcon.svg';
 import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/cn';
 
 interface MyPetListItemProps {
   pet: Pick<PetResponse, 'id' | 'name' | 'imageUrl' | 'isRepresentative'>;
