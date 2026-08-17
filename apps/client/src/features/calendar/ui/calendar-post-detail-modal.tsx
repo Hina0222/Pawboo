@@ -2,16 +2,35 @@
 
 import { Dialog, DialogContent, DialogTitle } from '@/shared/ui';
 import React from 'react';
-import type { PostDetail } from '@pawboo/schemas/post';
+import { useSuspenseQueries } from '@tanstack/react-query';
+import { withSuspense } from '@/shared/boundary';
+import { getPostQueryOptions } from '@/features/post/detail/api/useGetPostQuery';
 import { CalendarPostDetail } from './calendar-post-detail';
 
 interface CalendarPostDetailModalProps {
-  posts: PostDetail[];
+  postIds: number[];
   open: boolean;
   onClose: () => void;
 }
 
-function CalendarPostDetailModal({ posts, open, onClose }: CalendarPostDetailModalProps) {
+interface ModalBodyProps {
+  postIds: number[];
+  onDeleted?: () => void;
+}
+
+function ModalBody({ postIds, onDeleted }: ModalBodyProps) {
+  const results = useSuspenseQueries({
+    queries: postIds.map(id => getPostQueryOptions(id)),
+  });
+  return <CalendarPostDetail posts={results.map(r => r.data)} onDeleted={onDeleted} />;
+}
+
+const SuspendedModalBody = withSuspense(
+  ModalBody,
+  <div className="bg-muted aspect-square w-full animate-pulse rounded-[30px]" />
+);
+
+function CalendarPostDetailModal({ postIds, open, onClose }: CalendarPostDetailModalProps) {
   return (
     <Dialog open={open} onOpenChange={open => !open && onClose()}>
       <DialogContent
@@ -25,7 +44,7 @@ function CalendarPostDetailModal({ posts, open, onClose }: CalendarPostDetailMod
         }}
       >
         <DialogTitle className="sr-only">Post</DialogTitle>
-        <CalendarPostDetail posts={posts} onDeleted={onClose} />
+        <SuspendedModalBody postIds={postIds} onDeleted={onClose} />
       </DialogContent>
     </Dialog>
   );

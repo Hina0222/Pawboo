@@ -46,12 +46,8 @@ export const API_ROUTES = {
       URL: (id: number) => `/posts/${id}`,
       METHOD: 'DELETE',
     },
-    GET_MY_POSTS: {
-      URL: '/posts/me',
-      METHOD: 'GET',
-    },
-    GET_PET_POSTS: {
-      URL: (petId: number) => `/posts/pets/${petId}`,
+    GET_CALENDAR: {
+      URL: '/posts/calendar',
       METHOD: 'GET',
     },
     GET_LIKED_POSTS: {

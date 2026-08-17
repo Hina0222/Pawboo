@@ -5,6 +5,10 @@ export function toDateKey(date: Date): string {
   return `${y}-${m}-${d}`;
 }
 
+export function toMonthKey(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+}
+
 export function formatYear(date: Date): string {
   return date.toLocaleString('en-US', { year: 'numeric' });
 }
