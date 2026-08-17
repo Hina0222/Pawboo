@@ -22,10 +22,12 @@ import {
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.type';
 import {
   PostQuerySchema,
+  CalendarQuerySchema,
   type PostResponse,
   type PostDetail,
   type PostListResponse,
   type CalendarPostListResponse,
+  type CalendarMonthResponse,
 } from '@pawboo/schemas/post';
 
 @Controller('posts')
@@ -79,6 +81,20 @@ export class PostController {
       throw new BadRequestException(parsed.error.issues);
     }
     return this.postService.findPetPosts(req.user.id, petId, parsed.data);
+  }
+
+  // ⚠️ @Get(':id')보다 앞에 선언해야 한다 — 뒤에 두면 ParseIntPipe에 걸려 400.
+  @Get('calendar')
+  @UseGuards(JwtAuthGuard)
+  findCalendarDays(
+    @Req() req: AuthenticatedRequest,
+    @Query() query: Record<string, string>,
+  ): Promise<CalendarMonthResponse> {
+    const parsed = CalendarQuerySchema.safeParse(query);
+    if (!parsed.success) {
+      throw new BadRequestException(parsed.error.issues);
+    }
+    return this.postService.findCalendarDays(req.user.id, parsed.data);
   }
 
   @Get('liked')

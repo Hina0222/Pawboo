@@ -63,6 +63,7 @@ describe('PostController', () => {
     createPost: jest.fn(),
     findPosts: jest.fn(),
     findMyPosts: jest.fn(),
+    findCalendarDays: jest.fn(),
     findLikedPosts: jest.fn(),
     findPetPosts: jest.fn(),
     findOnePost: jest.fn(),
@@ -206,6 +207,51 @@ describe('PostController', () => {
         controller.findPetPosts(req, 2, { cursor: 'invalid' }),
       ).toThrow(BadRequestException);
       expect(service.findPetPosts).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('findCalendarDays', () => {
+    const mockCalendarDays = [
+      {
+        date: '2026-08-01',
+        thumbnailUrl: 'https://s3.example.com/img.jpg',
+        isMission: false,
+        postIds: [1],
+      },
+    ];
+
+    it('캘린더 조회 요청을 서비스에 전달', async () => {
+      service.findCalendarDays.mockResolvedValue(mockCalendarDays);
+
+      const result = await controller.findCalendarDays(req, {
+        month: '2026-08',
+      });
+
+      expect(service.findCalendarDays).toHaveBeenCalledWith(1, {
+        month: '2026-08',
+      });
+      expect(result).toEqual(mockCalendarDays);
+    });
+
+    it('petId 쿼리 파라미터 파싱', async () => {
+      service.findCalendarDays.mockResolvedValue(mockCalendarDays);
+
+      await controller.findCalendarDays(req, {
+        month: '2026-08',
+        petId: '2',
+      });
+
+      expect(service.findCalendarDays).toHaveBeenCalledWith(1, {
+        month: '2026-08',
+        petId: 2,
+      });
+    });
+
+    it('잘못된 month 형식 - BadRequestException', () => {
+      expect(() =>
+        controller.findCalendarDays(req, { month: '2026-13' }),
+      ).toThrow(BadRequestException);
+      expect(service.findCalendarDays).not.toHaveBeenCalled();
     });
   });
 

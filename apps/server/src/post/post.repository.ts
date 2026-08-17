@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { eq, and, lt, desc, inArray, count } from 'drizzle-orm';
+import { eq, and, lt, gte, desc, inArray, count, sql } from 'drizzle-orm';
 import { DRIZZLE_ORM } from '../database/database.provider';
 import type { DrizzleDB } from '../database/database.provider';
 import { posts, pets, postLikes } from '../database/schema';
@@ -63,6 +63,31 @@ export class PostRepository {
       hasNext,
       cursor: hasNext && lastItem ? lastItem.id : null,
     };
+  }
+
+  async findCalendarDays(petId: number, fromUtc: Date, toUtc: Date) {
+    // 한국은 DST 없음(UTC+9 고정). WHERE는 bare 컬럼(UTC 경계)이어야
+    // idx_post_pet_created 인덱스 range scan을 탄다 — KST 변환식 금지.
+    const kstDay = sql<string>`to_char(${posts.createdAt} + interval '9 hours', 'YYYY-MM-DD')`;
+    return this.db
+      .select({
+        date: kstDay,
+        thumbnailUrl: sql<string>`(array_agg(${posts.imageUrls}->>0 order by ${posts.id} desc))[1]`,
+        isMission: sql<boolean>`(array_agg(${posts.type}::text order by ${posts.id} desc))[1] = 'mission'`,
+        postIds: sql<
+          number[]
+        >`array_agg(${posts.id} order by ${posts.id} desc)`,
+      })
+      .from(posts)
+      .where(
+        and(
+          eq(posts.petId, petId),
+          gte(posts.createdAt, fromUtc),
+          lt(posts.createdAt, toUtc),
+        ),
+      )
+      .groupBy(kstDay)
+      .orderBy(kstDay);
   }
 
   async findOnePost(postId: number): Promise<PostRow | null> {

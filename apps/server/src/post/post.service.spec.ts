@@ -59,6 +59,7 @@ describe('PostService', () => {
     createPost: jest.fn(),
     findByMissionIdAndPetId: jest.fn(),
     findPosts: jest.fn(),
+    findCalendarDays: jest.fn(),
     findLikedPosts: jest.fn(),
     findOnePost: jest.fn(),
     findPostWithOwner: jest.fn(),
@@ -354,6 +355,67 @@ describe('PostService', () => {
       expect(result.data[0].pet.id).toBe(2);
       expect(result.data[0].isLiked).toBe(false);
       expect(postRepository.findPosts).toHaveBeenCalledWith({}, 2);
+    });
+  });
+
+  describe('findCalendarDays', () => {
+    const mockCalendarDay = {
+      date: '2026-08-01',
+      thumbnailUrl: 'https://s3.example.com/img.jpg',
+      isMission: false,
+      postIds: [1],
+    };
+
+    it('petId 지정 시 대표 펫 조회 없이 해당 펫으로 조회', async () => {
+      postRepository.findCalendarDays.mockResolvedValue([mockCalendarDay]);
+
+      const result = await service.findCalendarDays(1, {
+        month: '2026-08',
+        petId: 2,
+      });
+
+      expect(petRepository.findRepresentativeByUserId).not.toHaveBeenCalled();
+      expect(postRepository.findCalendarDays).toHaveBeenCalledWith(
+        2,
+        new Date('2026-07-31T15:00:00.000Z'),
+        new Date('2026-08-31T15:00:00.000Z'),
+      );
+      expect(result).toEqual([mockCalendarDay]);
+    });
+
+    it('petId 생략 시 대표 펫으로 조회', async () => {
+      petRepository.findRepresentativeByUserId.mockResolvedValue(mockPet);
+      postRepository.findCalendarDays.mockResolvedValue([mockCalendarDay]);
+
+      await service.findCalendarDays(1, { month: '2026-08' });
+
+      expect(petRepository.findRepresentativeByUserId).toHaveBeenCalledWith(1);
+      expect(postRepository.findCalendarDays).toHaveBeenCalledWith(
+        mockPet.id,
+        expect.any(Date),
+        expect.any(Date),
+      );
+    });
+
+    it('대표 펫 없음 - 빈 배열 반환', async () => {
+      petRepository.findRepresentativeByUserId.mockResolvedValue(null);
+
+      const result = await service.findCalendarDays(1, { month: '2026-08' });
+
+      expect(result).toEqual([]);
+      expect(postRepository.findCalendarDays).not.toHaveBeenCalled();
+    });
+
+    it('12월 KST 경계가 다음 해로 롤오버', async () => {
+      postRepository.findCalendarDays.mockResolvedValue([]);
+
+      await service.findCalendarDays(1, { month: '2026-12', petId: 2 });
+
+      expect(postRepository.findCalendarDays).toHaveBeenCalledWith(
+        2,
+        new Date('2026-11-30T15:00:00.000Z'),
+        new Date('2026-12-31T15:00:00.000Z'),
+      );
     });
   });
 

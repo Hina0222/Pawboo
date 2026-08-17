@@ -12,6 +12,8 @@ import type {
   PostDetail,
   PostListResponse,
   CalendarPostListResponse,
+  CalendarQuery,
+  CalendarMonthResponse,
   PostQuery,
 } from '@pawboo/schemas/post';
 
@@ -107,6 +109,30 @@ export class PostService {
       await this.postRepository.findPosts(query, petId),
       { id: pet.id, name: pet.name, imageUrl: pet.imageUrl ?? null },
     );
+  }
+
+  async findCalendarDays(
+    userId: number,
+    query: CalendarQuery,
+  ): Promise<CalendarMonthResponse> {
+    const petId =
+      query.petId ??
+      (await this.petRepository.findRepresentativeByUserId(userId))?.id;
+    if (!petId) {
+      return [];
+    }
+    const [fromUtc, toUtc] = this.monthRangeUtc(query.month);
+    return this.postRepository.findCalendarDays(petId, fromUtc, toUtc);
+  }
+
+  // 한국은 DST 없음(UTC+9 고정) → repository의 interval '9 hours'와 짝이 맞는다.
+  // Date.UTC의 월 오버플로가 12월 롤오버를 처리한다.
+  private monthRangeUtc(month: string): [Date, Date] {
+    const [y, m] = month.split('-').map(Number);
+    return [
+      new Date(Date.UTC(y, m - 1, 1, -9)),
+      new Date(Date.UTC(y, m, 1, -9)),
+    ];
   }
 
   private async toCalendarPostListResponse(
