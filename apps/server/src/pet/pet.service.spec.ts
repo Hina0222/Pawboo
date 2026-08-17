@@ -35,7 +35,6 @@ describe('PetService', () => {
     deleteById: jest.fn(),
     setRepresentative: jest.fn(),
     searchByName: jest.fn(),
-    countByUserId: jest.fn(),
   };
 
   const mockAwsService = {

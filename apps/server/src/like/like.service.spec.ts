@@ -12,7 +12,6 @@ describe('LikeService', () => {
       addLike: jest.fn(),
       removeLike: jest.fn(),
       countByPostId: jest.fn(),
-      existsPost: jest.fn(),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -31,29 +30,26 @@ describe('LikeService', () => {
 
   describe('addLike', () => {
     it('정상 좋아요 추가', async () => {
-      repository.existsPost.mockResolvedValue(true);
       repository.addLike.mockResolvedValue(undefined);
       repository.countByPostId.mockResolvedValue(5);
 
       const result = await service.addLike(42, 99);
 
       expect(result).toEqual({ likeCount: 5, isLiked: true });
-      expect(repository.existsPost).toHaveBeenCalledWith(99);
       expect(repository.addLike).toHaveBeenCalledWith(99, 42);
       expect(repository.countByPostId).toHaveBeenCalledWith(99);
     });
 
-    it('없는 게시물에 좋아요 - NotFoundException', async () => {
-      repository.existsPost.mockResolvedValue(false);
+    it('없는 게시물에 좋아요(FK 위반) - NotFoundException', async () => {
+      const dbError = new Error('foreign key violation');
+      dbError.cause = { code: '23503' };
+      repository.addLike.mockRejectedValue(dbError);
 
       await expect(service.addLike(1, 999)).rejects.toThrow(NotFoundException);
-      expect(repository.existsPost).toHaveBeenCalledWith(999);
-      expect(repository.addLike).not.toHaveBeenCalled();
       expect(repository.countByPostId).not.toHaveBeenCalled();
     });
 
     it('중복 좋아요 - ConflictException', async () => {
-      repository.existsPost.mockResolvedValue(true);
       const dbError = new Error('duplicate key');
       dbError.cause = { code: '23505' };
       repository.addLike.mockRejectedValue(dbError);
@@ -64,7 +60,6 @@ describe('LikeService', () => {
     });
 
     it('기타 데이터베이스 에러는 그대로 throw', async () => {
-      repository.existsPost.mockResolvedValue(true);
       const dbError = new Error('database error');
       repository.addLike.mockRejectedValue(dbError);
 

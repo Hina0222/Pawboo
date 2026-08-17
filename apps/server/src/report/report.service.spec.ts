@@ -9,7 +9,6 @@ describe('ReportService', () => {
 
   beforeEach(async () => {
     const mockRepository = {
-      existsPost: jest.fn(),
       createReport: jest.fn(),
     };
 
@@ -29,30 +28,26 @@ describe('ReportService', () => {
 
   describe('createReport', () => {
     it('정상 신고 생성', async () => {
-      repository.existsPost.mockResolvedValue(true);
       repository.createReport.mockResolvedValue(undefined);
 
       await expect(
         service.createReport(1, 10, { reason: 'spam' }),
       ).resolves.toBeUndefined();
 
-      expect(repository.existsPost).toHaveBeenCalledWith(10);
       expect(repository.createReport).toHaveBeenCalledWith(10, 1, 'spam');
     });
 
-    it('게시물이 없으면 NotFoundException', async () => {
-      repository.existsPost.mockResolvedValue(false);
+    it('게시물이 없으면(FK 위반) NotFoundException', async () => {
+      const dbError = new Error('foreign key violation');
+      dbError.cause = { code: '23503' };
+      repository.createReport.mockRejectedValue(dbError);
 
       await expect(
         service.createReport(1, 999, { reason: 'spam' }),
       ).rejects.toThrow(NotFoundException);
-
-      expect(repository.existsPost).toHaveBeenCalledWith(999);
-      expect(repository.createReport).not.toHaveBeenCalled();
     });
 
     it('중복 신고 - ConflictException', async () => {
-      repository.existsPost.mockResolvedValue(true);
       const dbError = new Error('duplicate key');
       dbError.cause = { code: '23505' };
       repository.createReport.mockRejectedValue(dbError);
@@ -65,7 +60,6 @@ describe('ReportService', () => {
     });
 
     it('기타 데이터베이스 에러는 그대로 throw', async () => {
-      repository.existsPost.mockResolvedValue(true);
       const dbError = new Error('database error');
       repository.createReport.mockRejectedValue(dbError);
 

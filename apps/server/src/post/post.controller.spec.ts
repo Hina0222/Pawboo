@@ -6,7 +6,6 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.type';
 import type {
   PostListResponse,
-  CalendarPostListResponse,
   PostItem,
   PostDetail,
   PostResponse,
@@ -49,12 +48,6 @@ const mockPostListResponse: PostListResponse = {
   cursor: null,
 };
 
-const mockCalendarPostListResponse: CalendarPostListResponse = {
-  data: [mockPostDetail],
-  hasNext: false,
-  cursor: null,
-};
-
 describe('PostController', () => {
   let controller: PostController;
   let service: jest.Mocked<PostService>;
@@ -62,10 +55,8 @@ describe('PostController', () => {
   const mockPostService = {
     createPost: jest.fn(),
     findPosts: jest.fn(),
-    findMyPosts: jest.fn(),
     findCalendarDays: jest.fn(),
     findLikedPosts: jest.fn(),
-    findPetPosts: jest.fn(),
     findOnePost: jest.fn(),
     deletePost: jest.fn(),
   };
@@ -126,35 +117,6 @@ describe('PostController', () => {
     });
   });
 
-  describe('findMyPosts', () => {
-    it('내 포스트 조회 요청을 서비스에 전달', async () => {
-      service.findMyPosts.mockResolvedValue(mockCalendarPostListResponse);
-
-      const result = await controller.findMyPosts(req, {});
-
-      expect(service.findMyPosts).toHaveBeenCalledWith(1, {});
-      expect(result).toEqual(mockCalendarPostListResponse);
-    });
-
-    it('유효한 쿼리 파라미터 파싱', async () => {
-      service.findMyPosts.mockResolvedValue(mockCalendarPostListResponse);
-
-      await controller.findMyPosts(req, { cursor: '10', missionId: '5' });
-
-      expect(service.findMyPosts).toHaveBeenCalledWith(1, {
-        cursor: 10,
-        missionId: 5,
-      });
-    });
-
-    it('잘못된 쿼리 파라미터 - BadRequestException', () => {
-      expect(() => controller.findMyPosts(req, { cursor: 'abc' })).toThrow(
-        BadRequestException,
-      );
-      expect(service.findMyPosts).not.toHaveBeenCalled();
-    });
-  });
-
   describe('findLikedPosts', () => {
     it('좋아요한 포스트 조회 요청을 서비스에 전달', async () => {
       service.findLikedPosts.mockResolvedValue(mockPostListResponse);
@@ -178,35 +140,6 @@ describe('PostController', () => {
         controller.findLikedPosts(req, { cursor: 'invalid' }),
       ).toThrow(BadRequestException);
       expect(service.findLikedPosts).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('findPetPosts', () => {
-    it('특정 펫 포스트 조회 요청을 서비스에 전달', async () => {
-      service.findPetPosts.mockResolvedValue(mockCalendarPostListResponse);
-
-      const result = await controller.findPetPosts(req, 2, {});
-
-      expect(service.findPetPosts).toHaveBeenCalledWith(1, 2, {});
-      expect(result).toEqual(mockCalendarPostListResponse);
-    });
-
-    it('유효한 쿼리 파라미터 파싱', async () => {
-      service.findPetPosts.mockResolvedValue(mockCalendarPostListResponse);
-
-      await controller.findPetPosts(req, 2, { cursor: '10', missionId: '5' });
-
-      expect(service.findPetPosts).toHaveBeenCalledWith(1, 2, {
-        cursor: 10,
-        missionId: 5,
-      });
-    });
-
-    it('잘못된 쿼리 파라미터 - BadRequestException', () => {
-      expect(() =>
-        controller.findPetPosts(req, 2, { cursor: 'invalid' }),
-      ).toThrow(BadRequestException);
-      expect(service.findPetPosts).not.toHaveBeenCalled();
     });
   });
 

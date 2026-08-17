@@ -31,7 +31,7 @@ export class PostRepository {
     return (post as PostResponse) ?? null;
   }
 
-  async findPosts(query: PostQuery, targetPetId?: number) {
+  async findPosts(query: PostQuery) {
     const { cursor, missionId } = query;
     const LIMIT = 20;
 
@@ -46,7 +46,6 @@ export class PostRepository {
       .from(posts)
       .where(
         and(
-          targetPetId !== undefined ? eq(posts.petId, targetPetId) : undefined,
           cursor ? lt(posts.id, cursor) : undefined,
           missionId ? eq(posts.missionId, missionId) : undefined,
         ),
@@ -66,8 +65,6 @@ export class PostRepository {
   }
 
   async findCalendarDays(petId: number, fromUtc: Date, toUtc: Date) {
-    // 한국은 DST 없음(UTC+9 고정). WHERE는 bare 컬럼(UTC 경계)이어야
-    // idx_post_pet_created 인덱스 range scan을 탄다 — KST 변환식 금지.
     const kstDay = sql<string>`to_char(${posts.createdAt} + interval '9 hours', 'YYYY-MM-DD')`;
     return this.db
       .select({
@@ -139,15 +136,15 @@ export class PostRepository {
     return new Map(rows.map((r) => [r.postId, r.count]));
   }
 
-  async getLikedPosts(userId: number, postIds: number[]) {
-    if (postIds.length === 0) return new Map();
+  async getLikedPosts(userId: number, postIds: number[]): Promise<Set<number>> {
+    if (postIds.length === 0) return new Set();
     const rows = await this.db
       .select({ postId: postLikes.postId })
       .from(postLikes)
       .where(
         and(eq(postLikes.userId, userId), inArray(postLikes.postId, postIds)),
       );
-    return new Map(rows.map((r) => [r.postId, true]));
+    return new Set(rows.map((r) => r.postId));
   }
 
   async findLikedPosts(userId: number, cursor?: number) {

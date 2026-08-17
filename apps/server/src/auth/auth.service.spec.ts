@@ -1,15 +1,13 @@
+import { createHash } from 'crypto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import * as bcrypt from 'bcryptjs';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
 
-jest.mock('bcryptjs', () => ({
-  hash: jest.fn(),
-  compare: jest.fn(),
-}));
+const sha256 = (token: string) =>
+  createHash('sha256').update(token).digest('hex');
 
 type UserRecord = NonNullable<Awaited<ReturnType<UserService['findById']>>>;
 
@@ -70,7 +68,6 @@ describe('AuthService', () => {
       jwtService.signAsync
         .mockResolvedValueOnce('access_token')
         .mockResolvedValueOnce('refresh_token');
-      (bcrypt.hash as jest.Mock).mockResolvedValue('hashed_refresh');
       userService.updateRefreshToken.mockResolvedValue(undefined);
 
       const result = await service.login({ id: 1, kakaoId: '12345' });
@@ -89,10 +86,9 @@ describe('AuthService', () => {
         { sub: 1, kakaoId: '12345' },
         { secret: 'refresh-secret', expiresIn: '30d' },
       );
-      expect(bcrypt.hash).toHaveBeenCalledWith('refresh_token', 10);
       expect(userService.updateRefreshToken).toHaveBeenCalledWith(
         1,
-        'hashed_refresh',
+        sha256('refresh_token'),
       );
     });
   });
@@ -100,12 +96,13 @@ describe('AuthService', () => {
   describe('refreshTokens', () => {
     it('정상 갱신 - 새 토큰 쌍 반환 및 refreshToken 저장', async () => {
       jwtService.verify.mockReturnValue({ sub: 1, kakaoId: '12345' });
-      userService.findById.mockResolvedValue(mockUser);
-      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+      userService.findById.mockResolvedValue({
+        ...mockUser,
+        refreshToken: sha256('valid_refresh_token'),
+      });
       jwtService.signAsync
         .mockResolvedValueOnce('new_access')
         .mockResolvedValueOnce('new_refresh');
-      (bcrypt.hash as jest.Mock).mockResolvedValue('new_hashed');
       userService.updateRefreshToken.mockResolvedValue(undefined);
 
       const result = await service.refreshTokens('valid_refresh_token');
@@ -129,7 +126,7 @@ describe('AuthService', () => {
       );
       expect(userService.updateRefreshToken).toHaveBeenCalledWith(
         1,
-        'new_hashed',
+        sha256('new_refresh'),
       );
     });
 
@@ -163,13 +160,11 @@ describe('AuthService', () => {
       await expect(service.refreshTokens('valid_token')).rejects.toThrow(
         UnauthorizedException,
       );
-      expect(bcrypt.compare).not.toHaveBeenCalled();
     });
 
     it('refreshToken 불일치 - UnauthorizedException', async () => {
       jwtService.verify.mockReturnValue({ sub: 1, kakaoId: '12345' });
       userService.findById.mockResolvedValue(mockUser);
-      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(service.refreshTokens('wrong_token')).rejects.toThrow(
         UnauthorizedException,
@@ -181,8 +176,10 @@ describe('AuthService', () => {
   describe('logoutByRefreshToken', () => {
     it('정상 로그아웃 - updateRefreshToken(null) 호출', async () => {
       jwtService.verify.mockReturnValue({ sub: 1, kakaoId: '12345' });
-      userService.findById.mockResolvedValue(mockUser);
-      (bcrypt.compare as jest.Mock).mockResolvedValue(true);
+      userService.findById.mockResolvedValue({
+        ...mockUser,
+        refreshToken: sha256('valid_token'),
+      });
       userService.updateRefreshToken.mockResolvedValue(undefined);
 
       await service.logoutByRefreshToken('valid_token');
@@ -214,7 +211,6 @@ describe('AuthService', () => {
     it('refreshToken 불일치 - 에러 없이 반환', async () => {
       jwtService.verify.mockReturnValue({ sub: 1, kakaoId: '12345' });
       userService.findById.mockResolvedValue(mockUser);
-      (bcrypt.compare as jest.Mock).mockResolvedValue(false);
 
       await expect(
         service.logoutByRefreshToken('wrong_token'),

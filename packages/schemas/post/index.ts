@@ -38,12 +38,6 @@ export const PostListResponseSchema = z.object({
   cursor: z.number().nullable(),
 });
 
-export const CalendarPostListResponseSchema = z.object({
-  data: z.array(PostDetailSchema),
-  hasNext: z.boolean(),
-  cursor: z.number().nullable(),
-});
-
 export const CalendarQuerySchema = z.object({
   month: z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'month는 YYYY-MM 형식이어야 합니다.'),
   petId: z.coerce.number().int().positive().optional(),
@@ -64,7 +58,6 @@ export type PostQuery = z.infer<typeof PostQuerySchema>;
 export type PostItem = z.infer<typeof PostItemSchema>;
 export type PostDetail = z.infer<typeof PostDetailSchema>;
 export type PostListResponse = z.infer<typeof PostListResponseSchema>;
-export type CalendarPostListResponse = z.infer<typeof CalendarPostListResponseSchema>;
 export type CalendarQuery = z.infer<typeof CalendarQuerySchema>;
 export type CalendarDay = z.infer<typeof CalendarDaySchema>;
 export type CalendarMonthResponse = z.infer<typeof CalendarMonthResponseSchema>;

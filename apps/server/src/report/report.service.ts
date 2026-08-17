@@ -15,11 +15,6 @@ export class ReportService {
     postId: number,
     input: CreateReportRequest,
   ): Promise<void> {
-    const exists = await this.reportRepository.existsPost(postId);
-    if (!exists) {
-      throw new NotFoundException('게시물을 찾을 수 없습니다.');
-    }
-
     try {
       await this.reportRepository.createReport(
         postId,
@@ -30,6 +25,9 @@ export class ReportService {
       const pgErr = err as { cause?: { code?: string } };
       if (pgErr?.cause?.code === '23505') {
         throw new ConflictException('이미 신고한 게시물입니다.');
+      }
+      if (pgErr?.cause?.code === '23503') {
+        throw new NotFoundException('게시물을 찾을 수 없습니다.');
       }
       throw err;
     }

@@ -122,10 +122,6 @@ export class PetService {
     return this.petRepository.setRepresentative(userId, petId);
   }
 
-  async findRepresentative(userId: number) {
-    return this.petRepository.findRepresentativeByUserId(userId);
-  }
-
   async search(query: PetSearchQuery): Promise<PetSearchResponse> {
     return this.petRepository.searchByName(query.q, query.cursor, query.limit);
   }

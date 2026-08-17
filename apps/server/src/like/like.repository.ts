@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { eq, and, count } from 'drizzle-orm';
 import { DRIZZLE_ORM } from '../database/database.provider';
 import type { DrizzleDB } from '../database/database.provider';
-import { postLikes, posts } from '../database/schema';
+import { postLikes } from '../database/schema';
 
 @Injectable()
 export class LikeRepository {
@@ -28,13 +28,5 @@ export class LikeRepository {
       .where(eq(postLikes.postId, postId));
 
     return cnt;
-  }
-
-  async existsPost(postId: number): Promise<boolean> {
-    const [post] = await this.db
-      .select({ id: posts.id })
-      .from(posts)
-      .where(eq(posts.id, postId));
-    return !!post;
   }
 }

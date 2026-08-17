@@ -26,7 +26,6 @@ import {
   type PostResponse,
   type PostDetail,
   type PostListResponse,
-  type CalendarPostListResponse,
   type CalendarMonthResponse,
 } from '@pawboo/schemas/post';
 
@@ -56,34 +55,6 @@ export class PostController {
     return this.postService.findPosts(parsed.data);
   }
 
-  @Get('me')
-  @UseGuards(JwtAuthGuard)
-  findMyPosts(
-    @Req() req: AuthenticatedRequest,
-    @Query() query: Record<string, string>,
-  ): Promise<CalendarPostListResponse> {
-    const parsed = PostQuerySchema.safeParse(query);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.issues);
-    }
-    return this.postService.findMyPosts(req.user.id, parsed.data);
-  }
-
-  @Get('pets/:petId')
-  @UseGuards(JwtAuthGuard)
-  findPetPosts(
-    @Req() req: AuthenticatedRequest,
-    @Param('petId', ParseIntPipe) petId: number,
-    @Query() query: Record<string, string>,
-  ): Promise<CalendarPostListResponse> {
-    const parsed = PostQuerySchema.safeParse(query);
-    if (!parsed.success) {
-      throw new BadRequestException(parsed.error.issues);
-    }
-    return this.postService.findPetPosts(req.user.id, petId, parsed.data);
-  }
-
-  // ⚠️ @Get(':id')보다 앞에 선언해야 한다 — 뒤에 두면 ParseIntPipe에 걸려 400.
   @Get('calendar')
   @UseGuards(JwtAuthGuard)
   findCalendarDays(

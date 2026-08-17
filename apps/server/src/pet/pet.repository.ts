@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { eq, and, asc, desc, count, ilike, gt } from 'drizzle-orm';
+import { eq, and, asc, desc, ilike, gt } from 'drizzle-orm';
 import { DRIZZLE_ORM } from '../database/database.provider';
 import type { DrizzleDB } from '../database/database.provider';
 import { pets } from '../database/schema';
@@ -121,13 +121,5 @@ export class PetRepository {
       hasNext,
       cursor: hasNext && lastItem ? lastItem.id : null,
     };
-  }
-
-  async countByUserId(userId: number): Promise<number> {
-    const [{ count: total }] = await this.db
-      .select({ count: count() })
-      .from(pets)
-      .where(eq(pets.userId, userId));
-    return total;
   }
 }

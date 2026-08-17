@@ -11,17 +11,15 @@ export class LikeService {
   constructor(private readonly likeRepository: LikeRepository) {}
 
   async addLike(userId: number, postId: number): Promise<LikeResponse> {
-    const exists = await this.likeRepository.existsPost(postId);
-    if (!exists) {
-      throw new NotFoundException('게시물을 찾을 수 없습니다.');
-    }
-
     try {
       await this.likeRepository.addLike(postId, userId);
     } catch (err: unknown) {
       const pgErr = err as { cause?: { code?: string } };
       if (pgErr?.cause?.code === '23505') {
         throw new ConflictException('이미 좋아요를 눌렀습니다.');
+      }
+      if (pgErr?.cause?.code === '23503') {
+        throw new NotFoundException('게시물을 찾을 수 없습니다.');
       }
       throw err;
     }

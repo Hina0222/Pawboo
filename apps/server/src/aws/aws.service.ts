@@ -10,8 +10,8 @@ import {
   PutObjectCommand,
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
+import { randomUUID } from 'crypto';
 import sharp from 'sharp';
-import { v4 as uuidv4 } from 'uuid';
 
 export const IMAGE_PRESET = {
   PET_THUMBNAIL: {
@@ -71,7 +71,7 @@ export class AwsService {
       throw new BadRequestException('이미지 처리에 실패했습니다.');
     }
 
-    const key = `${preset.folder}/${uuidv4()}.webp`;
+    const key = `${preset.folder}/${randomUUID()}.webp`;
 
     try {
       await this.s3.send(

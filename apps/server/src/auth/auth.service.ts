@@ -1,7 +1,7 @@
+import { createHash } from 'crypto';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcryptjs';
 import { UserService } from '../user/user.service';
 
 interface User {
@@ -19,8 +19,10 @@ export class AuthService {
 
   async login(user: User) {
     const tokens = await this.generateTokens(user.id, user.kakaoId);
-    const hashed = await bcrypt.hash(tokens.refreshToken, 10);
-    await this.userService.updateRefreshToken(user.id, hashed);
+    await this.userService.updateRefreshToken(
+      user.id,
+      this.hashToken(tokens.refreshToken),
+    );
     return tokens;
   }
 
@@ -37,12 +39,15 @@ export class AuthService {
     const user = await this.userService.findById(payload.sub);
     if (!user?.refreshToken) throw new UnauthorizedException();
 
-    const matches = await bcrypt.compare(refreshToken, user.refreshToken);
-    if (!matches) throw new UnauthorizedException();
+    if (this.hashToken(refreshToken) !== user.refreshToken) {
+      throw new UnauthorizedException();
+    }
 
     const tokens = await this.generateTokens(user.id, user.kakaoId);
-    const hashed = await bcrypt.hash(tokens.refreshToken, 10);
-    await this.userService.updateRefreshToken(user.id, hashed);
+    await this.userService.updateRefreshToken(
+      user.id,
+      this.hashToken(tokens.refreshToken),
+    );
     return tokens;
   }
 
@@ -59,8 +64,7 @@ export class AuthService {
     const user = await this.userService.findById(payload.sub);
     if (!user?.refreshToken) return;
 
-    const matches = await bcrypt.compare(refreshToken, user.refreshToken);
-    if (!matches) return;
+    if (this.hashToken(refreshToken) !== user.refreshToken) return;
 
     await this.userService.updateRefreshToken(user.id, null);
   }
@@ -89,16 +93,19 @@ export class AuthService {
     await this.userService.deleteMe(userId);
   }
 
+  private hashToken(token: string): string {
+    return createHash('sha256').update(token).digest('hex');
+  }
+
   private async generateTokens(userId: number, kakaoId: string) {
-    const accessPayload = { sub: userId, kakaoId };
-    const refreshPayload = { sub: userId, kakaoId };
+    const payload = { sub: userId, kakaoId };
 
     const [accessToken, refreshToken] = await Promise.all([
-      this.jwtService.signAsync(accessPayload, {
+      this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_SECRET'),
         expiresIn: '1h',
       }),
-      this.jwtService.signAsync(refreshPayload, {
+      this.jwtService.signAsync(payload, {
         secret: this.configService.get<string>('JWT_REFRESH_SECRET'),
         expiresIn: '30d',
       }),
