@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useUpdatePetForm } from '@/features/pet/edit/hooks/useUpdatePetForm';
 import { useGetPetSuspenseQuery } from '@/features/pet/detail/api/useGetPetQuery';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
@@ -31,10 +31,17 @@ function EditPetForm({ id }: EditPetFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(pet?.imageUrl ?? null);
 
+  // blob: 가드가 기존 previewUrl !== pet?.imageUrl 조건을 대체한다 (http URL은 revoke 대상 아님)
+  useEffect(
+    () => () => {
+      if (previewUrl?.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
+    },
+    [previewUrl]
+  );
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (previewUrl && previewUrl !== pet?.imageUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(URL.createObjectURL(file));
     setValue('image', file);
   };

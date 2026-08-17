@@ -1,8 +1,13 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { getQueryClient } from '@/shared/api/get-query-client';
-import { userQueryKeys } from '@/entities/user/model/user.query-key';
 import { ApiError } from '@/shared/api/api-error';
 import { apiLog } from '../../../alog.config';
+
+declare module 'axios' {
+  interface AxiosRequestConfig {
+    _retry?: boolean;
+  }
+}
 
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -21,8 +26,7 @@ axiosInstance.interceptors.request.use(async config => {
 });
 
 function handleAuthFailure() {
-  const queryClient = getQueryClient();
-  queryClient.removeQueries({ queryKey: userQueryKeys.me() });
+  getQueryClient().clear();
   if (typeof window !== 'undefined') {
     window.location.href = '/api/auth/clear';
   }
@@ -39,16 +43,12 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    if (originalRequest.url?.includes('/auth/refresh')) {
-      handleAuthFailure();
-      return Promise.reject(error);
-    }
-
     originalRequest._retry = true;
 
     try {
+      // _retry 덕에 refresh 자신의 401은 위 가드에서 reject — 인터셉터 재귀가 없다
       refreshPromise ??= axiosInstance
-        .post('/auth/refresh')
+        .post('/auth/refresh', null, { _retry: true })
         .then(() => {})
         .finally(() => {
           refreshPromise = null;

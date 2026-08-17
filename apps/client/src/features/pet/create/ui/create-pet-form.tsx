@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useCreatePetForm } from '@/features/pet/create/hooks/useCreatePetForm';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib/utils';
@@ -23,10 +23,16 @@ export function CreatePetForm() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
+  useEffect(
+    () => () => {
+      if (previewUrl?.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
+    },
+    [previewUrl]
+  );
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(URL.createObjectURL(file));
     setValue('image', file);
   };

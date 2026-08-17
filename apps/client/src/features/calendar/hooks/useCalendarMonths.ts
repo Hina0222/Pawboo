@@ -6,8 +6,12 @@ import type { CalendarDay } from '@pawboo/schemas/post';
 
 export function useCalendarMonths(petId?: number) {
   const [activeStartDate, setActiveStartDate] = useState<Date>(() => {
-    const now = new Date();
-    return new Date(now.getFullYear(), now.getMonth(), 1);
+    // 서버 버킷이 KST 기준이므로 "현재 달"도 KST로 — 기기 로컬 TZ와 무관하게 일치
+    const [y, m] = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Seoul' })
+      .format(new Date())
+      .split('-')
+      .map(Number);
+    return new Date(y, m - 1, 1);
   });
   // startTransition 필수 — 없으면 월 이동 시 useSuspenseQueries가 서스펜드해서
   // withSuspense가 화면 전체를 스켈레톤으로 갈아끼운다.
