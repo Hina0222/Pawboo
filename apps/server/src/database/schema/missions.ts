@@ -15,7 +15,6 @@ export const missions = pgTable(
     id: serial('id').primaryKey(),
     title: varchar('title', { length: 100 }).notNull(),
     description: text('description').notNull(),
-    exampleImageUrl: varchar('example_image_url', { length: 500 }),
     scheduledAt: date('scheduled_at').notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
   },

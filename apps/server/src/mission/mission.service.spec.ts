@@ -17,7 +17,6 @@ const mockMission: MissionRecord = {
   id: 1,
   title: '오늘의 산책 미션',
   description: '반려동물과 30분 산책하기',
-  exampleImageUrl: null,
   scheduledAt: '2026-04-22',
   createdAt: new Date('2026-04-22T00:00:00.000Z'),
 };
