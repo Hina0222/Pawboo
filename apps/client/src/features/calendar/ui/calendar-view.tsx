@@ -4,14 +4,13 @@ import { useState } from 'react';
 import Calendar from 'react-calendar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
+import { cn } from '@/shared/lib/utils';
 import CalendarPostDetailModal from './calendar-post-detail-modal';
-import { useCalendarView } from '../hooks/useCalendarView';
-import { usePetCalendarView } from '../hooks/usePetCalendarView';
+import { useCalendarMonths } from '../hooks/useCalendarMonths';
 import { toDateKey, formatYear, formatMonth } from '../lib/calendar';
 import { CalendarViewSkeleton } from './calendar-view-skeleton';
 import { CalendarViewError } from './calendar-view-error';
 import { CalendarTile } from './calendar-tile';
-import type { PostDetail } from '@pawboo/schemas/post';
 import './calendar.css';
 
 const CALENDAR_BASE_PROPS = {
@@ -25,30 +24,18 @@ const CALENDAR_BASE_PROPS = {
   className: 'custom-calendar',
 };
 
-interface CalendarViewContentProps {
-  activeStartDate: Date;
-  prevMonthDate: Date;
-  postsByDate: Record<string, PostDetail[]>;
-  prevMonth: () => void;
-  nextMonth: () => void;
-}
-
-function CalendarViewContent({
-  activeStartDate,
-  prevMonthDate,
-  postsByDate,
-  prevMonth,
-  nextMonth,
-}: CalendarViewContentProps) {
+function CalendarView({ petId }: { petId?: number }) {
+  const { activeStartDate, prevMonthDate, daysByDate, isPending, prevMonth, nextMonth } =
+    useCalendarMonths(petId);
   const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
-  const selectedPosts = selectedDateKey ? postsByDate[selectedDateKey] : undefined;
+  const selectedDay = selectedDateKey ? daysByDate[selectedDateKey] : undefined;
 
   const tileContent = ({ date, view }: { date: Date; view: string }) =>
-    view === 'month' ? <CalendarTile date={date} post={postsByDate[toDateKey(date)]?.[0]} /> : null;
+    view === 'month' ? <CalendarTile date={date} day={daysByDate[toDateKey(date)]} /> : null;
 
   const handleClickDay = (date: Date) => {
     const key = toDateKey(date);
-    if (postsByDate[key]?.length) {
+    if (daysByDate[key]) {
       setSelectedDateKey(key);
     }
   };
@@ -67,7 +54,7 @@ function CalendarViewContent({
             </button>
           </div>
         </div>
-        <div className="space-y-7">
+        <div className={cn('space-y-7', isPending && 'opacity-60')}>
           <div>
             <h3 className="mb-4 text-xl font-semibold text-[#E1E1E3]">
               {formatMonth(activeStartDate)}
@@ -92,30 +79,15 @@ function CalendarViewContent({
           </div>
         </div>
       </div>
-      {selectedPosts?.length ? (
+      {selectedDay ? (
         <CalendarPostDetailModal
-          posts={selectedPosts}
+          postIds={selectedDay.postIds}
           open
           onClose={() => setSelectedDateKey(null)}
         />
       ) : null}
     </>
   );
-}
-
-function MyCalendarViewInner() {
-  const hookData = useCalendarView();
-  return <CalendarViewContent {...hookData} />;
-}
-
-function PetCalendarViewInner({ petId }: { petId: number }) {
-  const hookData = usePetCalendarView(petId);
-  return <CalendarViewContent {...hookData} />;
-}
-
-function CalendarView({ petId }: { petId?: number }) {
-  if (petId !== undefined) return <PetCalendarViewInner petId={petId} />;
-  return <MyCalendarViewInner />;
 }
 
 export default withErrorBoundary(

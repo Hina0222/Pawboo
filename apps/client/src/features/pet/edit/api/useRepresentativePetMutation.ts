@@ -23,7 +23,7 @@ export const representativePetMutationOptions = () => {
       queryClient.invalidateQueries({ queryKey: petQueryKeys.details() });
       queryClient.invalidateQueries({ queryKey: missionQueryKeys.today() });
       queryClient.invalidateQueries({ queryKey: missionQueryKeys.history() });
-      queryClient.invalidateQueries({ queryKey: postQueryKeys.myPosts() });
+      queryClient.invalidateQueries({ queryKey: postQueryKeys.calendar() });
     },
     onError: (error: Error) => {
       toast.error(error.message);
