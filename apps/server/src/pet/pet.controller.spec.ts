@@ -35,7 +35,7 @@ describe('PetController', () => {
   const mockPetService = {
     create: jest.fn(),
     findAllByUser: jest.fn(),
-    findOne: jest.fn(),
+    findOneById: jest.fn(),
     update: jest.fn(),
     remove: jest.fn(),
     setRepresentative: jest.fn(),
@@ -161,11 +161,11 @@ describe('PetController', () => {
 
   describe('findOne', () => {
     it('특정 펫 조회', async () => {
-      service.findOne.mockResolvedValue(mockPetResponse);
+      service.findOneById.mockResolvedValue(mockPetResponse);
 
       const result = await controller.findOne(1);
 
-      expect(service.findOne).toHaveBeenCalledWith(1, 1);
+      expect(service.findOneById).toHaveBeenCalledWith(1);
       expect(result).toEqual(mockPetResponse);
     });
   });
