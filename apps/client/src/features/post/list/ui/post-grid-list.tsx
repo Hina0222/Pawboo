@@ -5,22 +5,31 @@ import { useInView } from 'react-intersection-observer';
 import type { InfiniteData } from '@tanstack/react-query';
 import type { PostListResponse } from '@pawboo/schemas/post';
 import PostDetailModal from '@/features/post/detail/ui/post-detail-modal';
+import { PostGridSkeleton } from './post-grid-skeleton';
 
 interface PostGridListProps {
   data: InfiniteData<PostListResponse>;
   fetchNextPage: () => void;
+  isFetchingNextPage: boolean;
+  isFetchNextPageError: boolean;
   hasNextPage: boolean;
 }
 
-export function PostGridList({ data, fetchNextPage, hasNextPage }: PostGridListProps) {
+export function PostGridList({
+  data,
+  fetchNextPage,
+  isFetchingNextPage,
+  isFetchNextPageError,
+  hasNextPage,
+}: PostGridListProps) {
   const { ref, inView } = useInView();
   const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
   useEffect(() => {
-    if (inView && hasNextPage) {
+    if (inView && hasNextPage && !isFetchingNextPage && !isFetchNextPageError) {
       fetchNextPage();
     }
-  }, [inView, hasNextPage, fetchNextPage]);
+  }, [inView, hasNextPage, isFetchingNextPage, isFetchNextPageError, fetchNextPage]);
 
   const posts = data.pages.flatMap(page => page.data);
 
@@ -49,6 +58,7 @@ export function PostGridList({ data, fetchNextPage, hasNextPage }: PostGridListP
           </button>
         ))}
       </div>
+      {isFetchingNextPage && <PostGridSkeleton />}
       <div ref={ref} className="h-4" />
       {selectedPostId !== null && (
         <PostDetailModal id={selectedPostId} open={true} onClose={() => setSelectedPostId(null)} />

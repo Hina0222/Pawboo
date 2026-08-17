@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useSuspenseInfiniteQuery } from '@tanstack/react-query';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { postQueryKeys } from '@/entities/post/model/post.query-key';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
@@ -17,10 +17,6 @@ export const getLikedPostsInfiniteQueryOptions = () => {
     getNextPageParam: (lastPage: PostListResponse) =>
       lastPage.hasNext ? lastPage.cursor : undefined,
   };
-};
-
-export const useGetLikedPostsInfiniteQuery = () => {
-  return useInfiniteQuery(getLikedPostsInfiniteQueryOptions());
 };
 
 export const useGetLikedPostsSuspenseInfiniteQuery = () => {

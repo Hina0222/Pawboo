@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Calendar from 'react-calendar';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { withErrorBoundary, withSuspense } from '@/shared/boundary';
-import { cn } from '@/shared/lib/utils';
+import { cn } from '@/shared/lib/cn';
 import CalendarPostDetailModal from './calendar-post-detail-modal';
 import { useCalendarMonths } from '../hooks/useCalendarMonths';
 import { toDateKey, formatYear, formatMonth } from '../lib/calendar';

@@ -1,8 +1,9 @@
 'use client';
 
-import { cn } from '@/shared/lib/utils';
-import { useAddLikeMutation } from '../add/api/useAddLikeMutation';
-import { useRemoveLikeMutation } from '../remove/api/useRemoveLikeMutation';
+import { cn } from '@/shared/lib/cn';
+import { useAddLikeMutation } from '../api/useAddLikeMutation';
+import { useRemoveLikeMutation } from '../api/useRemoveLikeMutation';
+import { patchLikeInCaches } from '../lib/patch-like-cache';
 import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
 
 interface LikeButtonProps {
@@ -18,11 +19,15 @@ export function LikeButton({ submissionId, likeCount, isLiked }: LikeButtonProps
   const isPending = isAdding || isRemoving;
 
   const handleClick = () => {
-    if (isLiked) {
-      removeLike(submissionId);
-    } else {
-      addLike(submissionId);
-    }
+    // 낙관 반영 — 서버 응답 전에 숫자·색을 먼저 바꾸고, 실패 시 원복
+    const before = { likeCount, isLiked };
+    patchLikeInCaches(submissionId, {
+      likeCount: likeCount + (isLiked ? -1 : 1),
+      isLiked: !isLiked,
+    });
+    (isLiked ? removeLike : addLike)(submissionId, {
+      onError: () => patchLikeInCaches(submissionId, before),
+    });
   };
 
   return (

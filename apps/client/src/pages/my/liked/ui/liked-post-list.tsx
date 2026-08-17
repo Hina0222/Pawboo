@@ -5,8 +5,17 @@ import { PostGridList, PostGridSkeleton, PostGridError } from '@/features/post/l
 import { useGetLikedPostsSuspenseInfiniteQuery } from '@/features/post/list/api/useGetLikedPostsInfiniteQuery';
 
 function LikedPostList() {
-  const { data, fetchNextPage, hasNextPage } = useGetLikedPostsSuspenseInfiniteQuery();
-  return <PostGridList data={data} fetchNextPage={fetchNextPage} hasNextPage={hasNextPage} />;
+  const { data, fetchNextPage, isFetchingNextPage, isFetchNextPageError, hasNextPage } =
+    useGetLikedPostsSuspenseInfiniteQuery();
+  return (
+    <PostGridList
+      data={data}
+      fetchNextPage={fetchNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      isFetchNextPageError={isFetchNextPageError}
+      hasNextPage={hasNextPage}
+    />
+  );
 }
 
 export default withErrorBoundary(withSuspense(LikedPostList, <PostGridSkeleton />), PostGridError);

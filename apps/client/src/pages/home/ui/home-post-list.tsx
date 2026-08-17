@@ -5,8 +5,17 @@ import { PostGridList, PostGridSkeleton, PostGridError } from '@/features/post/l
 import { useGetPostsSuspenseInfiniteQuery } from '@/features/post/list/api/useGetPostsInfiniteQuery';
 
 function HomePostList() {
-  const { data, fetchNextPage, hasNextPage } = useGetPostsSuspenseInfiniteQuery();
-  return <PostGridList data={data} fetchNextPage={fetchNextPage} hasNextPage={hasNextPage} />;
+  const { data, fetchNextPage, isFetchingNextPage, isFetchNextPageError, hasNextPage } =
+    useGetPostsSuspenseInfiniteQuery();
+  return (
+    <PostGridList
+      data={data}
+      fetchNextPage={fetchNextPage}
+      isFetchingNextPage={isFetchingNextPage}
+      isFetchNextPageError={isFetchNextPageError}
+      hasNextPage={hasNextPage}
+    />
+  );
 }
 
 export default withErrorBoundary(withSuspense(HomePostList, <PostGridSkeleton />), PostGridError);

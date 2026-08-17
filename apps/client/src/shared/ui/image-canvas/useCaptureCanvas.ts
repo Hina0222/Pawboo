@@ -17,9 +17,9 @@ export const useCaptureCanvas = (ref: RefObject<HTMLDivElement | null>) => {
       const pixelRatio = targetWidth / currentWidth;
       const options = { pixelRatio, skipAutoScale: true };
 
-      await toBlob(ref.current, options);
-      await toBlob(ref.current, options);
-      await toBlob(ref.current, options);
+      // 경험적 워밍업(toBlob 3회) 대신 기다리는 대상을 명시:
+      // 웹폰트(캔버스에 사용자 입력 텍스트가 렌더됨) + 배경 이미지 디코드
+      await Promise.all([document.fonts.ready, baseImg?.decode().catch(() => {})]);
       const blob = await toBlob(ref.current, options);
 
       if (!blob) return null;

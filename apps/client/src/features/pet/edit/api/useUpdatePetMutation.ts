@@ -22,10 +22,10 @@ export const updatePet = async ({
   return apiClient.patch<PetResponse>(API_ROUTES.PETS.UPDATE_PET.URL(id), formData);
 };
 
-export const updatePetMutationOptions = () => {
+export const useUpdatePetMutation = () => {
   const queryClient = getQueryClient();
 
-  return {
+  return useMutation({
     mutationFn: updatePet,
     onSuccess: () => {
       toast.success('반려동물을 업데이트했습니다.');
@@ -34,9 +34,5 @@ export const updatePetMutationOptions = () => {
     onError: (error: Error) => {
       toast.error(error.message);
     },
-  };
-};
-
-export const useUpdatePetMutation = () => {
-  return useMutation(updatePetMutationOptions());
+  });
 };

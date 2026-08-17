@@ -1,37 +1,32 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
-import type { UseFormReturn } from 'react-hook-form';
-import { ImageCanvas } from './image-canvas';
-import { useCanvasElements } from '../hooks/useCanvasElements';
-import { useCaptureCanvas } from '../hooks/useCaptureCanvas';
-import type { ImageEditorFormValues } from '../model/schema';
+import { toast } from 'sonner';
+import { ImageCanvas, useCanvasElements, useCaptureCanvas } from '@/shared/ui/image-canvas';
 import CameraIcon from '@/shared/assets/icons/CameraIcon.svg';
 import LogoIcon from '@/shared/assets/icons/LogoIcon.svg';
 import PlusIcon from '@/shared/assets/icons/PlusIcon.svg';
 
 interface ImageEditorFormProps {
-  methods: UseFormReturn<ImageEditorFormValues>;
-  onSubmit: () => Promise<void> | void;
+  onSubmit: (images: File[]) => void | Promise<void>;
   isPending: boolean;
   submitLabel: string;
 }
 
-export const ImageEditorForm = ({
-  methods,
-  onSubmit,
-  isPending,
-  submitLabel,
-}: ImageEditorFormProps) => {
-  const {
-    setValue,
-    formState: { errors },
-  } = methods;
-
+export const ImageEditorForm = ({ onSubmit, isPending, submitLabel }: ImageEditorFormProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const canvasRef = useRef<HTMLDivElement>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  // useRef가 아닌 이유: ref는 리렌더를 안 일으켜 버튼이 활성처럼 보인다
+  const [isCapturing, setIsCapturing] = useState(false);
+
+  useEffect(
+    () => () => {
+      if (previewUrl?.startsWith('blob:')) URL.revokeObjectURL(previewUrl);
+    },
+    [previewUrl]
+  );
 
   const {
     elements,
@@ -49,19 +44,25 @@ export const ImageEditorForm = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(URL.createObjectURL(file));
-    setValue('images', [file], { shouldValidate: true });
     e.target.value = '';
   };
 
   const handleFormSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
-    flushSync(() => setSelectedId(null));
-    const file = await capture();
-    if (!file) return;
-    setValue('images', [file]);
-    await onSubmit();
+    if (isCapturing) return;
+    setIsCapturing(true);
+    try {
+      flushSync(() => setSelectedId(null));
+      const file = await capture();
+      if (!file) {
+        toast.error('이미지 생성에 실패했어요. 다시 시도해주세요.');
+        return;
+      }
+      await onSubmit([file]);
+    } finally {
+      setIsCapturing(false);
+    }
   };
 
   return (
@@ -141,14 +142,13 @@ export const ImageEditorForm = ({
         className="hidden"
         onChange={handleFileChange}
       />
-      {errors.images && <p className="text-destructive text-xs">{errors.images.message}</p>}
 
       <button
         type="submit"
-        disabled={isPending || !previewUrl}
+        disabled={isPending || isCapturing || !previewUrl}
         className="mb-4 w-full rounded-[18px] bg-[#FADF78] py-4 font-semibold text-[#4D4D4D] disabled:bg-[#4D4D4D] disabled:text-[#808080]"
       >
-        {submitLabel}
+        {isPending || isCapturing ? '저장 중...' : submitLabel}
       </button>
     </form>
   );

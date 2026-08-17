@@ -11,23 +11,18 @@ export const deletePet = async (id: number): Promise<void> => {
   return apiClient.delete<void>(API_ROUTES.PETS.DELETE_PET.URL(id));
 };
 
-export const deletePetMutationOptions = () => {
+export const useDeletePetMutation = () => {
   const queryClient = getQueryClient();
 
-  return {
+  return useMutation({
     mutationFn: deletePet,
     onSuccess: () => {
       toast.success('반려동물을 삭제했습니다.');
       queryClient.invalidateQueries({ queryKey: petQueryKeys.details() });
       queryClient.invalidateQueries({ queryKey: missionQueryKeys.today() });
-      queryClient.invalidateQueries({ queryKey: missionQueryKeys.history() });
     },
     onError: (error: Error) => {
       toast.error(error.message);
     },
-  };
-};
-
-export const useDeletePetMutation = () => {
-  return useMutation(deletePetMutationOptions());
+  });
 };

@@ -13,24 +13,19 @@ export const representativePet = async (id: number): Promise<PetResponse> => {
   return apiClient.patch<PetResponse>(API_ROUTES.PETS.REPRESENTATIVE_PET.URL(id));
 };
 
-export const representativePetMutationOptions = () => {
+export const useRepresentativePetMutation = () => {
   const queryClient = getQueryClient();
 
-  return {
+  return useMutation({
     mutationFn: representativePet,
     onSuccess: () => {
       toast.success('대표 반려동물로 설정했습니다.');
       queryClient.invalidateQueries({ queryKey: petQueryKeys.details() });
       queryClient.invalidateQueries({ queryKey: missionQueryKeys.today() });
-      queryClient.invalidateQueries({ queryKey: missionQueryKeys.history() });
       queryClient.invalidateQueries({ queryKey: postQueryKeys.calendar() });
     },
     onError: (error: Error) => {
       toast.error(error.message);
     },
-  };
-};
-
-export const useRepresentativePetMutation = () => {
-  return useMutation(representativePetMutationOptions());
+  });
 };

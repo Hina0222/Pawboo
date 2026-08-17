@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { CanvasElement } from '../model/canvas-element';
+import type { CanvasElement } from './canvas-element';
 
 const MAX_ELEMENTS = 5;
 const segmenter = new Intl.Segmenter();

@@ -1,6 +1,6 @@
 import { Header } from '@/widgets/header';
 import SearchIcon from '@/shared/assets/icons/SearchIcon.svg';
-import HomePetAvatar from './ui/home-pet-avatar';
+import { PetAvatar } from '@/widgets/pet-avatar';
 import HomePostList from './ui/home-post-list';
 import HomeFab from './ui/home-fab';
 
@@ -9,7 +9,7 @@ export default async function HomePage() {
     <>
       <Header>
         <Header.Left>
-          <HomePetAvatar />
+          <PetAvatar />
         </Header.Left>
         <Header.Center>
           <Header.Nav />
