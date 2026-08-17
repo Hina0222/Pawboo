@@ -10,7 +10,7 @@ export function toMonthKey(date: Date): string {
 }
 
 export function formatYear(date: Date): string {
-  return date.toLocaleString('en-US', { year: 'numeric' });
+  return String(date.getFullYear());
 }
 
 export function formatMonth(date: Date): string {

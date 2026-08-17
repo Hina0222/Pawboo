@@ -1,4 +1,4 @@
-import { useInfiniteQuery, useSuspenseInfiniteQuery } from '@tanstack/react-query';
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api';
 import { API_ROUTES } from '@/shared/api/api-routes.constants';
 import { petQueryKeys } from '@/entities/pet/model/pet.query-key';
@@ -17,13 +17,6 @@ export const searchPetsInfiniteQueryOptions = (q: string) => ({
   getNextPageParam: (lastPage: PetSearchResponse) =>
     lastPage.hasNext ? lastPage.cursor : undefined,
 });
-
-export const useSearchPetsInfiniteQuery = (q: string) => {
-  return useInfiniteQuery({
-    ...searchPetsInfiniteQueryOptions(q),
-    enabled: q.trim().length > 0,
-  });
-};
 
 export const useSearchPetsSuspenseInfiniteQuery = (q: string) => {
   return useSuspenseInfiniteQuery(searchPetsInfiniteQueryOptions(q));

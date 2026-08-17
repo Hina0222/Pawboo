@@ -21,10 +21,10 @@ export const submitMission = async ({
   return apiClient.post<PostResponse>(API_ROUTES.MISSIONS.SUBMIT.URL(missionId), formData);
 };
 
-export const submitMissionMutationOptions = () => {
+export const useSubmitMissionMutation = () => {
   const queryClient = getQueryClient();
 
-  return {
+  return useMutation({
     mutationFn: submitMission,
     onSuccess: () => {
       toast.success('미션을 제출했습니다!');
@@ -34,9 +34,5 @@ export const submitMissionMutationOptions = () => {
     onError: (error: Error) => {
       toast.error(error.message);
     },
-  };
-};
-
-export const useSubmitMissionMutation = () => {
-  return useMutation(submitMissionMutationOptions());
+  });
 };

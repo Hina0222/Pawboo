@@ -12,8 +12,8 @@ export const removeLike = async (submissionId: number): Promise<LikeResponse> =>
   return apiClient.delete<LikeResponse>(API_ROUTES.POSTS.REMOVE_LIKE.URL(submissionId));
 };
 
-export const removeLikeMutationOptions = () => {
-  return {
+export const useRemoveLikeMutation = () => {
+  return useMutation({
     mutationFn: removeLike,
     onSuccess: (data: LikeResponse, submissionId: number) => {
       patchLikeInCaches(submissionId, data);
@@ -22,9 +22,5 @@ export const removeLikeMutationOptions = () => {
     onError: (error: Error) => {
       toast.error(error.message);
     },
-  };
-};
-
-export const useRemoveLikeMutation = () => {
-  return useMutation(removeLikeMutationOptions());
+  });
 };

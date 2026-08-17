@@ -10,10 +10,10 @@ export const deletePost = async (postId: number): Promise<void> => {
   return apiClient.delete<void>(API_ROUTES.POSTS.DELETE_POST.URL(postId));
 };
 
-export const deletePostMutationOptions = () => {
+export const useDeletePostMutation = () => {
   const queryClient = getQueryClient();
 
-  return {
+  return useMutation({
     mutationFn: deletePost,
     onSuccess: () => {
       toast.success('포스트를 삭제했습니다.');
@@ -22,9 +22,5 @@ export const deletePostMutationOptions = () => {
     onError: (error: Error) => {
       toast.error(error.message);
     },
-  };
-};
-
-export const useDeletePostMutation = () => {
-  return useMutation(deletePostMutationOptions());
+  });
 };

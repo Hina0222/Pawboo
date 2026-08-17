@@ -14,10 +14,10 @@ export const createPost = async (values: ImageEditorFormValues): Promise<PostRes
   return apiClient.post<PostResponse>(API_ROUTES.POSTS.CREATE_POST.URL, formData);
 };
 
-export const createPostMutationOptions = () => {
+export const useCreatePostMutation = () => {
   const queryClient = getQueryClient();
 
-  return {
+  return useMutation({
     mutationFn: createPost,
     onSuccess: () => {
       toast.success('게시글을 등록했습니다!');
@@ -26,9 +26,5 @@ export const createPostMutationOptions = () => {
     onError: (error: Error) => {
       toast.error(error.message);
     },
-  };
-};
-
-export const useCreatePostMutation = () => {
-  return useMutation(createPostMutationOptions());
+  });
 };

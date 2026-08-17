@@ -12,8 +12,8 @@ export const addLike = async (submissionId: number): Promise<LikeResponse> => {
   return apiClient.post<LikeResponse>(API_ROUTES.POSTS.ADD_LIKE.URL(submissionId));
 };
 
-export const addLikeMutationOptions = () => {
-  return {
+export const useAddLikeMutation = () => {
+  return useMutation({
     mutationFn: addLike,
     onSuccess: (data: LikeResponse, submissionId: number) => {
       patchLikeInCaches(submissionId, data);
@@ -22,9 +22,5 @@ export const addLikeMutationOptions = () => {
     onError: (error: Error) => {
       toast.error(error.message);
     },
-  };
-};
-
-export const useAddLikeMutation = () => {
-  return useMutation(addLikeMutationOptions());
+  });
 };

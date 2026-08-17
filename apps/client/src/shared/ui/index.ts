@@ -12,10 +12,4 @@ export {
   DialogTrigger,
 } from './dialog';
 export { ConfirmDialog } from './confirm-dialog';
-export {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from './carousel';
+export { Carousel, CarouselContent, CarouselItem } from './carousel';

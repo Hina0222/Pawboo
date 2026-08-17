@@ -68,18 +68,9 @@ export const API_ROUTES = {
       URL: '/missions/today',
       METHOD: 'GET',
     },
-    GET_HISTORY: {
-      URL: '/missions/submissions/history',
-      METHOD: 'GET',
-    },
     SUBMIT: {
       URL: (missionId: number) => `/missions/${missionId}/submissions`,
       METHOD: 'POST',
-    },
-    DELETE_SUBMISSION: {
-      URL: (missionId: number, submissionId: number) =>
-        `/missions/${missionId}/submissions/${submissionId}`,
-      METHOD: 'DELETE',
     },
   },
   AUTH: {
